@@ -101,6 +101,25 @@ python3 tai-nguyen/scripts/anh_ai.py "spa lobby christmas decor, warm light" out
 - Việc làm được bằng code thì tự làm, không tốn credit: ghép khung, cắt, che mắt, chỉnh màu, thêm chữ, logo. Chỉ gọi AI khi cần tạo ảnh hoặc nền mới, hoặc vẽ lại chỗ khó.
 - Ảnh AI không được ghi là ảnh khách thật.
 
+## 4b. Giọng đọc, chép lời, nhạc – có bản MIỄN PHÍ
+
+Nhân viên video dùng `tai-nguyen/scripts/giong_doc.py`. Không có khoá trả phí thì script tự dùng bản miễn phí.
+
+| Việc | Miễn phí (không cần khoá) | Trả phí (hay hơn) |
+|---|---|---|
+| **Giọng đọc** | Microsoft Edge: `pip install edge-tts` (tiếng Việt, Anh, Philippines… nhiều giọng nam/nữ). Dự phòng khi Edge lỗi: `pip install gTTS` (giọng Google, đều hơn) | ElevenLabs – `ELEVENLABS_API_KEY` |
+| **Chép lời video** (hiểu video SPY) | Whisper chạy trên máy: `pip install faster-whisper` | ElevenLabs |
+| **Nhạc nền** | Mixkit (mixkit.co – tự tải, được dùng cho quảng cáo), YouTube Audio Library | Higgsfield, ElevenLabs Music |
+
+Ví dụ:
+```
+python3 tai-nguyen/scripts/giong_doc.py voices --nguon edge vi          # xem giọng tiếng Việt miễn phí
+python3 tai-nguyen/scripts/giong_doc.py doc loi_doc.txt ra.mp3 --nguon edge --voice vi-VN-HoaiMyNeural
+```
+- Đặt `GIONG_NGUON=edge` để luôn dùng bản miễn phí; đặt `GIONG_EDGE=<tên giọng>` để cố định giọng.
+- Giọng Edge là dịch vụ miễn phí không chính thức của Microsoft: đôi lúc không trả âm thanh (script tự thử lại rồi chuyển sang giọng Google nếu đã cài gTTS), và có thể đổi bất cứ lúc nào.
+- Giọng miễn phí không nhấn nhá cảm xúc như ElevenLabs. Không nhái giọng người thật.
+
 ## 5. Chạy tự động khi tắt máy (đám mây)
 1. Tạo repo **private** trên GitHub và chép thư mục này vào, kể cả `.claude/` và `.claude-plugin/`.
 2. Mở repo trong Claude Code rồi gõ: `Đọc CHUYEN-THUONG-HIEU.md và làm theo` để chuyển nhân viên sang thương hiệu của bạn.
