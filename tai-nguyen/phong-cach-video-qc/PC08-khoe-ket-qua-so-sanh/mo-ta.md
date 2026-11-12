@@ -1,0 +1,6 @@
+# PC08 – "Khoe kết quả & So sánh" (VD4 v5, 11/11/2026, 45s, HyperFrames, hệ thiết kế PC07)
+Thứ tự: Hook khách XẤU (chữ dải trên) → khoanh 3 vấn đề (vòng vàng trên mặt, nhãn pill dải dưới) → lấy nét mờ (rack-focus) sang khách ĐẸP, GIỮ 6s với 3 góc đẹp + "Hello, new glow!" + pill LIFTED/FULLER/GLOWING → SO SÁNH 2 CỘT trước|sau GIỮ 5s → cơ chế bố cục ngang (huy hiệu tròn 30 MIN + tiêu đề trái + minh hoạ + 3 chip) → khách thật băng chuyền ngang → vé ưu đãi kem trên nền đồng (STARTING FROM) → CTA.
+Luật rút ra (sếp góp ý 11/11): mỗi video 1 phong cách khác; cảnh khách đẹp phải GIỮ đủ lâu (≥5s tổng + so sánh); chữ chỉ ở dải trên (y<480) hoặc dưới (y>1580), không đè mặt; không zoom cả cảnh nền phẳng thật chậm (gây nhảy từng pixel – giật).
+Voice: cắt từng đoạn từ voice Mely có sẵn rồi xếp lại theo bố cục mới (assets/vo1..8.mp3).
+Bản v6 (11/11): dùng VIDEO chuyển động thật (assets/v_*.mp4 cắt từ gốc, tốc độ gốc, cắt khung bỏ phụ đề, vá chữ băng đô từng khung) cho hook, cảnh đẹp, cột AFTER; chỉ cảnh khoanh vấn đề dừng hình. Tự nhận diện 4 khuyết điểm MAXFILL xử lý (dưới mắt trũng, rãnh cười sâu, chảy xệ hàm, cằm ngắn) và đối chiếu ở cảnh so sánh (✓ dưới mắt sáng hơn, rãnh cười mờ, hàm gọn, cằm rõ).
+

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+:root { --cream:#f6eee4; --cream2:#efe3d3; --choc:#4a2e22; --gold:#c9a46a; --gold2:#e8cfa0; --bronze1:#3b2416; --bronze2:#8a5a32; --brick:#9c4a3a; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:1080px; height:1920px; overflow:hidden; background:var(--cream); }
+#root { position:relative; width:100%; height:100%; overflow:hidden; font-family:Montserrat, sans-serif; color:var(--choc); }
+.frame { position:absolute; left:0; top:0; width:1080px; height:1300px; overflow:hidden; background:#2a1a10; }
+.frame .m { position:absolute; left:0; top:-350px; width:1080px; height:1920px; object-fit:cover; }
+.panel { position:absolute; left:0; top:1270px; width:1080px; height:650px; background:linear-gradient(180deg,#fbf5ec 0%, #f3e6d4 100%); border-top:4px solid var(--gold); border-radius:44px 44px 0 0; box-shadow:0 -20px 50px rgba(40,20,10,0.35); }
+.issue { position:absolute; left:70px; top:1310px; font-weight:700; font-size:24px; letter-spacing:0.28em; color:var(--bronze2); }
+.issue b { color:var(--brick); }
+.ph { position:absolute; left:70px; right:70px; top:1365px; }
+.kick { display:inline-block; font-weight:700; font-size:26px; letter-spacing:0.2em; color:var(--gold2); background:var(--choc); padding:9px 20px; border-radius:40px; }
+.hl { font-family:"Playfair Display", serif; font-weight:700; font-size:86px; line-height:1.05; color:var(--choc); margin-top:22px; }
+.hl em { color:var(--bronze2); font-style:italic; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:30px; }
+.pill { display:flex; align-items:center; gap:12px; font-weight:700; font-size:32px; letter-spacing:0.04em; color:var(--choc); background:#fff; padding:16px 22px; border-radius:50px; border:3px solid var(--gold); box-shadow:0 8px 20px rgba(74,46,34,0.15); white-space:nowrap; }
+.pill .dot { width:18px; height:18px; border-radius:50%; background:var(--brick); flex:none; }
+.pill.ok { background:linear-gradient(90deg,var(--bronze1),var(--bronze2)); color:#fff; border-color:var(--gold2); }
+.half { position:absolute; top:0; width:538px; height:1300px; overflow:hidden; }
+.half img { position:absolute; top:-390px; width:1080px; height:1920px; object-fit:cover; }
+.tag { position:absolute; top:40px; font-weight:700; font-size:30px; letter-spacing:0.2em; padding:10px 22px; border-radius:40px; z-index:3; }
+.vline { position:absolute; left:536px; top:0; width:8px; height:1300px; background:linear-gradient(180deg,var(--gold2),var(--gold)); box-shadow:0 0 20px rgba(232,207,160,0.9); }
+.offer { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 25%, #fbf5ec 0%, #f6eee4 45%, #efe3d3 100%); }
+.o-h { position:absolute; left:0; right:0; top:300px; text-align:center; font-family:"Playfair Display", serif; font-weight:700; font-size:96px; line-height:1.02; color:var(--choc); }
+.o-h em { color:var(--bronze2); }
+.seal { position:absolute; left:290px; top:560px; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #a06a3c 0%, #6b4226 55%, #3b2416 100%); border:8px solid var(--gold2); box-shadow:0 30px 70px rgba(40,20,10,0.45); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.seal .a { font-weight:700; font-size:30px; letter-spacing:0.26em; color:var(--gold2); }
+.seal .b { font-family:"Playfair Display", serif; font-weight:700; font-size:132px; line-height:1; background:linear-gradient(180deg,#fff3d6 0%,#e8cfa0 50%,#c9a46a 100%); -webkit-background-clip:text; background-clip:text; color:transparent; margin:10px 0; }
+.seal .c { font-weight:700; font-size:30px; color:#fff; }
+.strip { position:absolute; left:70px; right:70px; top:1130px; height:300px; border-radius:30px; background:#fff; border:3px solid var(--gold); display:flex; align-items:center; gap:26px; padding:20px; box-shadow:0 18px 40px rgba(74,46,34,0.2); }
+.strip img { width:280px; height:256px; object-fit:cover; border-radius:20px; }
+.s1t { font-weight:700; font-size:30px; letter-spacing:0.1em; color:var(--bronze2); }
+.s2t { font-family:"Playfair Display", serif; font-weight:700; font-size:62px; line-height:1.05; color:var(--choc); }
+.s3t { font-weight:700; font-size:28px; color:var(--brick); margin-top:8px; }
+.clients { position:absolute; left:70px; right:70px; top:1480px; display:flex; gap:20px; }
+.clients div { flex:1; height:300px; border-radius:22px; overflow:hidden; border:6px solid #fff; box-shadow:0 14px 30px rgba(74,46,34,0.25); }
+.clients img { width:100%; height:100%; object-fit:cover; }
+.cl-t { position:absolute; left:0; right:0; top:1800px; text-align:center; font-weight:700; font-size:28px; letter-spacing:0.2em; color:var(--bronze2); }
+.cta-logo { position:absolute; left:290px; top:380px; width:500px; }
+.cta-h { position:absolute; left:0; right:0; top:720px; text-align:center; font-family:"Playfair Display", serif; font-weight:700; font-size:100px; line-height:1.05; color:var(--choc); }
+.cta-h em { color:var(--bronze2); }
+.btn { position:absolute; left:160px; top:1060px; width:760px; height:150px; border-radius:80px; background:linear-gradient(90deg,var(--bronze1),var(--bronze2)); display:flex; align-items:center; justify-content:center; gap:22px; font-weight:700; font-size:52px; letter-spacing:0.08em; color:#fff; box-shadow:0 20px 50px rgba(74,46,34,0.4); }
+.addr { position:absolute; left:0; right:0; top:1260px; text-align:center; font-size:36px; letter-spacing:0.12em; color:var(--bronze2); font-weight:700; }
+.sweep { position:absolute; left:-500px; top:-200px; width:320px; height:1600px; background:linear-gradient(90deg, rgba(255,240,210,0) 0%, rgba(255,240,210,0.45) 50%, rgba(255,240,210,0) 100%); }
+</style></head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="41.29" data-width="1080" data-height="1920">
+
+<!-- KHUNG VIDEO (2/3 trên) -->
+<div id="fr" class="frame">
+  <div id="w-bef" class="full" style="position:absolute; inset:0"><video id="md1" class="clip m" src="assets/v_bef.mp4" muted playsinline data-start="0" data-duration="2.75" data-track-index="1"></video></div>
+  <div id="w-side" style="position:absolute; inset:0"><video id="md2" class="clip m" src="assets/v_side.mp4" muted playsinline data-start="2.75" data-duration="2.85" data-track-index="1"></video></div>
+  <div id="w-st" style="position:absolute; inset:0; transform-origin:540px 600px"><img class="clip m" src="assets/s11.3.png" alt="" data-start="5.6" data-duration="7.48" data-track-index="1"></div>
+  <svg id="circs" class="clip" data-start="6.93" data-duration="6.15" data-track-index="2" style="position:absolute; left:0; top:0; width:1080px; height:1300px" viewBox="0 0 1080 1300"><circle id="c1" cx="720" cy="580" r="80" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="503" stroke-dashoffset="503" stroke-linecap="round"/><circle id="c2" cx="550" cy="750" r="85" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="535" stroke-dashoffset="535" stroke-linecap="round"/><circle id="c3" cx="300" cy="830" r="75" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="472" stroke-dashoffset="472" stroke-linecap="round"/><circle id="c4" cx="550" cy="912" r="62" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="390" stroke-dashoffset="390" stroke-linecap="round"/></svg>
+  <div id="w-v_aft1" style="position:absolute; inset:0"><video id="md3" class="clip m" src="assets/v_aft1.mp4" muted playsinline data-start="13.08" data-duration="2.75" data-track-index="1"></video></div><div id="w-v_aft2" style="position:absolute; inset:0"><video id="md4" class="clip m" src="assets/v_aft2.mp4" muted playsinline data-start="15.83" data-duration="2.80" data-track-index="1"></video></div><div id="w-v_aft3" style="position:absolute; inset:0"><video id="md5" class="clip m" src="assets/v_aft3.mp4" muted playsinline data-start="18.63" data-duration="2.40" data-track-index="1"></video></div>
+  <div style="position:absolute; left:0; top:0; width:1080px; height:260px; background:linear-gradient(180deg, rgba(30,15,5,0.55), rgba(30,15,5,0)); z-index:2"></div>
+  <div id="sweep" class="sweep clip" data-start="13.08" data-duration="1.4" data-track-index="3"></div>
+  <div id="cmp" class="clip" data-start="21.03" data-duration="5.00" data-track-index="2" style="position:absolute; inset:0; background:#2a1a10">
+    <div id="hL" class="half" style="left:0"><img src="assets/s11.3.png" alt="" style="left:-270px"></div>
+    <div id="hR" class="half" style="left:542px"><img src="assets/s22.6.png" alt="" style="left:-270px"></div>
+    <div id="vl" class="vline"></div>
+    <div class="tag" style="left:30px; top:170px; color:#fff; background:rgba(59,36,22,0.88)">BEFORE</div>
+    <div class="tag" style="right:30px; top:170px; color:#3b2416; background:linear-gradient(90deg,#c9a46a,#e8cfa0)">AFTER</div>
+  </div>
+</div>
+
+<!-- BẢNG CHỮ (1/3 dưới) -->
+<div class="panel"></div>
+<div class="issue clip" data-start="0" data-duration="26.03" data-track-index="4">MERAH JOURNAL · <b>CASE 01</b> · MAXFILL FULL FACE</div>
+<div id="p1" class="ph clip" data-start="0" data-duration="6.93" data-track-index="5"><div class="kick">NO FILTER · NO MAKEUP</div><div class="hl">Her natural face,<br><em>before Maxfill</em></div></div>
+<div id="p2" class="ph clip" data-start="6.93" data-duration="6.15" data-track-index="5"><div class="kick">WHAT MAXFILL WILL FIX</div>
+  <div class="grid2"><div id="q1" class="pill"><span class="dot"></span>FLAT CHEEKBONES</div><div id="q2" class="pill"><span class="dot"></span>THIN LIPS</div><div id="q3" class="pill"><span class="dot"></span>SOFT JAWLINE</div><div id="q4" class="pill"><span class="dot"></span>SHORT CHIN</div></div></div>
+<div id="p3" class="ph clip" data-start="13.08" data-duration="7.95" data-track-index="5"><div class="hl" style="margin-top:0">Same girl,<br><em>30 minutes later</em></div>
+  <div class="grid2"><div id="k1" class="pill ok">✓ SCULPTED CHEEKS</div><div id="k2" class="pill ok">✓ FULLER LIPS</div><div id="k3" class="pill ok">✓ DEFINED JAWLINE</div><div id="k4" class="pill ok">✓ PROJECTED CHIN</div></div></div>
+<div id="p4" class="ph clip" data-start="21.03" data-duration="5.00" data-track-index="5"><div class="kick">SIDE BY SIDE</div><div class="hl">See the <em>difference</em></div></div>
+
+<!-- ƯU ĐÃI -->
+<div id="s5" class="clip offer" data-start="26.03" data-duration="10.05" data-track-index="6">
+  <div id="o-h" class="o-h">Your Christmas<br><em>glow-up</em></div>
+  <div id="seal" class="seal"><div class="a">MAXFILL · STARTING FROM</div><div class="b">₱2,999</div><div class="c">40% OFF · until Nov 30</div></div>
+  <div id="strip" class="strip"><img src="assets/qua_10k.jpg" alt=""><div><div class="s1t">+ CHRISTMAS GIFTS</div><div class="s2t">Up to ₱10,000</div><div class="s3t">Real ₱10,000 cash winner!</div></div></div>
+  <div id="cls" class="clients"><div><img src="assets/5_ba.png" alt=""></div><div><img src="assets/6_ba.png" alt=""></div><div><img src="assets/7_ba.png" alt=""></div></div>
+  <div class="cl-t">REAL MERAH CLIENTS</div>
+</div>
+<!-- CTA -->
+<div id="s6" class="clip offer" data-start="36.08" data-duration="5.21" data-track-index="6">
+  <img id="cta-logo" class="cta-logo" src="assets/logo.png" alt="MERAH Beauty">
+  <div id="cta-h" class="cta-h">Book your<br><em>glow-up</em></div>
+  <div id="cta-btn" class="btn"><span>💬</span>MESSAGE US NOW</div>
+  <div id="cta-addr" class="addr">MERAH BEAUTY · MAKATI</div>
+</div>
+<img class="clip" src="assets/logo_kem.png" alt="MERAH Beauty" data-start="0" data-duration="26.03" data-track-index="7" style="position:absolute; left:40px; top:56px; width:210px; z-index:9; filter:drop-shadow(0 2px 8px rgba(30,15,5,0.7))">
+<img class="clip" src="assets/logo_nau.png" alt="MERAH Beauty" data-start="26.03" data-duration="10.05" data-track-index="7" style="position:absolute; left:40px; top:56px; width:210px; z-index:9">
+
+<audio id="md6" class="clip" src="assets/vo1.mp3" data-start="0.10" data-duration="6.53" data-volume="1" data-track-index="10"></audio><audio id="md7" class="clip" src="assets/vo2.mp3" data-start="7.03" data-duration="5.25" data-volume="1" data-track-index="10"></audio><audio id="md8" class="clip" src="assets/vo3.mp3" data-start="13.18" data-duration="6.43" data-volume="1" data-track-index="10"></audio><audio id="md9" class="clip" src="assets/vo4.mp3" data-start="21.13" data-duration="2.27" data-volume="1" data-track-index="10"></audio><audio id="md10" class="clip" src="assets/vo5.mp3" data-start="26.13" data-duration="9.25" data-volume="1" data-track-index="10"></audio><audio id="md11" class="clip" src="assets/vo6.mp3" data-start="36.18" data-duration="4.21" data-volume="1" data-track-index="10"></audio>
+<audio id="md12" class="clip" src="assets/music.mp3" data-start="0" data-duration="41.29" data-volume="0.2" data-fade-in="0.3" data-fade-out="1.5" data-track-index="11"></audio>
+<audio id="md13" class="clip" src="assets/sfx/pop.mp3" data-start="7.23" data-duration="0.5" data-volume="0.55" data-track-index="13"></audio><audio id="md14" class="clip" src="assets/sfx/pop.mp3" data-start="8.54" data-duration="0.5" data-volume="0.55" data-track-index="14"></audio><audio id="md15" class="clip" src="assets/sfx/pop.mp3" data-start="9.86" data-duration="0.5" data-volume="0.55" data-track-index="13"></audio><audio id="md16" class="clip" src="assets/sfx/pop.mp3" data-start="11.17" data-duration="0.5" data-volume="0.55" data-track-index="14"></audio>
+<audio id="md17" class="clip" src="assets/sfx/whoosh-cinematic.mp3" data-start="12.68" data-duration="1.4" data-volume="0.5" data-track-index="12"></audio>
+<audio id="md18" class="clip" src="assets/sfx/sparkle.mp3" data-start="13.28" data-duration="1.2" data-volume="0.55" data-track-index="15"></audio>
+<audio id="md19" class="clip" src="assets/sfx/pop.mp3" data-start="14.68" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio><audio id="md20" class="clip" src="assets/sfx/pop.mp3" data-start="15.78" data-duration="0.5" data-volume="0.5" data-track-index="14"></audio><audio id="md21" class="clip" src="assets/sfx/pop.mp3" data-start="16.88" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio><audio id="md22" class="clip" src="assets/sfx/pop.mp3" data-start="17.98" data-duration="0.5" data-volume="0.5" data-track-index="14"></audio>
+<audio id="md23" class="clip" src="assets/sfx/whoosh.mp3" data-start="20.93" data-duration="0.57" data-volume="0.5" data-track-index="12"></audio>
+<audio id="md24" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="26.03" data-duration="1.0" data-volume="0.5" data-track-index="12"></audio>
+<audio id="md25" class="clip" src="assets/sfx/chime.mp3" data-start="27.03" data-duration="1.2" data-volume="0.5" data-track-index="13"></audio>
+<audio id="md26" class="clip" src="assets/sfx/sparkle.mp3" data-start="29.03" data-duration="1.2" data-volume="0.45" data-track-index="15"></audio>
+<audio id="md27" class="clip" src="assets/sfx/whoosh.mp3" data-start="35.98" data-duration="0.57" data-volume="0.45" data-track-index="12"></audio>
+<audio id="md28" class="clip" src="assets/sfx/click.mp3" data-start="37.48" data-duration="0.4" data-volume="0.6" data-track-index="13"></audio>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true }); const X = "expo.out";
+tl.fromTo("#p1 .kick", { opacity:0, y:30 }, { opacity:1, y:0, duration:0.45, ease:X }, 0.1);
+tl.fromTo("#p1 .hl", { opacity:0, y:40 }, { opacity:1, y:0, duration:0.5, ease:X }, 0.25);
+// khuyết điểm: vòng + nhãn theo lời đọc
+tl.to("#c1", { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power2.out" }, 7.23); tl.fromTo("#q1", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 7.28);tl.to("#c2", { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power2.out" }, 8.54); tl.fromTo("#q2", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 8.59);tl.to("#c3", { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power2.out" }, 9.86); tl.fromTo("#q3", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 9.91);tl.to("#c4", { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power2.out" }, 11.17); tl.fromTo("#q4", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 11.22);
+tl.fromTo("#p2 .kick", { opacity:0 }, { opacity:1, duration:0.3 }, 6.93);
+// lấy nét mờ XẤU -> ĐẸP
+tl.to("#w-st", { filter:"blur(14px)", duration:0.3, ease:"power2.in" }, 12.78);
+tl.fromTo("#w-v_aft1", { filter:"blur(14px)", scale:1.1 }, { filter:"blur(0px)", scale:1.0, duration:0.5, ease:"power2.out" }, 13.08);
+tl.fromTo("#sweep", { x:0 }, { x:1900, duration:1.2, ease:"power2.inOut" }, 13.28);
+tl.fromTo("#p3 .hl", { opacity:0, y:40 }, { opacity:1, y:0, duration:0.5, ease:X }, 13.28);
+tl.fromTo("#k1", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 14.68);tl.fromTo("#k2", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 15.78);tl.fromTo("#k3", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 16.88);tl.fromTo("#k4", { opacity:0, y:24 }, { opacity:1, y:0, duration:0.4, ease:X }, 17.98);
+// so sánh
+tl.fromTo("#hL", { x:-540 }, { x:0, duration:0.6, ease:X }, 21.03);
+tl.fromTo("#hR", { x:540 }, { x:0, duration:0.6, ease:X }, 21.03);
+tl.fromTo("#vl", { scaleY:0, transformOrigin:"50% 50%" }, { scaleY:1, duration:0.6, ease:X }, 21.33);
+tl.fromTo("#hL img, #hR img", { scale:1.0 }, { scale:1.08, duration:4.40, ease:"none" }, 21.63);
+tl.fromTo("#p4 .hl", { opacity:0, y:40 }, { opacity:1, y:0, duration:0.5, ease:X }, 21.33);
+// ưu đãi
+tl.fromTo("#o-h", { opacity:0, y:40 }, { opacity:1, y:0, duration:0.5, ease:X }, 26.13);
+tl.fromTo("#seal", { opacity:0, scale:0.6, rotation:-12 }, { opacity:1, scale:1, rotation:0, duration:0.7, ease:"back.out(1.8)" }, 26.63);
+tl.fromTo("#strip", { opacity:0, y:80 }, { opacity:1, y:0, duration:0.55, ease:X }, 28.63);
+tl.fromTo("#cls div", { opacity:0, y:60 }, { opacity:1, y:0, duration:0.5, ease:X, stagger:0.15 }, 30.03);
+// CTA
+tl.fromTo("#cta-logo", { opacity:0, y:-30 }, { opacity:1, y:0, duration:0.45, ease:X }, 36.13);
+tl.fromTo("#cta-h", { opacity:0, scale:0.85 }, { opacity:1, scale:1, duration:0.5, ease:"back.out(1.8)" }, 36.28);
+tl.fromTo("#cta-btn", { opacity:0, y:60 }, { opacity:1, y:0, duration:0.45, ease:X }, 37.08);
+tl.fromTo("#cta-addr", { opacity:0 }, { opacity:1, duration:0.4 }, 37.48);
+window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+</script></body></html>

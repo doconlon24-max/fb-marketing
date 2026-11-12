@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      /* PC08 "Khoe kết quả & So sánh" – cùng hệ thiết kế PC07 (kem/nâu/vàng, Playfair + Montserrat), bố cục khác.
+         Luật: chữ chỉ ở dải TRÊN (y < 480) hoặc dải DƯỚI (y > 1580) – không đè mặt. */
+      :root { --cream:#f6eee4; --cream2:#efe3d3; --choc:#4a2e22; --gold:#c9a46a; --gold2:#e8cfa0; --bronze1:#3b2416; --bronze2:#8a5a32; --brick:#9c4a3a; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      html, body { width:1080px; height:1920px; overflow:hidden; background:var(--cream); }
+      #root { position:relative; width:100%; height:100%; overflow:hidden; font-family:Montserrat, sans-serif; color:var(--choc); }
+      .full { position:absolute; left:0; top:0; width:1080px; height:1920px; }
+      img.full { object-fit:cover; }
+      .wrap { position:absolute; left:0; top:0; width:1080px; height:1920px; }
+      .serif { font-family:"Playfair Display", serif; }
+      .kick { display:inline-block; font-weight:700; font-size:28px; letter-spacing:0.18em; color:var(--gold2); background:rgba(59,36,22,0.85); padding:9px 22px; border-radius:40px; }
+      .big { font-family:"Playfair Display", serif; font-weight:700; color:#fff; text-shadow:0 6px 30px rgba(40,20,10,0.55); line-height:1.04; }
+      .big em { color:#ffe7b8; font-style:italic; }
+      .top-band { position:absolute; left:60px; right:60px; top:150px; text-align:center; }
+      .bot-band { position:absolute; left:60px; right:60px; top:1610px; text-align:center; }
+      .shade-top { position:absolute; left:0; top:0; width:1080px; height:620px; background:linear-gradient(180deg, rgba(40,22,12,0.85) 0%, rgba(40,22,12,0.45) 60%, rgba(40,22,12,0) 100%); }
+      .shade-bot { position:absolute; left:0; bottom:0; width:1080px; height:520px; background:linear-gradient(0deg, rgba(40,22,12,0.88) 0%, rgba(40,22,12,0.45) 60%, rgba(40,22,12,0) 100%); }
+      .pill { display:inline-flex; align-items:center; gap:12px; font-weight:700; font-size:32px; letter-spacing:0.05em; color:var(--choc); background:var(--cream); padding:10px 22px; border-radius:50px; box-shadow:0 10px 30px rgba(40,20,10,0.35); border:3px solid var(--gold); white-space:nowrap; }
+      .pill .dot { width:20px; height:20px; border-radius:50%; background:var(--brick); box-shadow:0 0 0 7px rgba(156,74,58,0.25); }
+      .row { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+      .spark { position:absolute; width:46px; height:46px; }
+      .sweep { position:absolute; left:-600px; top:-200px; width:380px; height:2400px; background:linear-gradient(90deg, rgba(255,240,210,0) 0%, rgba(255,240,210,0.5) 50%, rgba(255,240,210,0) 100%); }
+      /* so sánh 2 cột */
+      .col { position:absolute; top:0; width:540px; height:1920px; overflow:hidden; }
+      .col img { position:absolute; left:-170px; top:300px; width:880px; height:1564px; object-fit:cover; }  /* thu nhỏ để thấy trọn khuôn mặt mỗi bên */
+      .divider { position:absolute; left:535px; top:0; width:10px; height:1920px; background:linear-gradient(180deg, var(--gold2), var(--gold)); box-shadow:0 0 26px rgba(232,207,160,0.9); }
+      .tag { position:absolute; top:520px; font-weight:700; font-size:34px; letter-spacing:0.2em; padding:12px 26px; border-radius:40px; }
+      /* cơ chế: bố cục dọc */
+      .badge { position:absolute; left:90px; top:300px; width:300px; height:300px; border-radius:50%; background:linear-gradient(135deg, var(--bronze1), var(--bronze2)); display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 24px 60px rgba(74,46,34,0.35); border:6px solid var(--gold2); }
+      .badge b { font-family:"Playfair Display", serif; font-size:150px; line-height:0.9; color:#fff3d6; }
+      .badge span { font-weight:700; font-size:34px; letter-spacing:0.3em; color:var(--gold2); }
+      .mech-h { position:absolute; left:430px; right:60px; top:330px; }
+      .mech-h .t1 { font-weight:700; font-size:30px; letter-spacing:0.22em; color:var(--bronze2); }
+      .mech-h .t2 { font-family:"Playfair Display", serif; font-weight:700; font-size:78px; line-height:1.02; color:var(--choc); margin-top:12px; }
+      .mech-h .t2 em { color:var(--bronze2); }
+      .illus { position:absolute; left:90px; top:700px; width:900px; height:520px; border-radius:40px; overflow:hidden; box-shadow:0 24px 60px rgba(74,46,34,0.25); background:linear-gradient(180deg, #fbf4ea 0%, #f3e2cf 100%); }
+      .illus-tag { position:absolute; right:22px; bottom:18px; font-size:26px; font-style:italic; color:rgba(74,46,34,0.7); }
+      .chips { position:absolute; left:60px; right:60px; top:1300px; display:flex; justify-content:center; gap:18px; }
+      .chip { font-weight:700; font-size:34px; letter-spacing:0.06em; color:#fff; background:linear-gradient(90deg, var(--bronze1), var(--bronze2)); padding:16px 26px; border-radius:50px; display:flex; align-items:center; gap:12px; }
+      .chip b { display:inline-flex; width:40px; height:40px; border-radius:50%; background:var(--gold2); color:var(--bronze1); align-items:center; justify-content:center; font-size:26px; }
+      /* khách thật: băng chuyền ngang */
+      .belt { position:absolute; left:0; top:640px; height:720px; display:flex; gap:40px; padding-left:80px; }
+      .card { width:600px; height:720px; border-radius:34px; overflow:hidden; border:10px solid #fff; box-shadow:0 26px 60px rgba(74,46,34,0.3); flex:none; background:#fff; }
+      .card img { width:100%; height:100%; object-fit:cover; }
+      /* ưu đãi: vé kem */
+      .ticket { position:absolute; left:90px; top:330px; width:900px; height:1180px; border-radius:46px; background:linear-gradient(180deg, #fbf5ec 0%, #f3e6d4 100%); box-shadow:0 30px 70px rgba(30,15,5,0.45); border:4px solid var(--gold); }
+      .ticket::after { content:""; position:absolute; left:40px; right:40px; top:700px; border-top:4px dashed rgba(138,90,50,0.45); }
+      .t-x { position:absolute; left:0; right:0; top:60px; text-align:center; }
+      .xmas { display:inline-block; font-weight:700; font-size:32px; letter-spacing:0.28em; color:#fff; background:var(--brick); padding:12px 30px; border-radius:40px; }
+      .t-svc { position:absolute; left:0; right:0; top:150px; text-align:center; font-family:"Playfair Display", serif; font-weight:700; font-size:110px; color:var(--choc); }
+      .t-from { position:absolute; left:0; right:0; top:300px; text-align:center; font-weight:700; font-size:36px; letter-spacing:0.3em; color:var(--bronze2); }
+      .t-price { position:absolute; left:0; right:0; top:350px; text-align:center; font-family:"Playfair Display", serif; font-weight:700; font-size:220px; line-height:1; background:linear-gradient(180deg, #8a5a32 0%, #c9a46a 55%, #8a5a32 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+      .t-off { position:absolute; left:0; right:0; top:600px; text-align:center; } .t-off span { display:inline-block; font-weight:700; font-size:38px; color:var(--choc); border:3px solid var(--gold); padding:10px 28px; border-radius:40px; }
+      .t-gift { position:absolute; left:50px; right:50px; top:750px; height:360px; display:flex; align-items:center; gap:30px; }
+      .t-gift img { width:340px; height:330px; object-fit:cover; border-radius:26px; box-shadow:0 14px 30px rgba(74,46,34,0.3); }
+      .g1 { font-weight:700; font-size:34px; letter-spacing:0.08em; color:var(--bronze2); }
+      .g2 { font-family:"Playfair Display", serif; font-weight:700; font-size:68px; line-height:1.04; color:var(--choc); margin-top:6px; }
+      .g3 { font-weight:700; font-size:30px; color:var(--brick); margin-top:10px; }
+      .offer-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 30%, #8a5a32 0%, #5a3820 45%, #3b2416 100%); }
+      /* CTA */
+      .cta-logo { position:absolute; left:290px; top:360px; width:500px; }
+      .cta-h { position:absolute; left:0; right:0; top:700px; text-align:center; font-family:"Playfair Display", serif; font-weight:700; font-size:104px; line-height:1.05; color:var(--choc); }
+      .cta-h em { color:var(--bronze2); }
+      .btn { position:absolute; left:160px; top:1040px; width:760px; height:150px; border-radius:80px; background:linear-gradient(90deg, var(--bronze1), var(--bronze2)); display:flex; align-items:center; justify-content:center; gap:22px; font-weight:700; font-size:52px; letter-spacing:0.08em; color:#fff; box-shadow:0 20px 50px rgba(74,46,34,0.4); }
+      .addr { position:absolute; left:0; right:0; top:1240px; text-align:center; font-size:36px; letter-spacing:0.12em; color:var(--bronze2); font-weight:700; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="44.9" data-width="1080" data-height="1920">
+
+      <!-- ====== ẢNH NỀN (track 1) ====== -->
+      <div class="wrap" id="w-v0" style="transform-origin:540px 900px"><video class="clip full" src="assets/v_bef.mp4" muted playsinline data-start="0" data-duration="3.15" data-track-index="1" style="object-fit:cover"></video></div>
+      <div class="wrap" id="w-b1" style="transform-origin:540px 900px"><img class="clip full" src="assets/bef_front.png" alt="" data-start="3.15" data-duration="5.25" data-track-index="1"></div>
+      <div class="wrap" id="w-a1" style="transform-origin:540px 950px"><video class="clip full" src="assets/v_aft1.mp4" muted playsinline data-start="8.4" data-duration="3.0" data-track-index="1" style="object-fit:cover"></video></div>
+      <div class="wrap" id="w-a2" style="transform-origin:540px 900px"><video class="clip full" src="assets/v_aft2.mp4" muted playsinline data-start="11.4" data-duration="3.2" data-track-index="1" style="object-fit:cover"></video></div>
+      
+      <!-- S1 HOOK 0–3.2 : chữ dải trên -->
+      <div id="s1" class="clip full" data-start="0" data-duration="3.2" data-track-index="2" style="z-index:5">
+        <div class="shade-top"></div>
+        <div class="top-band" style="top:290px">
+          <div id="s1-k" class="kick">MAXFILL · HA COLLAGEN</div>
+          <div id="s1-a" class="big" style="margin-top:20px; font-size:76px">Is this what you see<br>in the <em>mirror?</em></div>
+        </div>
+      </div>
+
+      <!-- S2 VẤN ĐỀ 3.2–8.4 : vòng vàng trên mặt, nhãn ở dải dưới -->
+      <div id="s2" class="clip full" data-start="3.2" data-duration="5.2" data-track-index="2" style="z-index:5">
+        <div class="shade-top" style="height:460px"></div><div class="shade-bot"></div>
+        <div class="top-band" style="top:300px"><div class="kick">BEFORE · WHERE IT SHOWS</div></div>
+        <svg style="position:absolute; left:0; top:0; width:1080px; height:1920px" viewBox="0 0 1080 1920" data-layout-ignore>
+          <circle id="c1" cx="340" cy="1050" r="70" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="440" stroke-dashoffset="440" stroke-linecap="round"/>
+          <circle id="c2" cx="390" cy="1232" r="60" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round"/>
+          <circle id="c3" cx="700" cy="1385" r="78" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="491" stroke-dashoffset="491" stroke-linecap="round"/>
+          <circle id="c4" cx="500" cy="1405" r="60" fill="none" stroke="#e8cfa0" stroke-width="7" stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round"/>
+        </svg>
+        <div class="bot-band" style="top:1600px"><div class="row" style="gap:12px 14px">
+          <div id="p1" class="pill"><span class="dot"></span>UNDER-EYE HOLLOWS</div>
+          <div id="p2" class="pill"><span class="dot"></span>DEEP SMILE LINES</div>
+          <div id="p3" class="pill"><span class="dot"></span>SAGGING JOWLS</div>
+          <div id="p4" class="pill"><span class="dot"></span>SHORT CHIN</div>
+        </div></div>
+      </div>
+
+      <!-- S3 KẾT QUẢ – GIỮ LÂU 8.4–14.6 : chữ dải trên nhỏ, dải dưới lợi ích -->
+      <div id="s3" class="clip full" data-start="8.4" data-duration="6.2" data-track-index="2" style="z-index:5" data-layout-allow-overflow>
+        <div class="shade-top" style="height:500px"></div>
+        <div id="sweep" class="sweep"></div>
+        <div class="top-band" style="top:290px"><div id="g-h" class="big" style="font-size:80px">Hello, <em>new glow!</em></div></div>
+        <div class="shade-bot" style="height:420px"></div>
+        <div class="bot-band" style="top:1680px"><div class="row">
+          <div id="b1" class="pill">LIFTED</div><div id="b2" class="pill">FULLER</div><div id="b3" class="pill">GLOWING</div>
+        </div></div>
+        <svg class="spark sp" style="left:170px; top:520px" viewBox="0 0 46 46"><path d="M23 0 L27 19 L46 23 L27 27 L23 46 L19 27 L0 23 L19 19 Z" fill="#fff3d6"/></svg>
+        <svg class="spark sp" style="left:860px; top:600px" viewBox="0 0 46 46"><path d="M23 0 L27 19 L46 23 L27 27 L23 46 L19 27 L0 23 L19 19 Z" fill="#e8cfa0"/></svg>
+        <svg class="spark sp" style="left:780px; top:470px" viewBox="0 0 46 46"><path d="M23 0 L27 19 L46 23 L27 27 L23 46 L19 27 L0 23 L19 19 Z" fill="#fff3d6"/></svg>
+      </div>
+
+      <!-- S4 SO SÁNH 2 CỘT 14.6–19.6 -->
+      <div id="s4" class="clip full" data-start="14.6" data-duration="5.0" data-track-index="2" style="z-index:5; background:#3b2416">
+        <div id="colL" class="col" style="left:0"><img id="cmpLimg" src="assets/bef_front.png" alt="" style="position:absolute; left:-170px; top:300px; width:880px; height:1564px; object-fit:cover"></div>
+        <div id="colR" class="col" style="left:540px"><video class="clip" src="assets/v_cmpR.mp4" muted playsinline data-start="14.6" data-duration="5.0" data-track-index="3" style="position:absolute; left:-170px; top:300px; width:880px; height:1564px; object-fit:cover"></video></div>
+        <div id="dv" class="divider"></div>
+        <div class="shade-top" style="height:300px"></div><div class="shade-bot" style="height:420px"></div>
+        <div class="tag" style="left:40px; top:240px; color:#fff; background:rgba(59,36,22,0.88)">BEFORE</div>
+        <div class="tag" style="right:40px; top:240px; color:#3b2416; background:linear-gradient(90deg,#c9a46a,#e8cfa0)">AFTER</div>
+        <div class="top-band" style="top:360px"><div id="cmp-h" class="big" style="font-size:76px">See the <em>difference</em></div></div>
+        <div class="bot-band" style="top:1600px"><div class="row" style="gap:12px 14px">
+          <div id="f1" class="pill">✓ BRIGHTER UNDER-EYES</div><div id="f2" class="pill">✓ SOFTER SMILE LINES</div>
+          <div id="f3" class="pill">✓ LIFTED JAWLINE</div><div id="f4" class="pill">✓ DEFINED CHIN</div>
+        </div></div>
+      </div>
+
+      <!-- S5 CƠ CHẾ 19.6–29.3 : huy hiệu tròn + tiêu đề trái + minh hoạ + 3 chip -->
+      <div id="s5" class="clip full" data-start="19.6" data-duration="9.7" data-track-index="2" style="z-index:5; background:radial-gradient(ellipse at 50% 20%, #fbf5ec 0%, #f6eee4 50%, #efe3d3 100%)">
+        <div id="m-badge" class="badge"><b id="m-count">30</b><span>MIN</span></div>
+        <div id="m-h" class="mech-h"><div class="t1">MAXFILL AT MERAH</div><div class="t2">HA collagen<br><em>restores volume</em></div></div>
+        <div id="illus" class="illus">
+          <svg width="900" height="520" viewBox="0 0 900 520">
+            <defs>
+              <linearGradient id="gDerm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2cdb4"/><stop offset="1" stop-color="#e3a98a"/></linearGradient>
+              <linearGradient id="gEpi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e2cf"/><stop offset="1" stop-color="#efcdb2"/></linearGradient>
+              <radialGradient id="gDrop" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="#fff6dd"/><stop offset="0.5" stop-color="#e8cfa0"/><stop offset="1" stop-color="#c9a46a"/></radialGradient>
+            </defs>
+            <rect x="0" y="280" width="900" height="240" fill="url(#gDerm)"/>
+            <path id="epi" d="M0 190 C 150 190, 300 190, 380 220 C 420 290, 480 290, 520 220 C 600 190, 750 190, 900 190 L 900 290 L 0 290 Z" fill="url(#gEpi)"/>
+            <g stroke="#c98f6d" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.6">
+              <path class="fib" d="M30 360 C 120 330, 200 390, 290 360 S 470 330, 560 360 S 760 390, 870 360"/>
+              <path class="fib" d="M30 420 C 140 390, 230 450, 330 420 S 520 390, 620 420 S 790 450, 870 420"/>
+              <path class="fib" d="M30 475 C 110 445, 210 505, 300 475 S 480 445, 580 475 S 770 505, 870 475"/>
+            </g>
+            <g>
+              <circle class="drop" cx="420" cy="310" r="20" fill="url(#gDrop)"/><circle class="drop" cx="470" cy="330" r="16" fill="url(#gDrop)"/>
+              <circle class="drop" cx="380" cy="345" r="14" fill="url(#gDrop)"/><circle class="drop" cx="510" cy="300" r="13" fill="url(#gDrop)"/>
+              <circle class="drop" cx="450" cy="375" r="18" fill="url(#gDrop)"/><circle class="drop" cx="350" cy="310" r="11" fill="url(#gDrop)"/>
+            </g>
+            <text id="lblVol" x="450" y="130" text-anchor="middle" font-family="Montserrat" font-weight="700" font-size="32" letter-spacing="4" fill="#8a5a32">LOST VOLUME</text>
+          </svg>
+          <div class="illus-tag">Illustration</div>
+        </div>
+        <div class="chips">
+          <div id="k1" class="chip"><b>✓</b>FIRMER</div><div id="k2" class="chip"><b>✓</b>SMOOTHER</div><div id="k3" class="chip"><b>✓</b>YOUNGER</div>
+        </div>
+      </div>
+
+      <!-- S6 KHÁCH THẬT 29.3–33.0 : băng chuyền ngang -->
+      <div id="s6" class="clip full" data-start="29.3" data-duration="3.7" data-track-index="2" style="z-index:5; background:radial-gradient(ellipse at 50% 30%, #fbf5ec 0%, #f6eee4 55%, #efe3d3 100%)">
+        <div class="top-band" style="top:330px"><div class="kick" style="background:var(--choc)">REAL MERAH CLIENTS</div>
+          <div class="serif" style="font-weight:700; font-size:80px; margin-top:24px">They love <em style="color:var(--bronze2)">their results</em></div></div>
+        <div id="belt" class="belt">
+          <div class="card"><img src="assets/5_ba.png" alt=""></div><div class="card"><img src="assets/6_ba.png" alt=""></div><div class="card"><img src="assets/7_ba.png" alt=""></div>
+        </div>
+      </div>
+
+      <!-- S7 ƯU ĐÃI 33.0–41.1 : vé kem trên nền đồng -->
+      <div id="s7" class="clip full" data-start="33.0" data-duration="8.1" data-track-index="2" style="z-index:5" data-layout-allow-overflow>
+        <div class="offer-bg"></div>
+        <div id="ticket" class="ticket">
+          <div class="t-x"><div id="o-x" class="xmas">CHRISTMAS DEAL</div></div>
+          <div id="o-svc" class="t-svc">MAXFILL</div>
+          <div id="o-from" class="t-from">STARTING FROM</div>
+          <div id="o-price" class="t-price">₱2,999</div>
+          <div id="o-off" class="t-off"><span>40% OFF · until Nov 30</span></div>
+          <div id="o-gift" class="t-gift"><img src="assets/qua_10k.jpg" alt=""><div><div class="g1">+ CHRISTMAS GIFTS</div><div class="g2">Up to<br>₱10,000</div><div class="g3">Real ₱10,000 cash winner!</div></div></div>
+        </div>
+      </div>
+
+      <!-- S8 CTA 41.1–44.9 -->
+      <div id="s8" class="clip full" data-start="41.1" data-duration="3.8" data-track-index="2" style="z-index:5; background:radial-gradient(ellipse at 50% 35%, #fbf5ec 0%, #f6eee4 55%, #efe3d3 100%)">
+        <img id="cta-logo" class="cta-logo" src="assets/logo.png" alt="MERAH Beauty">
+        <div id="cta-h" class="cta-h">Gifts are<br><em>limited!</em></div>
+        <div id="cta-btn" class="btn"><span>💬</span>MESSAGE US NOW</div>
+        <div id="cta-addr" class="addr">MERAH BEAUTY · MAKATI</div>
+      </div>
+
+      <!-- LOGO góc trái trên -->
+      <img class="clip" src="assets/logo_kem.png" alt="MERAH Beauty" data-start="0" data-duration="19.6" data-track-index="4" style="position:absolute; left:40px; top:60px; width:220px; z-index:9; filter:drop-shadow(0 2px 6px rgba(30,15,5,0.55))">
+      <img class="clip" src="assets/logo_nau.png" alt="MERAH Beauty" data-start="19.6" data-duration="13.4" data-track-index="4" style="position:absolute; left:40px; top:60px; width:220px; z-index:9">
+      <img class="clip" src="assets/logo_kem.png" alt="MERAH Beauty" data-start="33.0" data-duration="8.1" data-track-index="4" style="position:absolute; left:40px; top:60px; width:220px; z-index:9">
+
+      <!-- ÂM THANH -->
+      <audio class="clip" src="assets/vo1.mp3" data-start="0.1" data-duration="3.08" data-volume="1" data-track-index="10"></audio>
+            <audio class="clip" src="assets/vo4.mp3" data-start="8.6" data-duration="1.65" data-volume="1" data-track-index="10"></audio>
+      <audio class="clip" src="assets/vo5.mp3" data-start="15.0" data-duration="1.72" data-volume="1" data-track-index="10"></audio>
+      <audio class="clip" src="assets/vo3.mp3" data-start="19.7" data-duration="9.56" data-volume="1" data-track-index="10"></audio>
+      <audio class="clip" src="assets/vo6.mp3" data-start="29.35" data-duration="3.63" data-volume="1" data-track-index="10"></audio>
+      <audio class="clip" src="assets/vo7.mp3" data-start="33.05" data-duration="8.05" data-volume="1" data-track-index="10"></audio>
+      <audio class="clip" src="assets/vo8.mp3" data-start="41.15" data-duration="3.63" data-volume="1" data-track-index="10"></audio>
+      <audio class="clip" src="assets/music.mp3" data-start="0" data-duration="44.9" data-volume="0.22" data-fade-in="0.3" data-fade-out="1.5" data-track-index="11"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="3.45" data-duration="0.5" data-volume="0.6" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="4.55" data-duration="0.5" data-volume="0.6" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="5.65" data-duration="0.5" data-volume="0.6" data-track-index="15"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="6.75" data-duration="0.5" data-volume="0.6" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/whoosh-cinematic.mp3" data-start="8.0" data-duration="1.4" data-volume="0.5" data-track-index="12"></audio>
+      <audio class="clip" src="assets/sfx/sparkle.mp3" data-start="8.6" data-duration="1.2" data-volume="0.6" data-track-index="14"></audio>
+      <audio class="clip" src="assets/sfx/whoosh-short.mp3" data-start="11.35" data-duration="0.57" data-volume="0.4" data-track-index="12"></audio>
+            <audio class="clip" src="assets/sfx/chime.mp3" data-start="11.2" data-duration="1.2" data-volume="0.45" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/whoosh.mp3" data-start="14.5" data-duration="0.57" data-volume="0.5" data-track-index="12"></audio>
+      <audio class="clip" src="assets/sfx/chime.mp3" data-start="15.65" data-duration="1.2" data-volume="0.4" data-track-index="15"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="16.35" data-duration="0.5" data-volume="0.5" data-track-index="16"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="17.05" data-duration="0.5" data-volume="0.5" data-track-index="16"></audio>
+      <audio class="clip" src="assets/sfx/sparkle.mp3" data-start="17.75" data-duration="1.2" data-volume="0.45" data-track-index="16"></audio>
+      <audio class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="19.65" data-duration="1.0" data-volume="0.45" data-track-index="14"></audio>
+      <audio class="clip" src="assets/sfx/sparkle.mp3" data-start="22.8" data-duration="1.2" data-volume="0.45" data-track-index="14"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="25.6" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="26.4" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/pop.mp3" data-start="27.2" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/whoosh.mp3" data-start="29.25" data-duration="0.57" data-volume="0.45" data-track-index="12"></audio>
+      <audio class="clip" src="assets/sfx/riser.mp3" data-start="31.6" data-duration="1.4" data-volume="0.4" data-track-index="14"></audio>
+      <audio class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="33.0" data-duration="1.0" data-volume="0.5" data-track-index="12"></audio>
+      <audio class="clip" src="assets/sfx/chime.mp3" data-start="34.3" data-duration="1.2" data-volume="0.55" data-track-index="13"></audio>
+      <audio class="clip" src="assets/sfx/sparkle.mp3" data-start="37.0" data-duration="1.2" data-volume="0.5" data-track-index="14"></audio>
+      <audio class="clip" src="assets/sfx/whoosh.mp3" data-start="41.0" data-duration="0.57" data-volume="0.45" data-track-index="12"></audio>
+      <audio class="clip" src="assets/sfx/click.mp3" data-start="42.6" data-duration="0.4" data-volume="0.6" data-track-index="13"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const E = "power3.out";
+      // nền ảnh: đẩy cận đều
+      tl.set("#w-b1", { scale: 1.05 }, 3.15);  // dừng hình để phân tích: vòng khoanh khớp đúng vị trí trên mặt
+      // BEFORE -> AFTER: lấy nét mờ (rack-focus), cắt ở đỉnh mờ
+      tl.to("#w-b1", { filter: "blur(14px)", duration: 0.3, ease: "power2.in" }, 8.1);
+      tl.fromTo("#w-a1", { scale: 1.12, filter: "blur(14px)" }, { scale: 1.0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }, 8.4);
+      
+      
+      
+      // S1
+      tl.fromTo("#s1-k", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.1);
+      tl.fromTo("#s1-a", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.25);
+      // S2 vòng + nhãn lần lượt
+      [["#c1","#p1",3.4],["#c2","#p2",4.5],["#c3","#p3",5.6],["#c4","#p4",6.7]].forEach(([c,p,t]) => {
+        tl.to(c, { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power2.out" }, t);
+        tl.fromTo(p, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, t + 0.1);
+      });
+      // S3 glow
+      tl.fromTo("#g-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 8.6);
+      tl.fromTo("#sweep", { x: 0 }, { x: 2100, duration: 1.1, ease: "power2.inOut" }, 8.7);
+      tl.fromTo(".sp", { opacity: 0, scale: 0, rotation: -60, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1.2, rotation: 0, duration: 0.45, ease: "back.out(3)", stagger: 0.15 }, 8.8);
+      [["#b1",11.0],["#b2",11.4],["#b3",11.8]].forEach(([b,t]) => tl.fromTo(b, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, t));
+      // S4 so sánh: 2 cột trượt vào, giữ lâu, đẩy cận chậm
+      tl.fromTo("#colL", { x: -540 }, { x: 0, duration: 0.6, ease: "expo.out" }, 14.6);
+      tl.fromTo("#colR", { x: 540 }, { x: 0, duration: 0.6, ease: "expo.out" }, 14.6);
+      tl.fromTo("#dv", { scaleY: 0, transformOrigin: "50% 50%" }, { scaleY: 1, duration: 0.6, ease: "expo.out" }, 14.9);
+      
+      tl.fromTo("#cmp-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 15.1);
+      tl.fromTo("#cmpLimg", { scale: 1.0 }, { scale: 1.06, duration: 4.4, ease: "none" }, 15.2);
+      [["#f1",15.6],["#f2",16.3],["#f3",17.0],["#f4",17.7]].forEach(([f,t]) => tl.fromTo(f, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, t));
+      // S5 cơ chế
+      tl.fromTo("#m-badge", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(2)" }, 19.7);
+      tl.fromTo("#m-h", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 20.0);
+      tl.fromTo("#illus", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.55, ease: "expo.out" }, 20.4);
+      tl.fromTo(".drop", { opacity: 0, y: -240 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.in", stagger: 0.12 }, 22.6);
+      tl.to("#epi", { attr: { d: "M0 190 C 150 190, 300 190, 380 190 C 420 190, 480 190, 520 190 C 600 190, 750 190, 900 190 L 900 290 L 0 290 Z" }, duration: 1.8, ease: "power2.inOut" }, 23.4);
+      tl.to("#lblVol", { opacity: 0, duration: 0.3 }, 23.2);
+      tl.fromTo(".fib", { opacity: 0.4 }, { opacity: 1, stroke: "#c9a46a", duration: 1.2, stagger: 0.2 }, 23.6);
+      [["#k1",25.6],["#k2",26.4],["#k3",27.2]].forEach(([k,t]) => tl.fromTo(k, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, t));
+      // S6 băng chuyền trượt sang trái
+      tl.fromTo("#belt", { x: 300 }, { x: -1000, duration: 3.7, ease: "none" }, 29.3);
+      // S7 ưu đãi
+      tl.fromTo("#ticket", { opacity: 0, y: 160 }, { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 33.05);
+      tl.fromTo("#o-x", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: E }, 33.4);
+      tl.fromTo("#o-svc", { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power4.out" }, 33.6);
+      tl.fromTo("#o-from", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 34.1);
+      tl.fromTo("#o-price", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(2)" }, 34.4);
+      tl.fromTo("#o-off", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: E }, 35.3);
+      tl.fromTo("#o-gift", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.55, ease: "back.out(1.4)" }, 37.0);
+      // S8 CTA
+      tl.fromTo("#cta-logo", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.45, ease: E }, 41.15);
+      tl.fromTo("#cta-h", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.8)" }, 41.3);
+      tl.fromTo("#cta-btn", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.45, ease: E }, 42.2);
+      tl.fromTo("#cta-addr", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 42.6);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

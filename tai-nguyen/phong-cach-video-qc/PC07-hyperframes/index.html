@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --cream: #f6eee4;
+        --cream2: #efe3d3;
+        --choc: #4a2e22;
+        --gold: #c9a46a;
+        --gold2: #e8cfa0;
+        --bronze1: #3b2416;
+        --bronze2: #8a5a32;
+        --brick: #9c4a3a;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, sans-serif; color: var(--choc); }
+      .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      video.full, img.full { object-fit: cover; }
+      .wrap { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      .bg { position: absolute; inset: 0; }
+      .serif { font-family: "Playfair Display", serif; }
+      .h-top { position: absolute; left: 70px; right: 70px; top: 330px; text-align: center; }
+      .kick { display: inline-block; font-weight: 700; font-size: 28px; letter-spacing: 0.18em; color: var(--gold2); background: rgba(59,36,22,0.82); padding: 9px 20px; border-radius: 40px; }
+      .big { font-family: "Playfair Display", serif; font-weight: 700; font-size: 92px; line-height: 1.02; color: #fff; text-shadow: 0 6px 30px rgba(40,20,10,0.55); }
+      .big em { color: #ffe7b8; font-style: italic; }
+      .shade-top { position: absolute; left: 0; top: 0; width: 1080px; height: 760px; background: linear-gradient(180deg, rgba(40,22,12,0.78) 0%, rgba(40,22,12,0.35) 55%, rgba(40,22,12,0) 100%); }
+      .shade-bot { position: absolute; left: 0; bottom: 0; width: 1080px; height: 900px; background: linear-gradient(0deg, rgba(40,22,12,0.75) 0%, rgba(40,22,12,0.25) 50%, rgba(40,22,12,0) 100%); }
+      .disc { position: absolute; left: 0; right: 0; top: 1290px; text-align: center; } .disc::before{content:none} .disc { font-size: 28px; color: #fff; letter-spacing: 0.04em; } .disc { width: max-content; margin: 0 auto; background: rgba(40,22,12,0.7); padding: 6px 20px; border-radius: 20px; }
+      .pill { position: absolute; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 38px; letter-spacing: 0.05em; color: var(--choc); background: var(--cream); padding: 10px 22px; border-radius: 50px; box-shadow: 0 10px 30px rgba(40,20,10,0.35); border: 3px solid var(--gold); white-space: nowrap; }
+      .pill .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--brick); box-shadow: 0 0 0 8px rgba(156,74,58,0.25); }
+      .cap { position: absolute; left: 90px; right: 90px; top: 1150px; text-align: center; }
+      .cap span { display: inline-block; font-weight: 700; font-size: 40px; line-height: 1.2; color: #fff; background: rgba(59,36,22,0.86); padding: 8px 20px; border-radius: 18px; }
+      .cap.light span { background: rgba(74,46,34,0.92); }
+      /* mechanism */
+      .mech-title { position: absolute; left: 0; right: 0; top: 310px; text-align: center; }
+      .mech-num { font-family: "Playfair Display", serif; font-weight: 700; font-size: 210px; line-height: 1; color: var(--choc); }
+      .mech-num small { font-size: 70px; color: var(--bronze2); font-style: italic; margin-left: 12px; }
+      .mech-sub { font-weight: 700; font-size: 40px; letter-spacing: 0.24em; color: var(--bronze2); margin-top: 10px; }
+      .illus { position: absolute; left: 90px; top: 630px; width: 900px; height: 560px; border-radius: 40px; overflow: hidden; box-shadow: 0 24px 60px rgba(74,46,34,0.25); background: linear-gradient(180deg, #fbf4ea 0%, #f3e2cf 100%); }
+      .illus-tag { position: absolute; right: 22px; bottom: 18px; font-size: 28px; font-style: italic; color: rgba(74,46,34,0.75); }
+      .checks { position: absolute; left: 190px; top: 1230px; width: 780px; }
+      .check { display: flex; align-items: center; gap: 24px; font-weight: 700; font-size: 50px; letter-spacing: 0.08em; color: var(--choc); margin-bottom: 26px; }
+      .check b { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #fff; font-size: 40px; }
+      /* glow */
+      .sweep { position: absolute; left: -600px; top: -200px; width: 380px; height: 2400px; background: linear-gradient(90deg, rgba(255,240,210,0) 0%, rgba(255,240,210,0.55) 50%, rgba(255,240,210,0) 100%); }
+      .spark { position: absolute; width: 46px; height: 46px; }
+      /* BA */
+      .ba-bar { position: absolute; top: 0; width: 10px; height: 1920px; background: linear-gradient(180deg, var(--gold2), var(--gold)); box-shadow: 0 0 24px rgba(232,207,160,0.9); }
+      .tag { position: absolute; top: 340px; font-weight: 700; font-size: 38px; letter-spacing: 0.2em; color: #fff; padding: 14px 30px; border-radius: 40px; }
+      /* clients */
+      .cl-title { position: absolute; left: 0; right: 0; top: 330px; text-align: center; }
+      .card { position: absolute; width: 560px; height: 560px; border-radius: 30px; overflow: hidden; border: 10px solid #fff; box-shadow: 0 26px 60px rgba(74,46,34,0.35); }
+      .card img { width: 100%; height: 100%; object-fit: cover; }
+      /* offer */
+      .offer-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 30%, #8a5a32 0%, #5a3820 45%, #3b2416 100%); }
+      .offer-top { position: absolute; left: 0; right: 0; top: 320px; text-align: center; }
+      .xmas { display: inline-block; font-weight: 700; font-size: 34px; letter-spacing: 0.28em; color: var(--bronze1); background: linear-gradient(90deg, var(--gold), var(--gold2)); padding: 14px 34px; border-radius: 40px; }
+      .svc { font-family: "Playfair Display", serif; font-weight: 700; font-size: 120px; color: #fff; margin-top: 34px; letter-spacing: 0.04em; }
+      .from { font-weight: 700; font-size: 38px; letter-spacing: 0.3em; color: var(--gold2); margin-top: 18px; }
+      .price { font-family: "Playfair Display", serif; font-weight: 700; font-size: 230px; line-height: 1; background: linear-gradient(180deg, #fff3d6 0%, #e8cfa0 45%, #c9a46a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; margin-top: 6px; }
+      .off { display: inline-block; font-weight: 700; font-size: 40px; color: #fff; border: 3px solid var(--gold2); padding: 12px 30px; border-radius: 40px; margin-top: 18px; }
+      .gift { position: absolute; left: 110px; top: 1110px; width: 860px; height: 300px; border-radius: 30px; background: rgba(246,238,228,0.97); display: flex; align-items: center; gap: 30px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.35); }
+      .gift img { width: 300px; height: 252px; object-fit: cover; border-radius: 20px; }
+      .gift-t1 { font-weight: 700; font-size: 36px; letter-spacing: 0.08em; color: var(--bronze2); }
+      .gift-t2 { font-family: "Playfair Display", serif; font-weight: 700; font-size: 66px; line-height: 1.05; color: var(--choc); margin-top: 6px; }
+      .gift-t3 { font-weight: 700; font-size: 30px; color: var(--brick); margin-top: 10px; }
+      /* cta */
+      .cta-logo { position: absolute; left: 290px; top: 330px; width: 500px; }
+      .cta-h { position: absolute; left: 0; right: 0; top: 660px; text-align: center; font-family: "Playfair Display", serif; font-weight: 700; font-size: 104px; line-height: 1.05; color: var(--choc); }
+      .cta-h em { color: var(--bronze2); }
+      .btn { position: absolute; left: 160px; top: 1000px; width: 760px; height: 150px; border-radius: 80px; background: linear-gradient(90deg, var(--bronze1), var(--bronze2)); display: flex; align-items: center; justify-content: center; gap: 22px; font-weight: 700; font-size: 52px; letter-spacing: 0.08em; color: #fff; box-shadow: 0 20px 50px rgba(74,46,34,0.4); }
+      .addr { position: absolute; left: 0; right: 0; top: 1200px; text-align: center; font-size: 36px; letter-spacing: 0.12em; color: var(--bronze2); font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="36.4" data-width="1080" data-height="1920">
+
+      <!-- ================= S1 HOOK 0–3.1 ================= -->
+      <div class="wrap" id="w-h1" style="transform-origin:540px 800px; z-index:1">
+        <img id="i-h1" class="clip full" src="assets/bef_front.png" alt="" data-start="0" data-duration="1.55" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-h2" style="transform-origin:540px 760px; z-index:1">
+        <img id="i-h2" class="clip full" src="assets/bef_front.png" alt="" data-start="1.55" data-duration="1.55" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-pa" style="transform-origin:756px 891px; z-index:1">
+        <img id="i-pa" class="clip full" src="assets/bef_hands.png" alt="" data-start="3.1" data-duration="1.15" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-pb" style="transform-origin:520px 1400px; z-index:1">
+        <img id="i-pb" class="clip full" src="assets/bef_side.png" alt="" data-start="4.25" data-duration="1.55" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-pc" style="transform-origin:675px 1200px; z-index:1">
+        <img id="i-pc" class="clip full" src="assets/bef_side2.png" alt="" data-start="5.8" data-duration="1.9" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-g1" style="transform-origin:540px 900px; z-index:1">
+        <img id="i-g1" class="clip full" src="assets/aft_front.png" alt="" data-start="17.3" data-duration="0.75" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-g2" style="transform-origin:540px 760px; z-index:1">
+        <img id="i-g2" class="clip full" src="assets/mirror.png" alt="" data-start="18.05" data-duration="0.75" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-bef" style="transform-origin:540px 960px; z-index:1">
+        <img id="i-bef" class="clip full" src="assets/bef_hands.png" alt="" data-start="18.8" data-duration="1.9" data-track-index="1" style="z-index:1">
+      </div>
+      <div class="wrap" id="w-aft" style="transform-origin:540px 960px; z-index:2">
+        <img id="i-aft" class="clip full" src="assets/aft_front.png" alt="" data-start="18.8" data-duration="1.9" data-track-index="1" style="z-index:2">
+      </div>
+      <div id="s1" class="clip full" data-start="0" data-duration="3.1" data-track-index="2" style="z-index:5">
+        <div class="shade-bot"></div>
+        <div class="h-top" style="top:1330px">
+          <div id="s1-k" class="kick">MAXFILL · HA COLLAGEN</div>
+          <div id="s1-a" class="big" style="margin-top:22px; font-size:84px">Is this what you see<br>in the <em>mirror?</em></div>
+        </div>
+      </div>
+
+      <!-- ================= S2 PROBLEMS 3.1–7.7 ================= -->
+      <div id="s2" class="clip full" data-start="3.1" data-duration="4.6" data-track-index="2" style="z-index:5">
+        <div class="shade-top" style="height:520px"></div><div class="shade-bot" style="height:620px"></div>
+        <div class="h-top" style="top:330px"><div class="kick">THE SIGNS OF LOST VOLUME</div></div>
+        <div id="g-a"><svg style="position:absolute; left:0; top:0; width:1080px; height:1920px" viewBox="0 0 1080 1920" data-layout-ignore><line x1="735" y1="1190" x2="540" y2="1470" stroke="#e8cfa0" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round"/></svg><svg id="r-a" style="position:absolute; left:585px; top:900px; width:300px; height:300px" viewBox="0 0 300 300"><circle cx="150" cy="150" r="140" fill="none" stroke="#e8cfa0" stroke-width="8" stroke-dasharray="880" stroke-dashoffset="880" stroke-linecap="round"/></svg><div style="position:absolute; left:0; right:0; top:1470px; display:flex; justify-content:center"><div id="p-a" class="pill" style="position:relative"><span class="dot"></span>FLAT CHEEKS</div></div></div>
+        <div id="g-b" style="opacity:0"><svg style="position:absolute; left:0; top:0; width:1080px; height:1920px" viewBox="0 0 1080 1920" data-layout-ignore><line x1="448" y1="1365" x2="540" y2="1470" stroke="#e8cfa0" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round"/></svg><svg id="r-b" style="position:absolute; left:288px; top:1055px; width:320px; height:320px" viewBox="0 0 320 320"><circle cx="160" cy="160" r="150" fill="none" stroke="#e8cfa0" stroke-width="8" stroke-dasharray="943" stroke-dashoffset="943" stroke-linecap="round"/></svg><div style="position:absolute; left:0; right:0; top:1470px; display:flex; justify-content:center"><div id="p-b" class="pill" style="position:relative"><span class="dot"></span>SOFT JAWLINE</div></div></div>
+        <div id="g-c" style="opacity:0"><svg style="position:absolute; left:0; top:0; width:1080px; height:1920px" viewBox="0 0 1080 1920" data-layout-ignore><line x1="655" y1="1340" x2="540" y2="1470" stroke="#e8cfa0" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round"/></svg><svg id="r-c" style="position:absolute; left:525px; top:1090px; width:260px; height:260px" viewBox="0 0 260 260"><circle cx="130" cy="130" r="120" fill="none" stroke="#e8cfa0" stroke-width="8" stroke-dasharray="754" stroke-dashoffset="754" stroke-linecap="round"/></svg><div style="position:absolute; left:0; right:0; top:1470px; display:flex; justify-content:center"><div id="p-c" class="pill" style="position:relative"><span class="dot"></span>UNDEFINED CHIN</div></div></div>
+      </div>
+
+      <!-- ================= S3 MECHANISM 7.7–17.3 ================= -->
+      <div id="s3" class="clip full" data-start="7.7" data-duration="9.6" data-track-index="2" style="z-index:5; background: radial-gradient(ellipse at 50% 20%, #fbf5ec 0%, #f6eee4 50%, #efe3d3 100%)">
+        <div class="mech-title">
+          <div id="m-num" class="mech-num"><span id="m-count">30</span><small>min</small></div>
+          <div id="m-sub" class="mech-sub">MAXFILL · HA COLLAGEN</div>
+        </div>
+        <div id="illus" class="illus">
+          <svg width="900" height="560" viewBox="0 0 900 560">
+            <defs>
+              <linearGradient id="gDerm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2cdb4"/><stop offset="1" stop-color="#e3a98a"/></linearGradient>
+              <linearGradient id="gEpi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e2cf"/><stop offset="1" stop-color="#efcdb2"/></linearGradient>
+              <radialGradient id="gDrop" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="#fff6dd"/><stop offset="0.5" stop-color="#e8cfa0"/><stop offset="1" stop-color="#c9a46a"/></radialGradient>
+            </defs>
+            <rect x="0" y="300" width="900" height="260" fill="url(#gDerm)"/>
+            <g id="skinTop">
+              <path id="epi" d="M0 200 C 150 200, 300 200, 380 230 C 420 300, 480 300, 520 230 C 600 200, 750 200, 900 200 L 900 310 L 0 310 Z" fill="url(#gEpi)"/>
+            </g>
+            <g id="fibers" stroke="#c98f6d" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.55">
+              <path class="fib" d="M30 380 C 120 350, 200 410, 290 380 S 470 350, 560 380 S 760 410, 870 380"/>
+              <path class="fib" d="M30 440 C 140 410, 230 470, 330 440 S 520 410, 620 440 S 790 470, 870 440"/>
+              <path class="fib" d="M30 500 C 110 470, 210 530, 300 500 S 480 470, 580 500 S 770 530, 870 500"/>
+            </g>
+            <g id="drops">
+              <circle class="drop" cx="420" cy="330" r="20" fill="url(#gDrop)"/>
+              <circle class="drop" cx="470" cy="350" r="16" fill="url(#gDrop)"/>
+              <circle class="drop" cx="380" cy="365" r="14" fill="url(#gDrop)"/>
+              <circle class="drop" cx="510" cy="320" r="13" fill="url(#gDrop)"/>
+              <circle class="drop" cx="450" cy="395" r="18" fill="url(#gDrop)"/>
+              <circle class="drop" cx="350" cy="330" r="11" fill="url(#gDrop)"/>
+              <circle class="drop" cx="540" cy="370" r="12" fill="url(#gDrop)"/>
+            </g>
+            <g id="glowRing" opacity="0"><ellipse cx="450" cy="360" rx="260" ry="90" fill="none" stroke="#e8cfa0" stroke-width="4" stroke-dasharray="10 14"/></g>
+            <text id="lblVol" x="450" y="150" text-anchor="middle" font-family="Montserrat" font-weight="700" font-size="34" letter-spacing="4" fill="#8a5a32">LOST VOLUME</text>
+          </svg>
+          <div class="illus-tag">Illustration</div>
+        </div>
+        <img src="assets/logo.png" alt="" style="position:absolute; left:400px; top:1560px; width:280px; opacity:0.55">
+        <div class="checks">
+          <div id="ck1" class="check"><b>✓</b>FIRMER</div>
+          <div id="ck2" class="check"><b>✓</b>SMOOTHER</div>
+          <div id="ck3" class="check"><b>✓</b>YOUNGER-LOOKING</div>
+        </div>
+      </div>
+
+      <!-- ================= S4 GLOW 17.3–18.8 ================= -->
+      <div id="s4" class="clip full" data-start="17.3" data-duration="1.5" data-track-index="2" style="z-index:5" data-layout-allow-overflow>
+        <div class="shade-top" style="height:560px"></div>
+        <div id="sweep" class="sweep"></div>
+        <div class="shade-bot" style="height:700px"></div><div class="h-top" style="top:1420px"><div id="g-h" class="big">Hello, <em>new glow!</em></div></div>
+        <svg id="sp1" class="spark" style="left:250px; top:560px" viewBox="0 0 46 46"><path d="M23 0 L27 19 L46 23 L27 27 L23 46 L19 27 L0 23 L19 19 Z" fill="#fff3d6"/></svg>
+        <svg id="sp2" class="spark" style="left:790px; top:700px" viewBox="0 0 46 46"><path d="M23 0 L27 19 L46 23 L27 27 L23 46 L19 27 L0 23 L19 19 Z" fill="#e8cfa0"/></svg>
+        <svg id="sp3" class="spark" style="left:700px; top:470px" viewBox="0 0 46 46"><path d="M23 0 L27 19 L46 23 L27 27 L23 46 L19 27 L0 23 L19 19 Z" fill="#fff3d6"/></svg>
+      </div>
+
+      <!-- ================= S5 BEFORE/AFTER 18.8–20.7 ================= -->
+      <div id="s5" class="clip full" data-start="18.8" data-duration="1.9" data-track-index="2" style="z-index:5">
+        <div id="ba-bar" class="ba-bar" style="left:1080px"></div>
+        <div class="tag" style="left:60px; background:rgba(59,36,22,0.85)">BEFORE</div>
+        <div id="t-aft" class="tag" style="right:60px; background:linear-gradient(90deg,#c9a46a,#e8cfa0); color:#3b2416">AFTER</div>
+      </div>
+
+      <!-- ================= S6 CLIENTS 20.7–24.2 ================= -->
+      <div id="s6" class="clip full" data-start="20.7" data-duration="3.5" data-track-index="2" style="z-index:5; background: radial-gradient(ellipse at 50% 30%, #fbf5ec 0%, #f6eee4 55%, #efe3d3 100%)" data-layout-allow-overlap>
+        <div class="cl-title">
+          <div class="kick" style="background:var(--choc)">REAL MERAH CLIENTS</div>
+          <div class="serif" style="font-weight:700; font-size:84px; margin-top:28px; color:var(--choc)">They love <em style="color:var(--bronze2)">their results</em></div>
+        </div>
+        <div id="c1" class="card" style="left:60px; top:620px"><img src="assets/5_ba.png" alt=""></div>
+        <div id="c2" class="card" style="left:460px; top:700px"><img src="assets/6_ba.png" alt=""></div>
+        <div id="c3" class="card" style="left:260px; top:860px"><img src="assets/7_ba.png" alt=""></div>
+      </div>
+
+      <!-- ================= S7 OFFER 24.2–32.3 ================= -->
+      <div id="s7" class="clip full" data-start="24.2" data-duration="8.1" data-track-index="2" style="z-index:5" data-layout-allow-overflow>
+        <div class="offer-bg"></div>
+        <div id="sweep2" class="sweep"></div>
+        <div class="offer-top">
+          <div id="o-x" class="xmas">CHRISTMAS DEAL</div>
+          <div id="o-svc" class="svc">MAXFILL</div>
+          <div id="o-from" class="from">STARTING FROM</div>
+          <div id="o-price" class="price">₱<span id="o-num">2,999</span></div>
+          <div id="o-off" class="off">40% OFF · until Nov 30</div>
+        </div>
+        <div id="o-gift" class="gift">
+          <img src="assets/qua_10k.jpg" alt="">
+          <div>
+            <div class="gift-t1">+ CHRISTMAS GIFTS</div>
+            <div class="gift-t2">Up to<br>₱10,000</div>
+            <div class="gift-t3">Real ₱10,000 cash winner!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= S8 CTA 32.3–36.4 ================= -->
+      <div id="s8" class="clip full" data-start="32.3" data-duration="4.1" data-track-index="2" style="z-index:5; background: radial-gradient(ellipse at 50% 35%, #fbf5ec 0%, #f6eee4 55%, #efe3d3 100%)">
+        <img id="cta-logo" class="cta-logo" src="assets/logo.png" alt="MERAH Beauty">
+        <div id="cta-h" class="cta-h">Gifts are<br><em>limited!</em></div>
+        <div id="cta-btn" class="btn"><span>💬</span>MESSAGE US NOW</div>
+        <div id="cta-addr" class="addr">MERAH BEAUTY · MAKATI</div>
+      </div>
+
+      <img id="lg1" class="clip" src="assets/logo_nau.png" alt="MERAH Beauty" data-start="0" data-duration="3.1" data-track-index="4" style="position:absolute; left:40px; top:176px; width:240px; z-index:9">
+      <img id="lg1b" class="clip" src="assets/logo_kem.png" alt="MERAH Beauty" data-start="3.1" data-duration="4.6" data-track-index="4" style="position:absolute; left:40px; top:176px; width:240px; z-index:9; filter: drop-shadow(0 2px 6px rgba(30,15,5,0.55))">
+      <img id="lg2" class="clip" src="assets/logo_nau.png" alt="MERAH Beauty" data-start="7.7" data-duration="9.6" data-track-index="4" style="position:absolute; left:40px; top:176px; width:240px; z-index:9">
+      <img id="lg3" class="clip" src="assets/logo_kem.png" alt="MERAH Beauty" data-start="17.3" data-duration="1.5" data-track-index="4" style="position:absolute; left:40px; top:176px; width:240px; z-index:9; filter: drop-shadow(0 2px 6px rgba(30,15,5,0.55))">
+      <img id="lg3b" class="clip" src="assets/logo_nau.png" alt="MERAH Beauty" data-start="18.8" data-duration="1.9" data-track-index="4" style="position:absolute; left:40px; top:176px; width:240px; z-index:9">
+      <img id="lg4" class="clip" src="assets/logo_nau.png" alt="MERAH Beauty" data-start="20.7" data-duration="3.5" data-track-index="4" style="position:absolute; left:40px; top:176px; width:240px; z-index:9">
+      <img id="lg5" class="clip" src="assets/logo_kem.png" alt="MERAH Beauty" data-start="24.2" data-duration="8.1" data-track-index="4" style="position:absolute; left:40px; top:176px; width:240px; z-index:9; filter: drop-shadow(0 2px 6px rgba(30,15,5,0.55))">
+      <!-- ================= CAPTIONS ================= -->
+      <div id="caps" class="full" style="z-index:8; pointer-events:none" data-track-kind="captions">
+        <div id="cp5" class="clip cap light" data-start="7.7" data-duration="3.2" style="top:1215px"><span>In just 30 minutes with Maxfill</span></div>
+        <div id="cp6" class="clip cap light" data-start="10.9" data-duration="2.85" style="top:1215px"><span>HA collagen restores lost volume</span></div>
+        <div id="cp9" class="clip cap" data-start="18.75" data-duration="1.95" style="top:1500px"><span>See the difference for yourself.</span></div>
+        <div id="cp10" class="clip cap light" data-start="20.7" data-duration="3.5" style="top:1500px"><span>MERAH clients love their results!</span></div>
+        <div id="cp11" class="clip cap" data-start="24.2" data-duration="8.1" style="top:1460px"><span>Maxfill from ₱2,999 + gifts up to ₱10,000</span></div>
+        <div id="cp12" class="clip cap light" data-start="32.3" data-duration="4.1" style="top:1290px"><span>Mga sis, message us now!</span></div>
+      </div>
+
+      <!-- ================= AUDIO ================= -->
+      <audio id="a-vo" class="clip" src="assets/vo.mp3" data-start="0.05" data-duration="35.89" data-volume="1" data-track-index="10"></audio>
+      <audio id="a-music" class="clip" src="assets/music.mp3" data-start="0" data-duration="36.4" data-volume="0.2" data-fade-in="0.3" data-fade-out="1.5" data-track-index="11"></audio>
+      <audio id="x1" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="3.05" data-duration="0.57" data-volume="0.55" data-track-index="12"></audio>
+      <audio id="x2" class="clip" src="assets/sfx/pop.mp3" data-start="3.2" data-duration="0.5" data-volume="0.6" data-track-index="13"></audio>
+      <audio id="x3" class="clip" src="assets/sfx/pop.mp3" data-start="4.35" data-duration="0.5" data-volume="0.6" data-track-index="13"></audio>
+      <audio id="x4" class="clip" src="assets/sfx/pop.mp3" data-start="5.9" data-duration="0.5" data-volume="0.6" data-track-index="13"></audio>
+      <audio id="x5" class="clip" src="assets/sfx/whoosh-cinematic.mp3" data-start="7.55" data-duration="1.4" data-volume="0.5" data-track-index="12"></audio>
+      <audio id="x6" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="7.8" data-duration="1.0" data-volume="0.45" data-track-index="14"></audio>
+      <audio id="x7" class="clip" src="assets/sfx/sparkle.mp3" data-start="11.0" data-duration="1.2" data-volume="0.45" data-track-index="14"></audio>
+      <audio id="x8" class="clip" src="assets/sfx/pop.mp3" data-start="13.75" data-duration="0.5" data-volume="0.55" data-track-index="13"></audio>
+      <audio id="x9" class="clip" src="assets/sfx/pop.mp3" data-start="14.75" data-duration="0.5" data-volume="0.55" data-track-index="13"></audio>
+      <audio id="x10" class="clip" src="assets/sfx/pop.mp3" data-start="15.75" data-duration="0.5" data-volume="0.55" data-track-index="13"></audio>
+      <audio id="x11" class="clip" src="assets/sfx/whoosh.mp3" data-start="17.2" data-duration="0.57" data-volume="0.5" data-track-index="12"></audio>
+      <audio id="x12" class="clip" src="assets/sfx/sparkle.mp3" data-start="17.45" data-duration="1.2" data-volume="0.6" data-track-index="14"></audio>
+      <audio id="x13" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="18.95" data-duration="0.57" data-volume="0.55" data-track-index="12"></audio>
+      <audio id="x14" class="clip" src="assets/sfx/whoosh.mp3" data-start="20.6" data-duration="0.57" data-volume="0.45" data-track-index="12"></audio>
+      <audio id="x15" class="clip" src="assets/sfx/pop.mp3" data-start="21.0" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio>
+      <audio id="x16" class="clip" src="assets/sfx/pop.mp3" data-start="21.6" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio>
+      <audio id="x17" class="clip" src="assets/sfx/pop.mp3" data-start="22.2" data-duration="0.5" data-volume="0.5" data-track-index="13"></audio>
+      <audio id="x18" class="clip" src="assets/sfx/riser.mp3" data-start="22.9" data-duration="1.4" data-volume="0.4" data-track-index="14"></audio>
+      <audio id="x19" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="24.2" data-duration="1.0" data-volume="0.5" data-track-index="12"></audio>
+      <audio id="x20" class="clip" src="assets/sfx/chime.mp3" data-start="25.5" data-duration="1.2" data-volume="0.55" data-track-index="13"></audio>
+      <audio id="x21" class="clip" src="assets/sfx/sparkle.mp3" data-start="28.3" data-duration="1.2" data-volume="0.55" data-track-index="14"></audio>
+      <audio id="x22" class="clip" src="assets/sfx/whoosh.mp3" data-start="32.2" data-duration="0.57" data-volume="0.45" data-track-index="12"></audio>
+      <audio id="x23" class="clip" src="assets/sfx/click.mp3" data-start="34.1" data-duration="0.4" data-volume="0.6" data-track-index="13"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const E = "power3.out";
+      // S1 hook: slow push-in + headline
+      
+      tl.fromTo("#s1-k", { scale: 1.08 }, { scale: 1, duration: 0.35, ease: E }, 0);
+      tl.fromTo("#s1-a", { scale: 1.06 }, { scale: 1, duration: 0.45, ease: E }, 0);
+      // S2 problems
+      
+      
+      
+      
+      
+
+      // ảnh tĩnh: zoom mượt (ảnh tĩnh nên không giật) + cắt nhanh
+      tl.fromTo("#w-h1", { scale: 1.0 }, { scale: 1.05, duration: 1.55, ease: "none" }, 0);
+      tl.fromTo("#w-h2", { scale: 1.35 }, { scale: 1.42, duration: 1.55, ease: "none" }, 1.55);
+      tl.fromTo("#w-pa", { scale: 1.55 }, { scale: 1.62, duration: 1.15, ease: "none" }, 3.1);
+      tl.fromTo("#w-pb", { scale: 1.3 }, { scale: 1.36, duration: 1.55, ease: "none" }, 4.25);
+      tl.fromTo("#w-pc", { scale: 1.6 }, { scale: 1.68, duration: 1.9, ease: "none" }, 5.8);
+      tl.fromTo("#w-g1", { scale: 1.1 }, { scale: 1.02, duration: 0.75, ease: "power2.out" }, 17.3);
+      tl.fromTo("#w-g2", { scale: 1.12 }, { scale: 1.04, duration: 0.75, ease: "power2.out" }, 18.05);
+      tl.set("#g-a", { opacity: 1 }, 0); tl.set("#g-b", { opacity: 0 }, 0); tl.set("#g-c", { opacity: 0 }, 0);
+      tl.set("#g-a", { opacity: 0 }, 4.25); tl.set("#g-b", { opacity: 1 }, 4.25);
+      tl.set("#g-b", { opacity: 0 }, 5.8); tl.set("#g-c", { opacity: 1 }, 5.8);
+      [["#r-a","#p-a",3.15],["#r-b","#p-b",4.3],["#r-c","#p-c",5.85]].forEach(([rg,pl,t])=>{
+        tl.fromTo(rg+" circle", { attr:{ "stroke-dashoffset": parseFloat(document.querySelector(rg+" circle").getAttribute("stroke-dasharray")) } }, { attr:{ "stroke-dashoffset": 0 }, duration: 0.45, ease: "power2.out" }, t);
+        tl.fromTo(pl, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, t+0.1);
+      });
+      // S3 mechanism
+      tl.fromTo("#m-num", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power4.out" }, 7.8);
+      tl.fromTo("#m-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: E }, 8.1);
+      tl.fromTo("#illus", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: E }, 8.3);
+      tl.fromTo(".drop", { opacity: 0, y: -260 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.in", stagger: 0.12 }, 11.0);
+      tl.fromTo(".drop", { scale: 1, transformOrigin: "50% 50%" }, { scale: 1.6, duration: 1.2, ease: "sine.inOut", stagger: 0.08 }, 12.1);
+      tl.to("#epi", { attr: { d: "M0 200 C 150 200, 300 200, 380 200 C 420 200, 480 200, 520 200 C 600 200, 750 200, 900 200 L 900 310 L 0 310 Z" }, duration: 1.8, ease: "power2.inOut" }, 12.0);
+      tl.fromTo("#lblVol", { opacity: 1 }, { opacity: 0, duration: 0.3 }, 11.6);
+      tl.fromTo("#glowRing", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 12.6);
+      tl.fromTo(".fib", { opacity: 0.4 }, { opacity: 1, stroke: "#c9a46a", duration: 1.2, stagger: 0.2 }, 12.4);
+      tl.fromTo("#ck1", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.35, ease: E }, 13.75);
+      tl.fromTo("#ck2", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.35, ease: E }, 14.75);
+      tl.fromTo("#ck3", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.35, ease: E }, 15.75);
+      // S4 glow
+      
+      tl.fromTo("#g-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: E }, 17.35);
+      tl.fromTo("#sweep", { x: 0 }, { x: 2100, duration: 1.0, ease: "power2.inOut" }, 17.4);
+      tl.fromTo(".spark", { opacity: 0, scale: 0, rotation: -60, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1.2, rotation: 0, duration: 0.4, ease: "back.out(3)", stagger: 0.15 }, 17.5);
+      // S5 before/after wipe
+      tl.fromTo("#w-aft", { clipPath: "inset(0px 0px 0px 1080px)" }, { clipPath: "inset(0px 0px 0px 0px)", duration: 1.1, ease: "power2.inOut" }, 19.0);
+      tl.fromTo("#ba-bar", { x: 0 }, { x: -1090, duration: 1.1, ease: "power2.inOut" }, 19.0);
+      tl.fromTo("#t-aft", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 19.6);
+      // S6 clients
+      tl.fromTo("#c1", { opacity: 0, y: 200, rotation: -14 }, { opacity: 1, y: 0, rotation: -6, duration: 0.5, ease: "back.out(1.6)" }, 20.9);
+      tl.fromTo("#c2", { opacity: 0, y: 200, rotation: 14 }, { opacity: 1, y: 0, rotation: 5, duration: 0.5, ease: "back.out(1.6)" }, 21.5);
+      tl.fromTo("#c3", { opacity: 0, y: 200, rotation: -4 }, { opacity: 1, y: 0, rotation: 0, duration: 0.5, ease: "back.out(1.6)" }, 22.1);
+      // S7 offer
+      tl.fromTo("#o-x", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.35, ease: E }, 24.25);
+      tl.fromTo("#o-svc", { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power4.out" }, 24.45);
+      tl.fromTo("#o-from", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 25.0);
+      tl.fromTo("#o-price", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, 25.5);
+      tl.fromTo("#o-off", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: E }, 26.4);
+      tl.fromTo("#sweep2", { x: 0 }, { x: 2100, duration: 1.2, ease: "power2.inOut" }, 25.6);
+      tl.fromTo("#o-gift", { opacity: 0, y: 140 }, { opacity: 1, y: 0, duration: 0.55, ease: "back.out(1.4)" }, 28.2);
+      tl.to("#o-price", { scale: 1.06, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 3 }, 29.0);
+      // S8 CTA
+      tl.fromTo("#cta-logo", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: E }, 32.35);
+      tl.fromTo("#cta-h", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.8)" }, 32.5);
+      tl.fromTo("#cta-btn", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.4, ease: E }, 33.6);
+      tl.to("#cta-btn", { scale: 1.06, duration: 0.45, ease: "sine.inOut", yoyo: true, repeat: 3 }, 34.1);
+      tl.fromTo("#cta-addr", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 34.0);
+      // captions pop
+      ["#cp5","#cp6","#cp9","#cp10","#cp11","#cp12"].forEach((id) => {
+        const el = document.querySelector(id);
+        tl.fromTo(id + " span", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.18, ease: E }, parseFloat(el.dataset.start));
+      });
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
