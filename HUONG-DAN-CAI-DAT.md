@@ -29,9 +29,12 @@ App chỉ là bảng điều khiển. Các việc như dựng video, viết capt
 1. Mở link **SPA MARKETING** → đăng nhập claude.ai.
 2. Bảng **Cài đặt** hiện ra. Điền tên thương hiệu, khu vực, các fanpage, giờ đăng, ID tài khoản quảng cáo, quy tắc thương hiệu, chữ ký caption và logo.
 3. Chọn **"Tự tạo thư mục Drive + Google Sheet mới cho tôi"** → **Lưu cài đặt**, rồi bấm **Cho phép** khi được hỏi quyền. App tự tạo trong Drive của bạn:
-   - Thư mục `<Tên> – FACEBOOK MARKETING/`: TƯ LIỆU ĐĂNG BÀI, TƯ LIỆU QUẢNG CÁO (SPA, SPY), THÀNH PHẨM, THÀNH PHẨM QUẢNG CÁO, ẢNH YÊU CẦU SỬA
-   - Google Sheet `<Tên> – DUYỆT BÀI`: các tab BAI-DANG, HOI-SEP, QC-DANH-GIA, QUANG-CAO, TIEN-DO-TU-LIEU
+   - Thư mục `<Tên> – SPA MARKETING/`: TƯ LIỆU ĐĂNG BÀI, TƯ LIỆU QUẢNG CÁO (SPA, SPY), THÀNH PHẨM, THÀNH PHẨM QUẢNG CÁO, ẢNH YÊU CẦU SỬA
+   - Google Sheet `<Tên> – DUYỆT BÀI`: các tab BAI-DANG, HOI-SEP, QC-DANH-GIA, QUANG-CAO, TIEN-DO-TU-LIEU, DO-LUONG, SPY-ADS, SPY-DOI-THU
 4. Dữ liệu trong app là **riêng của bạn**. Người khác dùng cùng link không xem được.
+
+### Muốn có app RIÊNG của bạn (tự sửa được)
+Link app dùng chung là app của người chia sẻ: bạn dùng được nhưng không sửa được. Muốn làm chủ app (đổi giao diện, bỏ/đổi công cụ theo thứ bạn có): mở Claude Code trong thư mục bộ cài và nói *"Đọc `app/CAI-APP-RIENG.md` và đăng `app/index.html` thành artifact riêng của tôi"*. Chi tiết: `app/CAI-APP-RIENG.md`.
 
 ## 3. Cài nhân viên + skill (plugin) – 2 lệnh
 Người chia sẻ đưa thư mục này lên GitHub, `doconlon24-max/fb-marketing` (công khai – ai có link cũng cài được). Bạn mở Claude Code và gõ:
