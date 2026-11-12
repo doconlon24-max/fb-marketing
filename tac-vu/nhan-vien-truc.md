@@ -1,7 +1,7 @@
 # Tác vụ ĐÁM MÂY: NHÂN VIÊN TRỰC – mỗi giờ (sếp chốt 10/11/2026)
 
 Mục tiêu: Sếp duyệt / trả lời trong app QUẢN TRỊ MERAH xong thì các phòng làm NGAY (chậm nhất ~1 tiếng), máy tắt vẫn chạy.
-Chạy mỗi giờ, TRỪ giờ có lượt quét chính (9h, 13h, 17h, 21h VN). Báo cáo tiếng Việt. Đọc `tai-nguyen/app-merah-studio.md` và `tac-vu/quet-tu-lieu-dam-may.md`.
+Chạy mỗi giờ, TRỪ giờ có lượt quét chính (9h, 13h, 17h, 21h VN). Báo cáo tiếng Việt. Đọc `tai-nguyen/app-fb-studio.md` và `tac-vu/quet-tu-lieu-dam-may.md`.
 
 ## Bước 1 – Kiểm tra nhanh (phải xong trong ~1 phút, KHÔNG làm gì khác nếu không có việc)
 Đọc Sheet `{{ID_DRIVE}}`:
@@ -9,6 +9,7 @@ Chạy mỗi giờ, TRỪ giờ có lượt quét chính (9h, 13h, 17h, 21h VN).
 2. Tab `QUANG-CAO` A1:L500: dòng I = `Đã duyệt` mà L (ID post) còn trống.
 3. Tab đầu (bài page): dòng I = `Đã duyệt` hoặc `Cần sửa`.
 4. Drive: tư liệu mới trong 70 phút qua – `search_files` với `modifiedTime > '<now-70m>'` trong `TƯ LIỆU ĐĂNG BÀI`, `TƯ LIỆU QUẢNG CÁO/SPA`, `TƯ LIỆU QUẢNG CÁO/SPY` (thư mục ngày bên trong).
+5. Tab `SPY-ADS` A1:J3000: dòng I = `Chờ quét` (sếp yêu cầu quét TikTok/video trend) hoặc I = `Dùng làm ý tưởng` (sếp chọn mẫu đối thủ để làm).
 Không có gì → trả lời đúng 1 dòng "Trực: không có việc." rồi DỪNG (không commit, không email).
 
 ## Bước 1b – Tránh làm trùng
@@ -27,7 +28,7 @@ Không có gì → trả lời đúng 1 dòng "Trực: không có việc." rồi
 - Bài page `Đã duyệt` → đăng / hẹn giờ như PHẦN 2 của quy trình quét.
 - Làm xong mỗi câu hỏi → ghi `Đã xử lý <giờ>` vào cột F của dòng HOI-SEP đó (ghi đúng ô, không ghi đè dòng khác).
 - Video dài: dựng lần lượt, mỗi video xong thì up + ghi Sheet ngay; hết thời gian thì để lượt sau làm tiếp (ghi tiến độ vào `trang-thai/quang-cao/<ngày>.json`).
-- Cập nhật văn phòng ảo (doc `office/status`, mã nhân viên trong `tai-nguyen/app-merah-studio.md`).
+- Cập nhật văn phòng ảo (doc `office/status`, mã nhân viên trong `tai-nguyen/app-fb-studio.md`).
 
 ## Giới hạn
 Không tạo/chạy quảng cáo, không tiêu tiền. Không đăng `all` cho bài quảng cáo. Không in token/khoá. Email chỉ {{EMAIL_BAO_CAO}}. Commit + push khi có thay đổi trong kho.
@@ -42,17 +43,17 @@ Gửi **thông báo điện thoại (PushNotification)** + **email** ({{EMAIL_BA
 Mốc 2 và 5 không gộp chờ cuối lượt – gửi ngay khi xong từng cái.
 
 ## NGÀY KHÔNG CÓ TƯ LIỆU – quy trình 2 lần duyệt (sếp chốt 10/11/2026)
-1. **Sếp trả lời "Có, cần đăng"** (tab `HOI-SEP`, phòng Quản trị page) → Content (`merah-content`) lên **1 ý tưởng**: chủ đề + hướng hình (ảnh hay video, cảnh gì) + caption nháp tiếng Anh, khung giờ trống gần nhất hôm nay (ưu tiên 19:00 PH).
+1. **Sếp trả lời "Có, cần đăng"** (tab `HOI-SEP`, phòng Quản trị page) → Content (`fb-content`) lên **1 ý tưởng**: chủ đề + hướng hình (ảnh hay video, cảnh gì) + caption nháp tiếng Anh, khung giờ trống gần nhất hôm nay (ưu tiên 19:00 PH).
    Ghi 1 dòng tab đầu Sheet: A mã `YYYYMMDD-HHMM`, E Dạng = `Ý tưởng`, F chủ đề, H caption nháp, I = `Chờ duyệt`, K = "Ý tưởng chờ Sếp duyệt – duyệt xong mới làm ảnh". Ghi `Đã xử lý` vào cột F của dòng HOI-SEP. Thông báo điện thoại + email: "Có ý tưởng bài page chờ duyệt".
 2. **Sếp duyệt ý tưởng** trong app (Quản trị page → Đăng bài lên fanpage, mở bài → Duyệt / Yêu cầu sửa).
-3. Dòng có E = `Ý tưởng` và I = `Đã duyệt` → **Media làm hình** (KHÔNG đăng): ưu tiên tư liệu cũ hợp chủ đề (Drive/thư viện); không có → **ảnh AI bằng `tai-nguyen/scripts/higgsfield.py`** (Ideogram 4.0 khi cần chữ, SOUL V2 cho ảnh chân thực; ghép logo/mẫu MERAH; không kim tiêm, không mặt khách giả làm khách thật). Lưu Drive `THÀNH PHẨM/<mã>/`.
+3. Dòng có E = `Ý tưởng` và I = `Đã duyệt` → **Media làm hình** (KHÔNG đăng): ưu tiên tư liệu cũ hợp chủ đề (Drive/thư viện); không có → **ảnh AI bằng Higgsfield MCP (gói Starter, xem `tai-nguyen/higgsfield-mcp.md`)** – script `higgsfield.py` (ví API riêng) chỉ khi MCP lỗi (gpt_image_2_6 khi cần chữ, nano_banana_pro/soul_2 cho ảnh chân thực; ghép logo/mẫu MERAH; không kim tiêm, không mặt khách giả làm khách thật). Lưu Drive `THÀNH PHẨM/<mã>/`.
 4. Content hoàn thiện caption theo hình → cập nhật dòng: E = `Ảnh đơn`/`Reels`, G = link Drive, H = caption, **I = `Chờ duyệt`**, K = "Đã có hình – chờ Sếp duyệt đăng". Thông báo Sếp.
 5. **Sếp duyệt lần 2** → đăng / hẹn giờ như bình thường (PHẦN 2 quy trình quét). Chỉ 1 bài cho ngày không có tư liệu.
 
 ## Yêu cầu sửa – tiến độ, lịch sử, tên file (sếp chốt 10/11/2026)
 Sếp KHÔNG sửa tay – chỉ bấm **Duyệt** hoặc **Yêu cầu sửa** trong app. Khi có yêu cầu sửa (QUANG-CAO I = `Cần sửa` / bài page I = `Cần sửa`):
 1. **Tiếp nhận ngay:** thêm 1 dòng vào lịch sử (QC: cột N; page: cột L) `dd/mm HH:MM – <phòng> đã tiếp nhận sửa`, rồi đặt I = `Đang sửa` + thêm dòng `… – Đang sửa: <sẽ làm gì>`.
-2. **Sửa xong:** up bản mới với hậu tố phiên bản (`…_v2.mp4`, `_v3`…), GIỮ bản cũ trên Drive; cập nhật link (F / G) sang bản mới; thêm dòng `… – Sửa xong (v2): <đã sửa gì>`; đặt I = `Chờ duyệt đăng` (QC) / `Chờ duyệt` (page). Thông báo điện thoại + email.
+2. **Sửa xong:** up bản mới với hậu tố phiên bản (`…_v2.mp4`, `_v3`…), cập nhật link (F / G) xong thì **XOÁ HẾT bản cũ** cùng mã trên Drive (`rclone deletefile`, vào Thùng rác) và file nháp/ảnh nền tạm – thư mục thành phẩm chỉ giữ bản cuối cùng (sếp chốt 12/11/2026); cập nhật link (F / G) sang bản mới; thêm dòng `… – Sửa xong (v2): <đã sửa gì>`; đặt I = `Chờ duyệt đăng` (QC) / `Chờ duyệt` (page). Thông báo điện thoại + email.
 3. App tự hiện thanh tiến độ: Đã gửi yêu cầu → Đã tiếp nhận → Đang sửa → Sửa xong – chờ duyệt (dựa vào các chữ "tiếp nhận", "Đang sửa", "Sửa xong" trong lịch sử).
 **Tên file thành phẩm (khớp bài):**
 - Page: `YYYY-MM-DD_HHhMM_ANH1.jpg` / `YYYY-MM-DD_HHhMM_VIDEO1.mp4` (ngày + giờ đăng PH + ảnh/video số mấy trong ngày), thư mục Drive `THÀNH PHẨM/<mã bài YYYYMMDD-HHMM>/`.
@@ -62,7 +63,7 @@ Sếp KHÔNG sửa tay – chỉ bấm **Duyệt** hoặc **Yêu cầu sửa** t
 Ghi chú sửa (cột J tab QUANG-CAO, cột L lịch sử tab đầu, hoặc fixNote) có thể kèm `| Ảnh: <link Drive>` – app tự tải ảnh sếp dán lên Drive `MERAH/ẢNH YÊU CẦU SỬA` (id `{{ID_DRIVE}}`, tên `sua_<qc|page>_<mã>_<yyyymmddhhmm>_<n>.jpg`). Nhân viên PHẢI tải về xem trước khi sửa: `rclone copy "merah:ẢNH YÊU CẦU SỬA" /tmp/anh-sua --include "sua_*<mã>*"` rồi đọc ảnh (Read). Làm đúng theo chỗ sếp khoanh/chỉ trong ảnh.
 
 ## NHẮC VIỆC CHẠY QC – 11/11/2026 (sếp duyệt trong chat 10/11)
-Từ 0h00 VN ngày 11/11/2026, 4 đối tượng sau PHẢI đang bật: camp 120250588173210083, nhóm 120250588178570083, camp 120250588151200083, nhóm 120250589864750083 (đều tên bắt đầu "CLAUDE", đối tượng Nữ 30-64, tắt Advantage+ – KHÔNG sửa lại). Lịch chính: routine {{ID_ROUTINE}} lúc 0h00. Lượt trực đầu tiên sau 0h10 VN 11/11: đọc status 4 ID qua Meta Ads; cái nào còn PAUSED (mà tên bắt đầu CLAUDE) thì bật bằng ads_activate_entity, ghi nhat-ky-chay-qc.md, email {{EMAIL_BAO_CAO}} "[MERAH QC] Bật dự phòng camp CLAUDE". Đã ACTIVE hết thì bỏ qua. Không đụng camp khác, không đổi ngân sách. Hết hiệu lực sau 12h00 VN 11/11.
+Từ 0h00 VN ngày 11/11/2026, 4 đối tượng sau PHẢI đang bật: camp {{ID_FACEBOOK}}, nhóm {{ID_FACEBOOK}}, camp {{ID_FACEBOOK}}, nhóm {{ID_FACEBOOK}} (đều tên bắt đầu "CLAUDE", đối tượng Nữ 30-64, tắt Advantage+ – KHÔNG sửa lại). Lịch chính: routine {{ID_ROUTINE}} lúc 0h00. Lượt trực đầu tiên sau 0h10 VN 11/11: đọc status 4 ID qua Meta Ads; cái nào còn PAUSED (mà tên bắt đầu CLAUDE) thì bật bằng ads_activate_entity, ghi nhat-ky-chay-qc.md, email {{EMAIL_BAO_CAO}} "[MERAH QC] Bật dự phòng camp CLAUDE". Đã ACTIVE hết thì bỏ qua. Không đụng camp khác, không đổi ngân sách. Hết hiệu lực sau 12h00 VN 11/11.
 
 ## Video QC – nhắc nhanh (10/11/2026)
 - Dùng `tai-nguyen/scripts/video/spy_merah.py` (bản mới nhất), mẫu `quang-cao/test-video/spy_ee79_mau.json`: BẮT BUỘC có `truoc_sau` (bản đồ BEFORE/AFTER, giữ BEFORE 3–5s khoanh vấn đề, rồi mới chuyển AFTER), `che` (che chữ cũ, không làm mờ), `loi` (voice Mely – mỗi câu ngắn, không đè câu sau).
@@ -101,7 +102,7 @@ Khi đám mây bị dừng vì hết hạn mức sử dụng (giới hạn 5 gi�
 
 
 ## Phối hợp Content + Media + Video (sếp chốt 11/11/2026)
-Ngày có tư liệu page: cả 3 (merah-content, merah-media, merah-video) **họp ý tưởng trước**: xem hết tư liệu, chọn ý tưởng cho từng bài (chủ đề, hook, ảnh/đoạn dùng, dạng, chữ trên hình, hướng caption), ghi `trang-thai/<yyyy-mm-dd>-y-tuong-page.md`. Sau đó mỗi người làm phần mình **theo đúng ý tưởng đó**; caption viết khớp hình đã làm xong.
+Ngày có tư liệu page: cả 3 (fb-content, fb-media, fb-video) **họp ý tưởng trước**: xem hết tư liệu, chọn ý tưởng cho từng bài (chủ đề, hook, ảnh/đoạn dùng, dạng, chữ trên hình, hướng caption), ghi `trang-thai/<yyyy-mm-dd>-y-tuong-page.md`. Sau đó mỗi người làm phần mình **theo đúng ý tưởng đó**; caption viết khớp hình đã làm xong.
 
 ## Tư liệu up lẻ ở thư mục gốc (sếp chốt 11/11/2026)
 Sếp có thể up ảnh/video thẳng vào gốc `TƯ LIỆU ĐĂNG BÀI/` (không tạo thư mục ngày). Mỗi lượt: thấy file lẻ ở gốc (trừ `_NOTE-MAU.txt`) → `rclone moveto` từng file vào `TƯ LIỆU ĐĂNG BÀI/<dd-mm-yyyy theo giờ VN>/` rồi xử lý như tư liệu ngày đó. `_NOTE-MAU.txt` vừa được sửa (cùng lúc với file mới) → chép thành `NOTE.txt` trong thư mục ngày đó (KHÔNG xoá file mẫu). Không được bỏ qua tư liệu chỉ vì không nằm trong thư mục ngày. (Không chuyển thư mục vào chính nó: `rclone move` gốc → con báo lỗi, phải `moveto` từng file.)
@@ -128,7 +129,7 @@ Bài ảnh đăng page CHỈ được **1 ảnh, 3 ảnh hoặc 4 ảnh** (khôn
 **Video page mùa Giáng sinh:** dùng công cụ mẫu `tai-nguyen/scripts/video/build_xmas_mau.py` (bản mới nhất: `bai-cho-duyet/20261111-1900/nguon/build_xmas.py`, che mặt bằng sticker ông già Noel `santa.png`): dây thông + tuyết + kim tuyến, thẻ chữ đỏ/nâu viền vàng, hook → ảnh thẻ → ưu đãi 40% / quà đến ₱10,000 → bài cũ → outro kem, luôn có nhạc Giáng sinh.
 
 ## Video QC dựng bằng HyperFrames (thiết kế chuẩn PC07 – sếp chốt 11/11/2026)
-- Dựng theo `.claude/agents/merah-ads-video.md` mục "THIẾT KẾ CHUẨN". Cần Node (`node -v`) + `npx --yes hyperframes@0.9.30` (tự tải trình duyệt khi render). Không chạy được trên đám mây → dựng dự phòng bằng spy_merah.py, ghi rõ "chưa phải bản HyperFrames" vào cột K và báo Sếp.
+- Dựng theo `.claude/agents/fb-ads-video.md` mục "THIẾT KẾ CHUẨN". Cần Node (`node -v`) + `npx --yes hyperframes@0.9.30` (tự tải trình duyệt khi render). Không chạy được trên đám mây → dựng dự phòng bằng spy_merah.py, ghi rõ "chưa phải bản HyperFrames" vào cột K và báo Sếp.
 - Up bản mới xong: chuyển bản cũ của cùng VD vào thùng rác Drive (`trash_file`).
 
 
@@ -149,3 +150,24 @@ Dòng tab `QUANG-CAO` I = `Đã duyệt` → đăng công khai lên đúng page 
 
 ## Yêu cầu sửa MỚI luôn thắng ghi chú cũ (sếp phạt 11/11/2026)
 Ghi chú kiểu "KHÔNG LÀM LẠI / đã làm trên máy" ở cột K chỉ áp dụng cho phiên bản lúc ghi. Nếu SAU đó Sếp bấm Yêu cầu sửa (cột I = `Cần sửa`, dòng mới trong lịch sử có giờ muộn hơn) → **phải tiếp nhận ngay** (ghi "đã tiếp nhận" vào lịch sử + I = `Đang sửa`) và làm. Không bao giờ bỏ qua yêu cầu của Sếp vì ghi chú cũ. Ghi chú trên máy cũng phải ghi kèm giờ.
+
+## SPY ADS ĐỐI THỦ – tab `SPY-ADS` (sếp chốt 12/11/2026)
+Cột: A Ngày quét · B Dịch vụ · C Nền tảng · D Đối thủ/kênh · E Quốc gia · F Link bài · G Số ngày chạy/lượt xem · H Hook/ghi chú · I Trạng thái · J ID. App MERAH (Quản trị quảng cáo → Content ý tưởng → SPY ADS) đọc tab này.
+0. Mọi việc ở mục này do agent **fb-spy** (`.claude/agents/fb-spy.md` – chuyên gia spy) làm, theo đúng tiêu chí nhận diện mẫu thắng + mổ xẻ (cột H) + dòng `TỔNG KẾT SPY` trong file đó. Dòng FB/IG sếp lưu từ app (I = `Đã lưu`/`Dùng làm ý tưởng`) mà H chưa có phần mổ xẻ → mở link Ad Library xem và bổ sung mổ xẻ + điểm.
+1. **I = `Chờ quét`** (cột C dạng `Quét sâu: <danh sách nền tảng> (quảng cáo + tự nhiên/trend)`, bản cũ ghi "TikTok + video trend"): **fb-spy** làm ngay trong lượt này, **đúng các nền tảng và loại sếp chọn** (Facebook, Instagram, TikTok, YouTube/Shorts, Threads, X, Pinterest, Lemon8, Xiaohongshu, Douyin, Google). Quảng cáo: Meta Ad Library, TikTok Creative Center Top Ads/TikTok Ad Library, Google Ads Transparency. Tự nhiên: video nhiều view nhất của từng nền tảng. Ghi điểm spy vào G dạng `Điểm spy NN · …` để app xếp STT. Đổi I thành `Đang quét`. Tìm 8–15 video **mọi quốc gia** (ưu tiên PH, VN, KR, US) cho dịch vụ ở cột B, theo từ khoá ở cột H: TikTok (TikTok Creative Center top ads/trending hashtag, tìm kiếm web `site:tiktok.com <từ khoá>`), Instagram Reels, Facebook Reels có lượt xem cao hoặc là quảng cáo đối thủ. Mỗi video **thêm 1 dòng mới**: A ngày hôm nay, B dịch vụ, C `TikTok`/`Instagram Reels`/`Facebook Reels`, D tên kênh, E quốc gia, **F link trực tiếp tới bài/video** (bắt buộc – sếp bấm vào xem và lấy), G lượt xem/lượt thích (ghi "không rõ" nếu không đọc được – KHÔNG bịa số), H hook 3 giây đầu + vì sao hay (1 câu tiếng Việt), I `Mới`, J `TT-<id video>`. Xong đổi dòng yêu cầu thành `Đã quét (n video)`. Không tải được TikTok thì vẫn ghi những gì tìm được và nói rõ trong H.
+2. **I = `Dùng làm ý tưởng`**: giao **Trưởng phòng QC** theo luật SPY (chỉ clone: giữ nội dung, đổi logo/chữ/áo/outro/khuyến mãi sang MERAH; không clone giọng người trong video; kết quả của đơn vị khác ghi "Sample result"). Tải video về thư mục SPY ngày hôm nay trên Drive (`TƯ LIỆU QUẢNG CÁO/SPY/dd-mm-yyyy`) nếu tải được; không tải được thì ghi link vào ý tưởng để EDIT video dựng lại theo cấu trúc. Đổi I thành `Đã giao Trưởng phòng QC` + ghi H thêm mã ý tưởng/video đã tạo.
+2b. **Tiến độ cho Sếp:** nhận việc là đổi I thành `Đang quét` NGAY trước khi tìm; xong đổi thành `Đã quét (n video)`. Dòng `Chờ quét` trùng dịch vụ + nền tảng: làm 1 lần, dòng trùng ghi `Đã quét (gộp với dòng trên)`. Dòng kết quả KHÔNG dùng ID bắt đầu `YC-` (chỉ dòng yêu cầu mới dùng).
+2c. **Đám mây vào được gì (kiểm chứng 12/11/2026):** KHÔNG mở được trang tiktok.com, instagram.com, facebook.com/ads/library (bị chặn mạng). Vì vậy:
+   - **Facebook/Instagram (quảng cáo):** dùng connector **Meta Ads** `ads_library_search` (chạy được trên đám mây) theo cách 2 bước trong skill `fb-spy-tham-my` mục 2b: từ khoá → lọc phòng khám đúng dịch vụ → quét lại theo `page_ids` → ghi 8–15 đối thủ mạnh nhất (F = link `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&view_all_page_id=<page_id>&media_type=video&search_type=page`, G = `Điểm spy NN · chạy X ngày · N quảng cáo`). Dòng `Dùng làm ý tưởng` có link Ad Library: không mở link, dùng `ads_library_search` với `page_ids` của đối thủ đó để lấy dữ liệu rồi giao Trưởng phòng QC.
+   - **TikTok / YouTube / Instagram tự nhiên / nền tảng khác – CÁCH CHẠY ĐƯỢC TRÊN ĐÁM MÂY (đã kiểm chứng 12/11/2026):** dùng công cụ **WebSearch với tham số `allowed_domains`** (KHÔNG viết `site:` trong câu truy vấn, KHÔNG dùng curl/WebFetch vào các trang này). Ví dụ `WebSearch({query:"lip filler clinic before after", mode:"extended", allowed_domains:["tiktok.com"]})` trả về link video thật dạng `tiktok.com/@kênh/video/<id>` kèm chú thích. Tương tự `["youtube.com"]` (lấy link `/shorts/` hoặc `/watch`), `["instagram.com"]` (link `/reel/` hoặc `/p/`), `["threads.net"]`, `["pinterest.com"]`, `["xiaohongshu.com"]`, `["douyin.com"]`, `["x.com"]`, `["lemon8-app.com"]`.
+     · Chạy 5–8 truy vấn cho mỗi nền tảng: từng từ khoá ở cột H (đúng ngôn ngữ quốc gia sếp chọn) + biến thể `clinic`, `before after`, `price promo`, `thẩm mỹ viện`, tên thành phố lớn của nước đó.
+     · Chỉ giữ link **video/bài cụ thể** (không lấy link trang kênh) của **đơn vị bán đúng dịch vụ** (phòng khám, thẩm mỹ viện, bác sĩ, injector); bỏ video giải trí, review mỹ phẩm, bài báo.
+     · TikTok: ngày đăng tính từ ID video (`id >> 32` = giây Unix). Ưu tiên video mới (≤ 12 tháng) và kênh xuất hiện nhiều lần trong kết quả.
+     · Lượt xem/lượt thích công cụ không trả → ghi G = `Lượt xem: không rõ · đăng dd/mm/yyyy` (KHÔNG bịa số). Điểm spy chấm theo: đúng dịch vụ (4) + hook/chú thích có ưu đãi, kết quả, lời kêu gọi nhắn tin (3) + mới (2) + kênh lặp lại nhiều (1), quy ra thang 100 và ghi `Điểm spy NN · …` ở đầu cột G.
+     · Mỗi nền tảng ghi 8–15 dòng tốt nhất (C = tên nền tảng, D = @kênh, F = link, H = mổ xẻ theo mẫu của skill, I = `Mới`, J = `TT-<id>` / `YT-<id>` / `IG-<id>`), rồi 1 dòng `TỔNG KẾT SPY`.
+     · Chỉ khi cả 5–8 truy vấn đều không ra link video thật mới ghi I = `Không quét được (<nền tảng>: không có kết quả)` – KHÔNG trả về `Chờ quét`. Yêu cầu nhiều nền tảng: I = `Đã quét (n video TikTok, m đối thủ FB/IG…)`.
+2d. **MANIFOLD (connector `manifold`, có từ 12/11/2026) – TÍNH THEO LƯỢT, gói miễn phí 250 lượt/tháng:** mẫu dữ liệu + tham số ở `tai-nguyen/manifold-mau.md`. Luôn truyền `max_credits`, mỗi yêu cầu của sếp dùng **tối đa 8 lượt**; `credits_remaining` < 20 hoặc lỗi hết lượt → quay về cách miễn phí ở 2c và ghi rõ trong H.
+   - Quét sâu TikTok: `tiktok_search_videos {query, since:"month", sort:"popular"}` (1 lượt/từ khoá, có views/likes/ngày đăng) – ghi G = `Điểm spy NN · <views> lượt xem · <likes> thích · đăng dd/mm/yyyy`. Quét sâu quảng cáo FB/IG: `ads_search_ads {platform:"facebook", query, active_only:true, country?}` (trả từng bài, có `format` VIDEO/IMAGE, `versions`, `body`).
+   - **Dòng I = `Dùng làm ý tưởng` có H bắt đầu `SPY-CLONE`** (sếp tích ô SPY trong app; J = `FB-<id>` / `TT-<id>`): đổi I = `Đang quét`, rồi (1) lấy chi tiết + lời thoại: FB dùng `ads_get_ad` + `facebook_get_transcript`; TikTok dùng `tiktok_get_transcript` (KHÔNG bật ai_fallback – 11 lượt); (2) chỉ với TikTok và khi thật cần cảnh gốc mới dùng `tiktok_get_video` (10 lượt) để lấy link tải; **video quảng cáo Facebook KHÔNG tải được** (Manifold chỉ trả ảnh bìa) → dựng lại theo cấu trúc; (3) viết brief `quang-cao/spy/<yyyy-mm-dd>-<id>.md`: hook 3 giây, từng cảnh, lời thoại gốc + bản viết lại cho MERAH, ưu đãi đổi sang khuyến mãi MERAH, ảnh bìa tham khảo; (4) giao **Trưởng phòng QC → EDIT video** dựng lại THEO CÁCH MERAH (luật SPY: giữ cấu trúc/nội dung, đổi logo, chữ, áo, outro, khuyến mãi; không clone giọng; kết quả đơn vị khác ghi "Sample result"; thiết kế chuẩn PC07) → thành phẩm vào tab `QUANG-CAO` trạng thái chờ duyệt như mọi video QC; (5) I = `Đã giao Trưởng phòng QC` + H thêm mã video.
+2e. **TẢI VIDEO SPY (sếp chốt 12/11/2026):** bấm SPY trong app giờ ghi I = `Chờ máy tải`. Đám mây KHÔNG tải được video (đã thử: Facebook chặn công cụ tải, TikTok bị chặn mạng, Manifold không trả file – `tai-nguyen/thu-tai-video-spy.md`) nên dòng `Chờ máy tải` / `Đang tải` **không phải việc của đám mây – bỏ qua, không đổi trạng thái**. Máy của sếp tải (theo `tac-vu/spy-tai-video-may.md`) và đẩy vào Drive `TƯ LIỆU QUẢNG CÁO/SPY/<dd-mm-yyyy>/` (tự tạo thư mục ngày), I = `Đã tải về SPY <dd-mm-yyyy>`. Khi file vào thư mục SPY, máy theo dõi Drive báo như tư liệu SPY mới → làm theo `quang-cao/quy-trinh-tu-lieu-qc.md` (Trưởng phòng QC → EDIT video clone theo luật SPY). Tên file `SPY_<khoá>_<đối thủ>.mp4`: tra khoá ở cột J tab SPY-ADS để lấy dịch vụ, link gốc, nội dung gốc (cột H) làm brief.
+3. Không đăng, không chạy quảng cáo gì từ mục này nếu sếp chưa duyệt như quy trình thường.

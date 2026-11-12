@@ -44,7 +44,7 @@ sm = np.stack([np.convolve(np.pad(track[:, k], 2, mode="edge"), ker, "valid") fo
 np.save("mat_video.npy", sm)
 # ---- ảnh
 out = {}
-for f in ["photo_6307525521813738300_w.jpg", "photo_6307525521813738303_w.jpg", "photo_6307525521813738304_w.jpg", "photo_6307525521813738299_w.jpg"]:
+for f in ["photo_{{ID_FACEBOOK}}_w.jpg", "photo_{{ID_FACEBOOK}}_w.jpg", "photo_{{ID_FACEBOOK}}_w.jpg", "photo_{{ID_FACEBOOK}}_w.jpg"]:
     img = cv2.imdecode(np.fromfile(SRC + f, np.uint8), cv2.IMREAD_COLOR)
     fs = det(img); fs = sorted(fs, key=lambda z: z[0])
     print(f, img.shape[:2], [(int(a), int(b), int(c), round(float(s), 2)) for a, b, c, s in fs])

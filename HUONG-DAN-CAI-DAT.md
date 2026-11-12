@@ -1,11 +1,11 @@
-# HƯỚNG DẪN CÀI ĐẶT – APP FACEBOOK MARKETING
+# HƯỚNG DẪN CÀI ĐẶT – SPA MARKETING
 
 Hệ thống có 2 phần, cài riêng:
 
 | Phần | Là gì | Cài thế nào |
 |---|---|---|
-| **App** – APP FACEBOOK MARKETING | Trang web để xem trước, duyệt, yêu cầu sửa, xem số liệu quảng cáo | Mở link app → điền **⚙ Cài đặt** lần đầu |
-| **Bộ nhân viên + skill** – thư mục này | 11 nhân viên AI, **33 skill** (edit video, chạy quảng cáo, mạng xã hội), script dựng video, quy trình tự động | Cài như **plugin** (mục 3) hoặc đưa lên GitHub để chạy tự động trên đám mây (mục 5) |
+| **App** – SPA MARKETING | Trang web để xem trước, duyệt, yêu cầu sửa, xem số liệu quảng cáo | Mở link app → điền **⚙ Cài đặt** lần đầu |
+| **Bộ nhân viên + skill** – thư mục này | 12 nhân viên AI, **42 skill** (edit video, chạy quảng cáo, mạng xã hội), script dựng video, quy trình tự động | Cài như **plugin** (mục 3) hoặc đưa lên GitHub để chạy tự động trên đám mây (mục 5) |
 
 App chỉ là bảng điều khiển. Các việc như dựng video, viết caption, chạy quảng cáo, báo cáo là do **bộ nhân viên + skill** làm.
 
@@ -26,7 +26,7 @@ App chỉ là bảng điều khiển. Các việc như dựng video, viết capt
 | Công cụ ảnh/video AI | Xem mục 4 | Chọn ít nhất 1 |
 
 ## 2. Mở app và cài đặt lần đầu
-1. Mở link **APP FACEBOOK MARKETING** → đăng nhập claude.ai.
+1. Mở link **SPA MARKETING** → đăng nhập claude.ai.
 2. Bảng **Cài đặt** hiện ra. Điền tên thương hiệu, khu vực, các fanpage, giờ đăng, ID tài khoản quảng cáo, quy tắc thương hiệu, chữ ký caption và logo.
 3. Chọn **"Tự tạo thư mục Drive + Google Sheet mới cho tôi"** → **Lưu cài đặt**, rồi bấm **Cho phép** khi được hỏi quyền. App tự tạo trong Drive của bạn:
    - Thư mục `<Tên> – FACEBOOK MARKETING/`: TƯ LIỆU ĐĂNG BÀI, TƯ LIỆU QUẢNG CÁO (SPA, SPY), THÀNH PHẨM, THÀNH PHẨM QUẢNG CÁO, ẢNH YÊU CẦU SỬA
@@ -53,13 +53,22 @@ Cài xong, mọi phiên Claude Code của bạn đều có:
 - Đọc hiệu quả, tìm chỗ đốt tiền: `ad-manager`, `campaign-analytics`, `growth-pulse`
 - Nội dung quảng cáo và đo lường: `mk-ad-creative`, `mk-conversion-tracking`, `mk-influencer-marketing`
 
-**Mạng xã hội:** `social-media-manager`
+**Spy đối thủ, hiểu khách, ưu đãi**
+- Spy quảng cáo ngành thẩm mỹ: `fb-spy-tham-my` (Thư viện quảng cáo Meta, TikTok, Reels; mổ xẻ hook, chấm điểm)
+- Đối thủ: `competitive-teardown`, `mk-competitor-profiling`, `mk-reverse-engineer-marketing`
+- Khách hàng và tâm lý mua: `mk-customer-research`, `mk-marketing-psychology`
+- Thiết kế ưu đãi: `mk-offers`
 
-**11 nhân viên**
+**Mạng xã hội:** `social-media-manager`, `mk-social`, `social-content`
+
+**12 nhân viên**
 - `fb-content`, `fb-media`, `fb-video`, `fb-publisher`: phòng Quản trị page
 - `fb-ads-truong-phong`, `fb-ads-content`, `fb-ads-media`, `fb-ads-video`, `fb-ads-runner`: phòng Quảng cáo
+- `fb-spy`: spy quảng cáo đối thủ, tìm video trend
 - `fb-do-luong`: đo lường
 - `fb-bao-cao`: thư ký báo cáo
+
+**Nhận bản mới:** bộ này được cập nhật dần theo hệ thống gốc. Trong Claude Code gõ `/plugin marketplace update fb-marketing-kho` rồi khởi động lại Claude Code để lấy nhân viên và skill mới.
 
 Script dựng video có sẵn trong `tai-nguyen/scripts/video/`: Before–Vấn đề–After, PC02, PC03, SFX tự tạo.
 

@@ -1,4 +1,4 @@
-# FB-MARKETING – Bộ cài đặt APP FACEBOOK MARKETING
+# FB-MARKETING – Bộ cài đặt SPA MARKETING
 
 Repo **riêng tư**: chỉ người được mời mới cài được.
 

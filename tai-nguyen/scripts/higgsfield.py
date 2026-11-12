@@ -45,7 +45,7 @@ def tao(prompt, ra, mau="ideogram", ty_le="9:16", chat_luong="1080p", so=1, anh_
     r = requests.post(API + MAU[mau], headers=h, json=body, timeout=60)
     if not r.ok:
         if "not_enough_credits" in r.text:
-            sys.exit("LỖI: tài khoản Higgsfield HẾT CREDIT API – sếp cần nạp credit tại cloud.higgsfield.ai rồi chạy lại.")
+            sys.exit("LỖI: ví credit API Higgsfield (cloud.higgsfield.ai) đã hết – ví này KHÁC gói Starter. Dùng Higgsfield qua MCP (tai-nguyen/higgsfield-mcp.md) hoặc nạp ví API.")
         sys.exit(f"LỖI gửi yêu cầu {r.status_code}: {r.text[:400]}")
     j = r.json(); rid = j.get("request_id"); st_url = j.get("status_url") or f"{API}/requests/{rid}/status"
     print("Đã gửi:", mau, rid)

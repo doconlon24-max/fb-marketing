@@ -236,8 +236,8 @@ def crop_for(pid, ratio, x0, x1, y0):
 
 REV = r"C:\MERAH\TƯ LIỆU MERAH ĐĂNG BÀI\9-11-2026\photo_"
 # vùng làm mờ trên ảnh gốc 960x1280: avatar (tâm, bán kính) + họ (trừ chữ cái đầu)
-REVBLUR = {"6305072339573479278": ((241, 305, 27), (407, 285, 472, 319)),
-           "6307672255076439864": ((243, 330, 27), (351, 317, 410, 347))}
+REVBLUR = {"{{ID_FACEBOOK}}": ((241, 305, 27), (407, 285, 472, 319)),
+           "{{ID_FACEBOOK}}": ((243, 330, 27), (351, 317, 410, 347))}
 
 
 def review_photo(n):
@@ -302,7 +302,7 @@ def build_review(H, n, crop, ch, l1, sub, foot, foot2=None, seed=1):
 
 
 def reviews_0700():
-    A, B = "6305072339573479278", "6307672255076439864"
+    A, B = "{{ID_FACEBOOK}}", "{{ID_FACEBOOK}}"
     cA, cB = (40, 90, 920, 1270), (60, 70, 940, 1250)
     o = OUT + "/20261109-0700/"
     build_review(1350, A, cA, 800, "+1 More Love", "from our customers", "MERAH BEAUTY  ·  Makati City", None, 11).save(o + "20261109-0700_anh_01.jpg", quality=93, subsampling=0)

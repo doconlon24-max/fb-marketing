@@ -59,7 +59,7 @@ Mọi câu hỏi chọn page / phương án phải để Sếp TÍCH, không b�
 ## Yêu cầu sửa – tiến độ, lịch sử, tên file (sếp chốt 10/11/2026)
 Sếp KHÔNG sửa tay – chỉ bấm **Duyệt** hoặc **Yêu cầu sửa** trong app. Khi có yêu cầu sửa (QUANG-CAO I = `Cần sửa` / bài page I = `Cần sửa`):
 1. **Tiếp nhận ngay:** thêm 1 dòng vào lịch sử (QC: cột N; page: cột L) `dd/mm HH:MM – <phòng> đã tiếp nhận sửa`, rồi đặt I = `Đang sửa` + thêm dòng `… – Đang sửa: <sẽ làm gì>`.
-2. **Sửa xong:** up bản mới với hậu tố phiên bản (`…_v2.mp4`, `_v3`…), GIỮ bản cũ trên Drive; cập nhật link (F / G) sang bản mới; thêm dòng `… – Sửa xong (v2): <đã sửa gì>`; đặt I = `Chờ duyệt đăng` (QC) / `Chờ duyệt` (page). Thông báo điện thoại + email.
+2. **Sửa xong:** up bản mới với hậu tố phiên bản (`…_v2.mp4`, `_v3`…), cập nhật link (F / G) xong thì **XOÁ HẾT bản cũ** cùng mã trên Drive (`rclone deletefile`, vào Thùng rác) và file nháp/ảnh nền tạm – thư mục thành phẩm chỉ giữ bản cuối cùng (sếp chốt 12/11/2026); cập nhật link (F / G) sang bản mới; thêm dòng `… – Sửa xong (v2): <đã sửa gì>`; đặt I = `Chờ duyệt đăng` (QC) / `Chờ duyệt` (page). Thông báo điện thoại + email.
 3. App tự hiện thanh tiến độ: Đã gửi yêu cầu → Đã tiếp nhận → Đang sửa → Sửa xong – chờ duyệt (dựa vào các chữ "tiếp nhận", "Đang sửa", "Sửa xong" trong lịch sử).
 **Tên file thành phẩm (khớp bài):**
 - Page: `YYYY-MM-DD_HHhMM_ANH1.jpg` / `YYYY-MM-DD_HHhMM_VIDEO1.mp4` (ngày + giờ đăng PH + ảnh/video số mấy trong ngày), thư mục Drive `THÀNH PHẨM/<mã bài YYYYMMDD-HHMM>/`.
@@ -95,3 +95,16 @@ Dòng tab `QUANG-CAO` I = `Đã duyệt` → đăng công khai lên đúng page 
 - L = ID post; I = `Đã đăng page`;
 - K thêm `Đã đăng dd/mm HH:MM (<page>). Post ID: <pageid_postid>` rồi `TIN 24H: đã đăng dd/mm HH:MM (<page>)` (giờ VN).
 Đăng Tin lỗi → ghi `TIN 24H: lỗi – <lý do>` vào K, email sếp, lượt sau thử lại. Mỗi lượt: dòng `Đã đăng page` mà K chưa có `TIN 24H: đã đăng` → đăng Tin ngay. App (Quản trị QC → Đăng bài lên page) hiện tiến độ Đã duyệt › Đã đăng page › Tin 24h từ cột I/K/L.
+
+## SPY đối thủ + Manifold (12/11/2026) – ghi chú cho người dùng app
+- Mục **Quản trị quảng cáo → SPY đối thủ**: chọn dịch vụ, quốc gia, nền tảng (bảng thả xuống có ô tích), bấm Quét. Tích **SPY** ở bài muốn làm lại → ghi tab `SPY-ADS` (I = `Dùng làm ý tưởng`, H bắt đầu `SPY-CLONE`) → nhân viên đám mây nhận trong 1–2 phút.
+- **Manifold tính theo lượt:** gói miễn phí 250 lượt/tháng, tự cấp lại hằng tháng; mỗi từ khoá × mỗi nền tảng = 1 lượt; quét lại cùng từ khoá trong ngày thường không tốn. Hết lượt: Manifold ngừng trả kết quả, không tự trừ tiền; bỏ tích "Dùng Manifold" để quét bằng cách miễn phí (Meta Ad Library + tìm kiếm web: không có lượt xem TikTok, không tách video/ảnh). Gói trả phí (nếu cần): xem manifoldmcp.com/pricing – chủ tài khoản tự quyết và tự thanh toán.
+- **Mỗi người dùng app phải tự kết nối Manifold** bằng tài khoản Claude của mình: claude.ai → Tuỳ chỉnh → Plugin → Manifold → Thêm → Trình kết nối → Kết nối. Lượt của ai người nấy dùng.
+- Không tải được file video quảng cáo Facebook của đối thủ (chỉ có ảnh bìa + lời thoại) → EDIT video dựng lại theo cấu trúc.
+- **Tiết kiệm lượt (mặc định):** Facebook/Instagram quét MIỄN PHÍ bằng kết nối Meta – vẫn hiện từng bài và tích SPY được; Manifold chỉ tốn lượt ở 3 chỗ: (1) ô "TikTok có lượt xem" khi có tích TikTok, (2) ô "Facebook quét bằng Manifold" (mặc định tắt), (3) nút "Xem chi tiết đối thủ này" – 1 lượt/đối thủ. Bài tích SPY: nhân viên đám mây dùng 1–2 lượt để lấy chi tiết + lời thoại.
+
+## Bản chia sẻ SPA MARKETING (cập nhật 12/11/2026 – GĐ4)
+- Artifact riêng, slug `{{ID_KET_NOI}}`, tạo bằng `python tai-nguyen/scripts/lam_app_chung.py merah-studio app-facebook-marketing <chk.js>` rồi thay `__APP_SLUG__` trong `index.html` bằng slug trên, `node --check`, đăng.
+- Dữ liệu trong app lưu riêng từng người (`data/users/<uid>/app/`); Sheet/Drive/Meta/Manifold là của chính người mở app. Lượt Manifold tính theo tài khoản từng người (250 lượt/tháng bản miễn phí).
+- Khác bản MERAH: Đo lường không ghi sẵn page (mặc định "Toàn tài khoản"); Sheet tự có thêm tab DO-LUONG, SPY-ADS, SPY-DOI-THU (Sheet cũ được bổ sung khi mở app); bấm SPY chỉ LƯU bài vào tab SPY-ADS (trạng thái `Dùng làm ý tưởng`), không tự tải video vì không có máy tải hộ.
+- Sửa giao diện ở `merah-studio/src.html` xong phải chạy lại script trên để kiểm tra các chuỗi nó thay còn khớp.

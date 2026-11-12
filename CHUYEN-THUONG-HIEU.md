@@ -7,7 +7,7 @@ Bộ nhân viên này được viết từ một spa mẫu (tên cũ "MERAH", Ma
    - Dịch vụ chính + giá, ưu đãi đang chạy, chữ cấm dùng theo luật quảng cáo ở nước họ.
    - Danh sách fanpage. Page nào được chạy quảng cáo.
    - KPI quảng cáo: giá mỗi tin nhắn chấp nhận được, giá mỗi đơn, mức chi tối đa mỗi ngày, đối tượng mặc định.
-   - ID Google Sheet và các thư mục Drive. Lấy trong app APP FACEBOOK MARKETING → mục Thư mục.
+   - ID Google Sheet và các thư mục Drive. Lấy trong app SPA MARKETING → mục Thư mục.
    - Công cụ ảnh AI có sẵn (OpenAI, Gemini, Higgsfield, Replicate, Canva) và giọng đọc (ElevenLabs hay không).
    - Email nhận báo cáo, giờ báo cáo.
 2. **Sửa** `.claude/agents/fb-*.md`, `tac-vu/*.md`, `tai-nguyen/hop-dong-du-lieu-app.md`:

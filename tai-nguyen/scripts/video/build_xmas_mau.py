@@ -26,7 +26,7 @@ GOLD_L, CREAM, BROWN = (238, 211, 156), (247, 238, 224), (74, 46, 34)
 # ------------------------------------------------------------------ lịch dựng
 SEG = [(6.0, 9.0, "hook"), (0.4, 6.0, "pan"), (9.0, 13.0, "pan")]     # (từ, đến) trong video gốc
 V_END = sum(b - a for a, b, _ in SEG)                                    # 12.6
-PH = [("photo_6307525521813738300_w.jpg", 2.8), ("photo_6307525521813738303_w.jpg", 2.4)]
+PH = [("photo_{{ID_FACEBOOK}}_w.jpg", 2.8), ("photo_{{ID_FACEBOOK}}_w.jpg", 2.4)]
 PROMO_DUR = 3.8
 PAST_PICK = [11, 23, 22, 17]
 PAST_DUR = 0.8
@@ -226,7 +226,7 @@ for i, (f, d) in enumerate(PH):
     card_on_blur(graded_photo(f), f"ph{i}.jpg"); still(f"ph{i}.jpg", d, f"b_ph{i}.mp4", 1.0, 1.05); parts.append(f"b_ph{i}.mp4")
 
 # cảnh ưu đãi: nền ảnh 304 mờ tối ấm (đã che mặt trước khi làm mờ)
-pr = graded_photo("photo_6307525521813738304_w.jpg")
+pr = graded_photo("photo_{{ID_FACEBOOK}}_w.jpg")
 pr = ImageOps.fit(pr, (W, H)).filter(ImageFilter.GaussianBlur(40))
 pr = Image.blend(pr, Image.new("RGB", (W, H), (70, 30, 20)), .45)
 pr.save("promo.jpg", quality=95); still("promo.jpg", PROMO_DUR, "b_promo.mp4", 1.0, 1.04); parts.append("b_promo.mp4")

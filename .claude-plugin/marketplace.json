@@ -2,6 +2,6 @@
   "name": "fb-marketing-kho",
   "owner": {"name": "MERAH"},
   "plugins": [
-    {"name": "fb-marketing", "source": "./", "description": "Nhân viên AI + skill edit video, chạy quảng cáo cho APP FACEBOOK MARKETING"}
+    {"name": "fb-marketing", "source": "./", "description": "Nhân viên AI + skill edit video, chạy quảng cáo cho SPA MARKETING"}
   ]
 }

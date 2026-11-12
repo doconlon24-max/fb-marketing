@@ -63,3 +63,6 @@ Dòng tab `QUANG-CAO` I = `Đã duyệt` → đăng công khai lên đúng page 
 
 ## Yêu cầu sửa MỚI luôn thắng ghi chú cũ (sếp phạt 11/11/2026)
 Ghi chú kiểu "KHÔNG LÀM LẠI / đã làm trên máy" ở cột K chỉ áp dụng cho phiên bản lúc ghi. Nếu SAU đó Sếp bấm Yêu cầu sửa (cột I = `Cần sửa`, dòng mới trong lịch sử có giờ muộn hơn) → **phải tiếp nhận ngay** (ghi "đã tiếp nhận" vào lịch sử + I = `Đang sửa`) và làm. Không bao giờ bỏ qua yêu cầu của Sếp vì ghi chú cũ. Ghi chú trên máy cũng phải ghi kèm giờ.
+
+## SPY ADS – yêu cầu quét sâu của Sếp (12/11/2026)
+Mỗi lượt chạy đều đọc tab `SPY-ADS` A1:K3000 của Sheet `{{ID_DRIVE}}`: dòng I = `Chờ quét` hoặc `Dùng làm ý tưởng` là CÓ VIỆC → làm ngay theo mục "SPY ADS ĐỐI THỦ" trong `tac-vu/nhan-vien-truc.md` (agent `fb-spy`). Nhận việc là đổi I thành `Đang quét` NGAY (app hiện tiến độ cho Sếp), xong đổi thành `Đã quét (n video)`. Nhiều dòng `Chờ quét` trùng dịch vụ + nền tảng thì làm 1 lần, các dòng còn lại ghi `Đã quét (gộp với dòng trên)`.

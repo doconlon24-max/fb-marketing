@@ -27,3 +27,9 @@ Các mục khác trong 26 kết quả tìm "chuyển động" KHÔNG cài vì kh
 - anthropics/knowledge-work-plugins (Apache-2.0): ad-manager (đọc hiệu suất, chỉ ra chỗ đốt tiền), growth-pulse (kiểm tra tăng trưởng theo kênh).
 - alirezarezvani/claude-skills (MIT): campaign-analytics (ROAS, CPA, ROI, phễu), marketing-demand-acquisition (tối ưu phễu tìm khách), paid-ads (chiến lược cấu trúc/đối tượng/giá thầu/retargeting/ngân sách).
 Quy tắc khi dùng: vẫn theo KPI và luật MERAH (chỉ camp CLAUDE, không tự tăng chi/bật camp khi sếp chưa duyệt, BM MERAH TKQC, đối tượng mặc định Nữ 30–64). Skill chỉ là kiến thức tham khảo, luật MERAH thắng nếu khác.
+
+## Đợt 4 (12/11/2026) – skill SPY đối thủ (sếp yêu cầu nhân viên spy chuyên nghiệp)
+- coreyhaines31/marketingskills (MIT, nhánh main 12/11): mk-competitor-profiling, mk-reverse-engineer-marketing (có scripts/teardown.mjs – chỉ đọc trang công khai/Wayback, đã rà: không chạy lệnh hệ thống; mục scrapecreators cần khoá riêng – không dùng), mk-offers, mk-marketing-psychology, mk-customer-research, mk-social.
+- alirezarezvani/claude-skills (MIT, nhánh main 12/11): competitive-teardown (scripts/competitive_matrix_builder.py – tính bảng điểm cục bộ, đã rà), social-content.
+- Tự viết: merah-spy-tham-my (sổ tay spy ngành thẩm mỹ cho agent merah-spy).
+Đổi tên thư mục coreyhaines sang tiền tố mk- (sửa dòng name) như các đợt trước.
