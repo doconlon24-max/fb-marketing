@@ -1241,11 +1241,14 @@ $("#pDrop").onclick=async()=>{const p=S.editing&&S.editing.id&&S.posts.get(S.edi
 /* bài quá giờ: KHÔNG tự bỏ – sếp chọn Bỏ bài hoặc Dời ngày ngay trên app (sếp chốt 13/11/2026) */
 const isOverdue=p=>p&&p.date&&!["Đã lên lịch","Đã đăng","Đã bỏ"].includes(p.status)&&(p.date+" "+(p.time||"00:00"))<nowPH();
 function askMove(p){const d=$("#confirmDlg"),tm=addDays(todayPH(),1);$("#cfTitle").textContent="Dời ngày đăng";
-  $("#cfText").innerHTML=`<p style="margin:0 0 8px">${esc(p.topic||p.id)}<br><span class="note">Lịch cũ: ${fmtDate(p.date)} ${esc(p.time||"")}</span></p><div class="row"><label class="f" for="mvD">Ngày mới<input type="date" id="mvD" value="${tm}" min="${todayPH()}"></label><label class="f" for="mvT">Giờ (PH)<select id="mvT">${TIMES.map(t=>`<option${t===p.time?" selected":""}>${t}</option>`).join("")}</select></label></div><p class="note" id="mvMsg" style="margin:6px 0 0"></p>`;
+  $("#cfText").innerHTML=`<p style="margin:0 0 8px">${esc(p.topic||p.id)}<br><span class="note">Lịch cũ: ${fmtDate(p.date)} ${esc(p.time||"")}</span></p><div class="row"><label class="f" for="mvD">Ngày mới<input type="date" id="mvD" value="${tm}" min="${todayPH()}"></label><label class="f" for="mvT">Giờ đăng (giờ PH)<input type="time" id="mvT" value="${esc(p.time||TIMES[0])}" step="300"></label></div><div class="row" id="mvSlots" style="gap:6px;margin-top:8px"></div><p class="note" id="mvMsg" style="margin:6px 0 0"></p>`;
+  const slots=()=>{const nd=$("#mvD").value,busy=new Set([...S.posts.values()].filter(x=>x.id!==p.id&&x.date===nd&&x.status!=="Đã bỏ").map(x=>x.time));
+    $("#mvSlots").innerHTML='<span class="note">Khung giờ:</span>'+TIMES.map(t=>`<button type="button" class="btn small${$("#mvT").value===t?" primary":""}" data-mvt="${t}"${busy.has(t)?' disabled title="Đã có bài"':""}>${t}${busy.has(t)?" · đã có bài":""}</button>`).join("")+'<span class="note">hoặc gõ giờ khác ở ô trên</span>'};
+  slots();$("#mvD").onchange=slots;$("#mvT").oninput=slots;$("#mvSlots").onclick=e=>{const b=e.target.closest("[data-mvt]");if(b&&!b.disabled){$("#mvT").value=b.dataset.mvt;$("#mvMsg").textContent="";slots()}};
   d.showModal();const done=()=>{d.close();$("#cfTitle").textContent="Xác nhận"};$("#cfNo").onclick=done;
-  $("#cfYes").onclick=async()=>{const nd=$("#mvD").value,nt=$("#mvT").value;if(!nd||nd+" "+nt<nowPH()){$("#mvMsg").textContent="Chọn ngày giờ sau thời điểm hiện tại.";return}
+  $("#cfYes").onclick=async()=>{const nd=$("#mvD").value,nt=($("#mvT").value||"").slice(0,5);if(!nd||!/^\d{2}:\d{2}$/.test(nt)||nd+" "+nt<nowPH()){$("#mvMsg").textContent="Chọn ngày giờ sau thời điểm hiện tại.";return}
     const clash=[...S.posts.values()].find(x=>x.id!==p.id&&x.date===nd&&x.time===nt&&x.status!=="Đã bỏ");if(clash){$("#mvMsg").textContent="Giờ đó đã có bài: "+(clash.topic||clash.id)+". Chọn giờ khác.";return}
-    done();await movePost(p,nd,nt);toast(`Đã dời sang ${fmtDate(nd)} ${nt}`)}}
+    done();await movePost(p,nd,nt);toast(`Đã dời sang ${fmtDate(nd)} ${nt}`);if(typeof DAYSEL==="object"&&DAYSEL.d&&DAYSEL.d!=="all"){DAYSEL.d=nd;render()}}}
 async function movePost(p,nd,nt){const n={...p,date:nd,time:nt,history:[...(p.history||[]),`${nowVN()} – Sếp dời lịch trong app: ${fmtDate(p.date)} ${p.time} → ${fmtDate(nd)} ${nt}`]};
   const r=sheetRows.get(p.id);if(r&&mcp)try{const [h,m]=nt.split(":").map(Number),vn=String((h+23)%24).padStart(2,"0")+":"+String(m).padStart(2,"0");
     await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`B${r.row}:D${r.row}`,values:[[nd,nt,vn]]});

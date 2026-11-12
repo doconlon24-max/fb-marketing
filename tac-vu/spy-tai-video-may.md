@@ -10,6 +10,15 @@ description: CHẠY TRÊN MÁY SẾP (không phải đám mây): tải video SPY
 ## Kích hoạt tức thì từ app (sếp chốt 12/11/2026)
 Khi sếp bấm SPY → Đồng ý, app gửi vào phiên Claude đang mở trên máy một bình luận: `TẢI SPY NGAY | <khoá> | <đối thủ> | <link bài> | <dịch vụ>`. Nhận được là tải NGAY đúng bài đó theo Bước 2 (không cần đọc Sheet trước; dòng của bài ở tab SPY-ADS tìm theo cột J = khoá để cập nhật trạng thái), rồi trả lời 1 dòng trong luồng bình luận ("Đã tải về SPY dd-mm-yyyy: <tên file>" hoặc lý do không tải được). Sau đó xử lý nốt các dòng `Chờ máy tải` còn tồn nếu có.
 
+## Sếp gửi link video thẳng trong chat (sếp chốt 13/11/2026)
+Sếp dán link video (Facebook, TikTok, Instagram, Thư viện quảng cáo…) vào chat: tải NGAY, không hỏi lại.
+- **Ngày thư mục** = ngày sếp gửi link (sếp ghi ngày khác thì dùng ngày đó). Truyền `--date dd-mm-yyyy` cho `spy_tai_ve.py`; thư mục `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/` chưa có thì script tự tạo, có rồi thì thêm vào.
+- **Khoá:** `FB-<id>` / `TT-<id>` / `IG-<mã>` lấy từ link (không có id thì `LINK-<hhmmss>`); **đối thủ:** tên page/kênh đọc trên trang.
+- Tải theo Bước 2 (mục 2–6): mở tab Chrome, chạy JS tải về Downloads tên `SPY_<khoá>.mp4`, `python tai-nguyen/scripts/spy_tai_ve.py --key <khoá> --who "<đối thủ>" --tu-downloads --date <ngày>`, ghi dòng `SPY/<ngày>` ở tab TIEN-DO-TU-LIEU, đóng tab.
+- Thêm 1 dòng tab SPY-ADS để app hiện bài: A ngày, C nền tảng, D đối thủ, F link, I `Đã tải về SPY <ngày>`, H `Sếp gửi trong chat · File: <tên file>`, J khoá.
+- Đẩy lên Drive xong là xoá trên máy (script tự xoá tệp trong Downloads + thư mục tạm). Kết quả `da_xoa_tren_may:false` thì xoá tay `SPY_<khoá>*.mp4` trong Downloads, chỉ khi đã chắc file nằm trên Drive.
+- Nhiều link một lúc thì tải lần lượt. Trả lời sếp 1 dòng mỗi link: đã vào `SPY/<ngày>` (tên file), hoặc lý do không tải được (ảnh, cần đăng nhập/captcha – không tự vượt).
+
 ## Bước 1 – kiểm tra nhanh
 Đọc Sheet `{{ID_DRIVE}}` tab `SPY-ADS!A1:K3000`. Lấy các dòng cột I = `Chờ máy tải`. Không có → trả lời đúng 1 dòng "SPY: không có video chờ tải." rồi DỪNG.
 
