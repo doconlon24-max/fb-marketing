@@ -1,7 +1,7 @@
 {
   "name": "fb-marketing",
   "displayName": "FACEBOOK MARKETING – nhân viên + skill",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Nhân viên AI cho fanpage và quảng cáo Facebook: viết caption, làm ảnh, dựng video quảng cáo (HyperFrames, SFX), chạy và đo lường quảng cáo Meta. Đi kèm SPA MARKETING.",
   "author": {
     "name": "MERAH"

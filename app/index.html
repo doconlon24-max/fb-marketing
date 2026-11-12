@@ -364,6 +364,8 @@ a.tq-t:hover{border-color:var(--accent)}
 .tq-r:hover{outline:1px solid var(--accent)}
 .tq-r b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tq-h{color:var(--muted);font-variant-numeric:tabular-nums}
+.tq-late{grid-template-columns:74px minmax(0,1fr) auto}
+@media (max-width:560px){.tq-late{grid-template-columns:64px minmax(0,1fr)}.tq-late>.row{grid-column:1/-1;justify-content:flex-end}}
 </style>
 </head>
 <body>
@@ -391,6 +393,7 @@ a.tq-t:hover{border-color:var(--accent)}
   <section class="view" id="v-t-tq">
     <div class="head"><h2>Tổng quan</h2><p>Việc đang chờ Sếp, bài đăng hôm nay và số quảng cáo test.</p></div>
     <div class="tq-g" id="tqTodo"></div>
+    <div class="panel" id="tqLateBox" style="margin-top:16px;border-color:var(--warn)" hidden><h3>Bài quá giờ – chọn Dời ngày hoặc Bỏ bài</h3><div id="tqLate" class="tq-list"></div></div>
     <div class="panel" style="margin-top:16px"><h3>Bài fanpage hôm nay</h3><div id="tqToday" class="tq-list"></div></div>
     <div class="panel" style="margin-top:16px"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Quảng cáo test – <span id="tqAdLbl">7 ngày gần nhất</span></h3><a class="btn small" href="#a-camp">Xem chi tiết</a></div><div class="tq-g" id="tqAds" style="margin-top:12px"><div class="muted">Đang tải…</div></div></div>
   </section>
@@ -743,6 +746,7 @@ a.tq-t:hover{border-color:var(--accent)}
         <button type="button" class="btn" id="pSave">Lưu bài</button>
         <button type="button" class="btn" id="pDrive" style="display:none">Xem ảnh/video trên Drive</button>
         <button type="button" class="btn" id="pDrop" style="color:var(--danger)">Bỏ bài</button>
+        <button type="button" class="btn" id="pMove">Dời ngày</button>
         <button type="button" class="btn" id="pFix">Yêu cầu sửa</button>
         <button type="button" class="btn primary" id="pApprove">Duyệt bài này</button>
       </div>
@@ -968,7 +972,7 @@ function postProg(p){let r=null;try{r=sheetRows.get(p.id)}catch(e){}const log=St
   return `<div class="rp-fix"><div class="fixbar" aria-label="Tiến độ đăng bài">${steps.map(([n,on,t],i)=>`<span class="${on?"on":""}${i===k?" cur":""}"><i>${on?"✓":i+1}</i>${n}${t?` <small>${esc(t)}</small>`:""}</span>`).join("")}</div>`+
     `${late?'<small style="color:var(--danger)">Quá giờ đăng mà chưa lên page – nhân viên sẽ đăng bù ngay lượt kế tiếp.</small>':""}${pid?`<small><a href="https://www.facebook.com/${esc(pid)}" target="_blank" rel="noopener">Xem bài trên Facebook ↗</a></small>`:""}</div>`}
 function cardHTML(p){
-  return `<div class="rp-wrap"><button class="row-post" data-id="${esc(p.id)}" style="--st:${ST_COLOR[p.status]}"><span class="rp-t">${esc(p.time)}</span><span class="rp-m"><b>${esc(p.topic||"(chưa có chủ đề)")}</b><small>${esc(p.format||"")}${(p.media||[]).length||p.driveLink?" · có hình":" · chưa có hình"}</small></span><span class="chip" style="--st:${ST_COLOR[p.status]}">${esc(isLate(p)&&p.status!=="Đã đăng"?"Quá giờ":p.status)}</span></button>${fixLine(p)}${postProg(p)}</div>`;
+  return `<div class="rp-wrap"><button class="row-post" data-id="${esc(p.id)}" style="--st:${ST_COLOR[p.status]}"><span class="rp-t">${esc(p.time)}</span><span class="rp-m"><b>${esc(p.topic||"(chưa có chủ đề)")}</b><small>${esc(p.format||"")}${(p.media||[]).length||p.driveLink?" · có hình":" · chưa có hình"}</small></span><span class="chip" style="--st:${ST_COLOR[p.status]}">${esc(isLate(p)&&p.status!=="Đã đăng"?"Quá giờ":p.status)}</span></button>${isOverdue(p)?`<div class="row" style="gap:6px;justify-content:flex-end;padding:4px 8px 8px"><span class="note" style="margin-right:auto;color:var(--danger)">Bài quá giờ – sếp chọn:</span><button class="btn small primary" data-tqmove="${esc(p.id)}">Dời ngày</button><button class="btn small" style="color:var(--danger)" data-tqdrop="${esc(p.id)}">Bỏ bài</button></div>`:""}${fixLine(p)}${postProg(p)}</div>`;
 }
 function renderCal(){
   const start=todayPH(),all=[...S.posts.values()].filter(p=>S.filter?p.status===S.filter:p.status!=="Đã bỏ").map(p=>({...p,_d:p.date}));
@@ -989,7 +993,7 @@ function openPost(id,d,t){
   $("#pDate").value=p.date;opts($("#pTime"),[...new Set([...TIMES,p.time])].sort(),p.time);
   opts($("#pPage"),PAGES,p.page);opts($("#pFormat"),FORMATS,p.format);opts($("#pGroup"),GROUPS,p.group);opts($("#pStatus"),STATUSES,p.status);
   $("#pAi").value=p.ai||"";$("#pTopic").value=p.topic||"";$("#pCaption").value=p.caption||"";$("#pBrief").value=p.brief||"";
-  $("#pDelete").style.visibility=p.id?"visible":"hidden";$("#pDrop").hidden=!p.id||/Đã đăng|Đã bỏ/.test(p.status||"");$("#capStatus").textContent="";
+  $("#pDelete").style.visibility=p.id?"visible":"hidden";$("#pDrop").hidden=!p.id||/Đã đăng|Đã bỏ/.test(p.status||"");$("#pMove").hidden=!p.id||/Đã đăng|Đã lên lịch/.test(p.status||"");$("#capStatus").textContent="";
   const done=p.status==="Đã lên lịch"||p.status==="Đã đăng";$("#pApprove").style.display=done?"none":"";$("#pFix").style.display=done?"none":"";$("#pStatus").disabled=done;
   $("#pDrive").style.display=p.driveLink?"":"none";$("#pDrive").textContent=/reel|video/i.test(p.format||"")?"Xem video trên Drive":"Xem ảnh";$("#pDrive").onclick=()=>{if(!p.driveLink)return;if(/reel|video/i.test(p.format||""))window.open(p.driveLink,"_blank","noopener");else gallery(driveIds(p.driveLink))};
   if(done)$("#capStatus").textContent="Bài đã lên lịch trên Facebook. Muốn sửa nội dung trên Facebook thì sửa trực tiếp trong Meta Business Suite.";
@@ -1234,11 +1238,22 @@ $("#sheetBtn").onclick=()=>{if(!mcp){toast("Trang chưa được phép dùng Goo
 async function dropPost(p,why){const n={...p,status:"Đã bỏ",history:[...(p.history||[]),`${nowVN()} – ${why}`]};await savePost(n);return n}
 $("#pDrop").onclick=async()=>{const p=S.editing&&S.editing.id&&S.posts.get(S.editing.id);if(!p)return;$("#dlg").close();
   if(await confirmBox(`Bỏ bài ${p.id} (${fmtDate(p.date)} ${p.time})? Bài sẽ không đăng nữa và rời khỏi lịch.${p.status==="Đã lên lịch"?" Bài này đã hẹn giờ trên page – nhân viên sẽ huỷ hẹn giờ ở lượt trực tới.":""}`)){await dropPost(p,"Sếp bỏ bài trong app");toast("Đã bỏ bài")}};
-/* bài quá ngày đăng hơn 1 ngày mà chưa đăng/hẹn giờ và không được dời lịch -> tự bỏ (sếp chốt 13/11/2026) */
-async function autoDrop(){const lim=addDays(todayPH(),-1);let n=0;
-  for(const p of [...S.posts.values()]){if(!p.date||p.date>=lim||["Đã lên lịch","Đã đăng","Đã bỏ"].includes(p.status))continue;
-    await dropPost(p,`Tự bỏ: quá ngày đăng ${fmtDate(p.date)} hơn 1 ngày, không có yêu cầu dời lịch`);n++}
-  if(n)toast(`Đã tự bỏ ${n} bài quá ngày`)}
+/* bài quá giờ: KHÔNG tự bỏ – sếp chọn Bỏ bài hoặc Dời ngày ngay trên app (sếp chốt 13/11/2026) */
+const isOverdue=p=>p&&p.date&&!["Đã lên lịch","Đã đăng","Đã bỏ"].includes(p.status)&&(p.date+" "+(p.time||"00:00"))<nowPH();
+function askMove(p){const d=$("#confirmDlg"),tm=addDays(todayPH(),1);$("#cfTitle").textContent="Dời ngày đăng";
+  $("#cfText").innerHTML=`<p style="margin:0 0 8px">${esc(p.topic||p.id)}<br><span class="note">Lịch cũ: ${fmtDate(p.date)} ${esc(p.time||"")}</span></p><div class="row"><label class="f" for="mvD">Ngày mới<input type="date" id="mvD" value="${tm}" min="${todayPH()}"></label><label class="f" for="mvT">Giờ (PH)<select id="mvT">${TIMES.map(t=>`<option${t===p.time?" selected":""}>${t}</option>`).join("")}</select></label></div><p class="note" id="mvMsg" style="margin:6px 0 0"></p>`;
+  d.showModal();const done=()=>{d.close();$("#cfTitle").textContent="Xác nhận"};$("#cfNo").onclick=done;
+  $("#cfYes").onclick=async()=>{const nd=$("#mvD").value,nt=$("#mvT").value;if(!nd||nd+" "+nt<nowPH()){$("#mvMsg").textContent="Chọn ngày giờ sau thời điểm hiện tại.";return}
+    const clash=[...S.posts.values()].find(x=>x.id!==p.id&&x.date===nd&&x.time===nt&&x.status!=="Đã bỏ");if(clash){$("#mvMsg").textContent="Giờ đó đã có bài: "+(clash.topic||clash.id)+". Chọn giờ khác.";return}
+    done();await movePost(p,nd,nt);toast(`Đã dời sang ${fmtDate(nd)} ${nt}`)}}
+async function movePost(p,nd,nt){const n={...p,date:nd,time:nt,history:[...(p.history||[]),`${nowVN()} – Sếp dời lịch trong app: ${fmtDate(p.date)} ${p.time} → ${fmtDate(nd)} ${nt}`]};
+  const r=sheetRows.get(p.id);if(r&&mcp)try{const [h,m]=nt.split(":").map(Number),vn=String((h+23)%24).padStart(2,"0")+":"+String(m).padStart(2,"0");
+    await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`B${r.row}:D${r.row}`,values:[[nd,nt,vn]]});
+    await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`J${r.row}`,values:[[`Sếp dời lịch trong app sang ${nd} ${nt} (giờ PH)`+(r.note?" · "+r.note:"")]]});r.date=nd;r.time=nt}catch(e){toast("Chưa ghi được ngày mới lên Google Sheet – bấm Đồng bộ rồi dời lại");return}
+  await savePost(n)}
+$("#pMove").onclick=()=>{const p=S.editing&&S.editing.id&&S.posts.get(S.editing.id);if(!p)return;$("#dlg").close();askMove(p)};
+document.addEventListener("click",async e=>{const mv=e.target.closest("[data-tqmove]");if(mv){e.preventDefault();const p=S.posts.get(mv.dataset.tqmove);if(p)askMove(p);return}
+  const dr=e.target.closest("[data-tqdrop]");if(dr){e.preventDefault();const p=S.posts.get(dr.dataset.tqdrop);if(p&&await confirmBox(`Bỏ bài "${p.topic||p.id}" (${fmtDate(p.date)} ${p.time})? Bài sẽ không đăng nữa.`)){await dropPost(p,"Sếp bỏ bài trong app (bài quá giờ)");toast("Đã bỏ bài")}}});
 $("#pDelete").onclick=async()=>{const id=S.editing&&S.editing.id;if(!id)return;$("#dlg").close();
   if(await confirmBox(`Xoá bài ${id}? Caption và danh sách media của bài sẽ mất.`)){await deletePost(id);toast("Đã xoá bài")}};
 $("#pToImage").onclick=async()=>{const p=await submitPost();if(!p)return;$("#dlg").close();
@@ -1355,7 +1370,7 @@ async function sheetPull(){
       // bạn duyệt trong app mà Sheet chưa có -> đẩy lên
       else if((cur.status==="Đã duyệt"||cur.status==="Cần sửa")&&r.status==="Chờ duyệt")sheetPush(cur);
     }
-    sheetOk=true;if(db)await autoDrop();render();sheetMsg("Đã đồng bộ Google Sheet lúc "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"}));
+    sheetOk=true;render();sheetMsg("Đã đồng bộ Google Sheet lúc "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"}));
   }catch(e){sheetOk=false;sheetMsg("Chưa đồng bộ được Google Sheet"+(e&&e.code?" ("+e.code+")":"")+". Bấm Đồng bộ để thử lại.",true);console.warn("sheetPull",e)}
 }
 async function sheetPush(p){
@@ -2094,6 +2109,8 @@ function renderTq(){const box=$("#tqTodo");if(!box)return;try{hoiRows;qcRows;TQ_
   box.innerHTML=T(hoi.length-hq,"Câu hỏi fanpage","Nhân viên đang chờ Sếp trả lời","p-y",1)+T(hq,"Câu hỏi quảng cáo","Phong cách, page đăng","q-nguon",1)
     +T(cnt("Chờ duyệt"),"Bài fanpage chờ duyệt","Xem, duyệt hoặc yêu cầu sửa","p-dang",1)+T(qcW,"Quảng cáo chờ duyệt","Chọn page, duyệt đăng","q-dang",1)
     +T(cnt("Cần sửa")+cnt("Đang sửa"),"Bài đang sửa","Nhân viên đang làm lại","p-dang")+T(posts.filter(p=>p.status==="Đã lên lịch"&&(p.date||"")>=td).length,"Bài đã hẹn giờ","Từ hôm nay trở đi, sẽ tự đăng","p-dang");
+  const late=posts.filter(isOverdue).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));$("#tqLateBox").hidden=!late.length;
+  $("#tqLate").innerHTML=late.map(p=>`<div class="tq-r tq-late"><span class="tq-h">${fmtDate(p.date)}<br>${esc(p.time||"")}</span><span style="min-width:0"><b style="display:block">${esc(p.topic||"(chưa có chủ đề)")}</b><span class="chip" style="--st:${ST_COLOR[p.status]||"var(--muted)"}">${esc(p.status||"")}</span></span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn small primary" data-tqmove="${esc(p.id)}">Dời ngày</button><button class="btn small" style="color:var(--danger)" data-tqdrop="${esc(p.id)}">Bỏ bài</button></span></div>`).join("");
   const today=posts.filter(p=>p.date===td).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
   $("#tqToday").innerHTML=today.length?today.map(p=>`<a class="tq-r" href="#p-dang"><span class="tq-h">${esc(p.time||"")}</span><b>${esc(p.topic||"(chưa có chủ đề)")}</b><span class="chip" style="--st:${ST_COLOR[p.status]||"var(--muted)"}">${esc(p.status||"")}</span></a>`).join(""):'<div class="muted">Hôm nay chưa có bài nào trong lịch.</div>';
   const ab=$("#tqAds");if(TQ_ADS){const m=TQ_ADS;const A=(v,l)=>`<div class="tq-t"><b>${v}</b><span>${l}</span></div>`;
