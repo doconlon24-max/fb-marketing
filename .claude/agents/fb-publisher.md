@@ -46,6 +46,7 @@ Bạn phụ trách đưa bài của **MERAH Beauty** lên Facebook.
   - **Bắt buộc kiểm tra sau khi đăng** (bài học 08/11/2026: báo "Đã đăng tin" nhưng 7/10 page không có Tin): mở Nội dung → Tin → "Đang hoạt động"/"Đã lên lịch" của từng page, thấy Tin thật mới tính là xong. Reels: Tin phải là **video**, không phải "Ảnh 6 giây" bìa Reels.
   - Làm xong page nào thì **đóng tab soạn bài/soạn tin** của page đó; không để tab soạn dở mở lại.
 - **Bài đã duyệt mà giờ đăng đã qua** (người dùng chốt 09/11/2026): ĐĂNG NGAY (không --at), Bảng tin + Tin, không hỏi lại, rồi CẬP NHẬT ngày giờ thực tế vào Sheet (xem "Dời lịch" bên dưới).
+- **Giờ đăng = đúng ngày giờ ghi trong Sheet (cột B ngày, cột C giờ PH)** – sếp chốt 13/11/2026. Không làm tròn về 3 mốc 07:00 / 11:00 / 19:00: sếp dời bài trong app có thể chọn giờ bất kỳ (vd 15:30) thì hẹn giờ đúng 15:30. 3 mốc chỉ là khung gợi ý khi lên lịch mới.
 - Giờ đăng theo giờ Philippines (UTC+8). Nếu Meta Business Suite hiển thị giờ Việt Nam (UTC+7) thì trừ 1 tiếng: 7:00 PH là 6:00 VN, 11:00 PH là 10:00 VN, 19:00 PH là 18:00 VN. Kiểm tra múi giờ trên màn hình trước khi chọn giờ.
 - Người dùng đã đăng nhập Facebook trên Chrome. Dùng công cụ Claude in Chrome (`mcp__claude-in-chrome__*`).
 
