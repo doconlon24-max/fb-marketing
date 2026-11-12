@@ -742,6 +742,7 @@ a.tq-t:hover{border-color:var(--accent)}
         <button type="button" class="btn" id="pToImage">Mở trong Chỉnh ảnh</button>
         <button type="button" class="btn" id="pSave">Lưu bài</button>
         <button type="button" class="btn" id="pDrive" style="display:none">Xem ảnh/video trên Drive</button>
+        <button type="button" class="btn" id="pDrop" style="color:var(--danger)">Bỏ bài</button>
         <button type="button" class="btn" id="pFix">Yêu cầu sửa</button>
         <button type="button" class="btn primary" id="pApprove">Duyệt bài này</button>
       </div>
@@ -793,8 +794,8 @@ a.tq-t:hover{border-color:var(--accent)}
 "use strict";
 let LOGO_LIGHT="", LOGO_DARK="";
 const ARTIFACT_NAME="SPA MARKETING";
-const STATUSES=["Nháp","Đã viết","Đã có media","Chờ duyệt","Cần sửa","Đang sửa","Đã duyệt","Đã lên lịch","Đã đăng"];
-const ST_COLOR={"Nháp":"var(--muted)","Đã viết":"var(--info)","Đã có media":"#7a5bb5","Chờ duyệt":"var(--warn)","Đã duyệt":"var(--ok)","Đã lên lịch":"var(--accent)","Cần sửa":"var(--danger,#c0392b)","Đang sửa":"#c77d1a","Đã đăng":"var(--muted)"};
+const STATUSES=["Nháp","Đã viết","Đã có media","Chờ duyệt","Cần sửa","Đang sửa","Đã duyệt","Đã lên lịch","Đã đăng","Đã bỏ"];
+const ST_COLOR={"Đã bỏ":"var(--muted)","Nháp":"var(--muted)","Đã viết":"var(--info)","Đã có media":"#7a5bb5","Chờ duyệt":"var(--warn)","Đã duyệt":"var(--ok)","Đã lên lịch":"var(--accent)","Cần sửa":"var(--danger,#c0392b)","Đang sửa":"#c77d1a","Đã đăng":"var(--muted)"};
 let PAGES=["Page của tôi"];
 const FORMATS=["Ảnh đơn","Carousel","Reels","Story"];
 let GROUPS=["Kiến thức da","Dịch vụ","Khuyến mãi/CTA","Khách hàng thật","Hậu trường","Before/After"];
@@ -970,7 +971,7 @@ function cardHTML(p){
   return `<div class="rp-wrap"><button class="row-post" data-id="${esc(p.id)}" style="--st:${ST_COLOR[p.status]}"><span class="rp-t">${esc(p.time)}</span><span class="rp-m"><b>${esc(p.topic||"(chưa có chủ đề)")}</b><small>${esc(p.format||"")}${(p.media||[]).length||p.driveLink?" · có hình":" · chưa có hình"}</small></span><span class="chip" style="--st:${ST_COLOR[p.status]}">${esc(isLate(p)&&p.status!=="Đã đăng"?"Quá giờ":p.status)}</span></button>${fixLine(p)}${postProg(p)}</div>`;
 }
 function renderCal(){
-  const start=todayPH(),all=[...S.posts.values()].filter(p=>!S.filter||p.status===S.filter).map(p=>({...p,_d:p.date}));
+  const start=todayPH(),all=[...S.posts.values()].filter(p=>S.filter?p.status===S.filter:p.status!=="Đã bỏ").map(p=>({...p,_d:p.date}));
   const picked=dayBar("d",all,renderCal),one=DAYSEL.d&&DAYSEL.d!=="all";
   const posts=one?picked:all.filter(p=>p.date>=start||!["Đã lên lịch","Đã đăng"].includes(p.status));
   const days=one?[DAYSEL.d]:[...new Set([start,...posts.map(p=>p.date)])].sort();
@@ -988,7 +989,7 @@ function openPost(id,d,t){
   $("#pDate").value=p.date;opts($("#pTime"),[...new Set([...TIMES,p.time])].sort(),p.time);
   opts($("#pPage"),PAGES,p.page);opts($("#pFormat"),FORMATS,p.format);opts($("#pGroup"),GROUPS,p.group);opts($("#pStatus"),STATUSES,p.status);
   $("#pAi").value=p.ai||"";$("#pTopic").value=p.topic||"";$("#pCaption").value=p.caption||"";$("#pBrief").value=p.brief||"";
-  $("#pDelete").style.visibility=p.id?"visible":"hidden";$("#capStatus").textContent="";
+  $("#pDelete").style.visibility=p.id?"visible":"hidden";$("#pDrop").hidden=!p.id||/Đã đăng|Đã bỏ/.test(p.status||"");$("#capStatus").textContent="";
   const done=p.status==="Đã lên lịch"||p.status==="Đã đăng";$("#pApprove").style.display=done?"none":"";$("#pFix").style.display=done?"none":"";$("#pStatus").disabled=done;
   $("#pDrive").style.display=p.driveLink?"":"none";$("#pDrive").textContent=/reel|video/i.test(p.format||"")?"Xem video trên Drive":"Xem ảnh";$("#pDrive").onclick=()=>{if(!p.driveLink)return;if(/reel|video/i.test(p.format||""))window.open(p.driveLink,"_blank","noopener");else gallery(driveIds(p.driveLink))};
   if(done)$("#capStatus").textContent="Bài đã lên lịch trên Facebook. Muốn sửa nội dung trên Facebook thì sửa trực tiếp trong Meta Business Suite.";
@@ -1230,6 +1231,14 @@ $("#pFix").onclick=async()=>{const id=S.editing&&S.editing.id;if(!id)return;$("#
   const note=await askText("Yêu cầu sửa bài","Cần sửa gì? – có thể dán ảnh bên dưới",{img:true,tag:"bai"});if(!note)return;
   $("#pStatus").value="Cần sửa";const p0=await submitPost();if(p0){const p={...p0,fixNote:note};await savePost(p);$("#dlg").close();toast("Đã gửi yêu cầu sửa "+p.id)}};
 $("#sheetBtn").onclick=()=>{if(!mcp){toast("Trang chưa được phép dùng Google Sheets");return}sheetMsg("Đang đồng bộ…");sheetPull()};
+async function dropPost(p,why){const n={...p,status:"Đã bỏ",history:[...(p.history||[]),`${nowVN()} – ${why}`]};await savePost(n);return n}
+$("#pDrop").onclick=async()=>{const p=S.editing&&S.editing.id&&S.posts.get(S.editing.id);if(!p)return;$("#dlg").close();
+  if(await confirmBox(`Bỏ bài ${p.id} (${fmtDate(p.date)} ${p.time})? Bài sẽ không đăng nữa và rời khỏi lịch.${p.status==="Đã lên lịch"?" Bài này đã hẹn giờ trên page – nhân viên sẽ huỷ hẹn giờ ở lượt trực tới.":""}`)){await dropPost(p,"Sếp bỏ bài trong app");toast("Đã bỏ bài")}};
+/* bài quá ngày đăng hơn 1 ngày mà chưa đăng/hẹn giờ và không được dời lịch -> tự bỏ (sếp chốt 13/11/2026) */
+async function autoDrop(){const lim=addDays(todayPH(),-1);let n=0;
+  for(const p of [...S.posts.values()]){if(!p.date||p.date>=lim||["Đã lên lịch","Đã đăng","Đã bỏ"].includes(p.status))continue;
+    await dropPost(p,`Tự bỏ: quá ngày đăng ${fmtDate(p.date)} hơn 1 ngày, không có yêu cầu dời lịch`);n++}
+  if(n)toast(`Đã tự bỏ ${n} bài quá ngày`)}
 $("#pDelete").onclick=async()=>{const id=S.editing&&S.editing.id;if(!id)return;$("#dlg").close();
   if(await confirmBox(`Xoá bài ${id}? Caption và danh sách media của bài sẽ mất.`)){await deletePost(id);toast("Đã xoá bài")}};
 $("#pToImage").onclick=async()=>{const p=await submitPost();if(!p)return;$("#dlg").close();
@@ -1335,6 +1344,8 @@ async function sheetPull(){
        if(nd&&/^\d{1,2}:\d{2}$/.test(nt)&&(nd!==cur.date||nt.padStart(5,"0")!==cur.time)){const c0=S.posts.get(id);
          const p={...c0,date:nd,time:nt.padStart(5,"0"),history:[...(c0.history||[]),`${nowVN()} – Dời lịch: ${fmtDate(c0.date)} ${c0.time} → ${fmtDate(nd)} ${nt.padStart(5,"0")}`],updatedAt:new Date().toISOString()};
          S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}}}
+      if(S.posts.get(id).status==="Đã bỏ")continue;
+      if(r.status==="Đã bỏ"){const p={...S.posts.get(id),status:"Đã bỏ",updatedAt:new Date().toISOString()};S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}continue}
       if(r.link&&!(cur.media||[]).length&&(r.link!==cur.driveLink||(/Chờ duyệt|Đang sửa|Cần sửa/.test(cur.status)&&r.caption&&r.caption!==cur.caption))){const c1=S.posts.get(id),p={...c1,driveLink:r.link,caption:/Chờ duyệt|Đang sửa|Cần sửa/.test(c1.status)&&r.caption?r.caption:c1.caption,updatedAt:new Date().toISOString()};S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}}
       if(r.status==="Đang sửa"&&cur.status==="Cần sửa"){const p={...S.posts.get(id),status:"Đang sửa",updatedAt:new Date().toISOString()};S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}continue}
       // hệ thống đã lên lịch/đăng -> cập nhật app
@@ -1344,7 +1355,7 @@ async function sheetPull(){
       // bạn duyệt trong app mà Sheet chưa có -> đẩy lên
       else if((cur.status==="Đã duyệt"||cur.status==="Cần sửa")&&r.status==="Chờ duyệt")sheetPush(cur);
     }
-    sheetOk=true;render();sheetMsg("Đã đồng bộ Google Sheet lúc "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"}));
+    sheetOk=true;if(db)await autoDrop();render();sheetMsg("Đã đồng bộ Google Sheet lúc "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"}));
   }catch(e){sheetOk=false;sheetMsg("Chưa đồng bộ được Google Sheet"+(e&&e.code?" ("+e.code+")":"")+". Bấm Đồng bộ để thử lại.",true);console.warn("sheetPull",e)}
 }
 async function sheetPush(p){
@@ -2077,13 +2088,13 @@ spyInit();platInit();$("#spySvcIn").onchange=()=>spyRun(spyPick,"Đang lấy t�
 /* ---- sự kiện ---- */
 /* ---------- Tổng quan ---------- */
 let TQ_ADS=null,TQ_ERR="";
-function renderTq(){const box=$("#tqTodo");if(!box)return;try{hoiRows;qcRows;TQ_ADS;ST_COLOR}catch(e){return}const posts=[...S.posts.values()],cnt=st=>posts.filter(p=>p.status===st).length;
+function renderTq(){const box=$("#tqTodo");if(!box)return;try{hoiRows;qcRows;TQ_ADS;ST_COLOR}catch(e){return}const td=todayPH();const posts=[...S.posts.values()],cnt=st=>posts.filter(p=>p.status===st).length;
   const hoi=hoiRows.filter(r=>!r.a),hq=hoi.filter(r=>/qc|quảng/i.test(r.phong)).length,qcW=qcRows.filter(r=>/chờ.*duyệt|chờ sếp/i.test(r.st||"")).length;
   const T=(n,l,d,href,hot)=>`<a class="tq-t${hot&&n?" hot":""}" href="#${href}"><b>${n}</b><span>${l}</span><small>${d}</small></a>`;
   box.innerHTML=T(hoi.length-hq,"Câu hỏi fanpage","Nhân viên đang chờ Sếp trả lời","p-y",1)+T(hq,"Câu hỏi quảng cáo","Phong cách, page đăng","q-nguon",1)
     +T(cnt("Chờ duyệt"),"Bài fanpage chờ duyệt","Xem, duyệt hoặc yêu cầu sửa","p-dang",1)+T(qcW,"Quảng cáo chờ duyệt","Chọn page, duyệt đăng","q-dang",1)
-    +T(cnt("Cần sửa")+cnt("Đang sửa"),"Bài đang sửa","Nhân viên đang làm lại","p-dang")+T(cnt("Đã lên lịch"),"Bài đã hẹn giờ","Sẽ tự đăng đúng giờ","p-dang");
-  const td=todayPH(),today=posts.filter(p=>p.date===td).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+    +T(cnt("Cần sửa")+cnt("Đang sửa"),"Bài đang sửa","Nhân viên đang làm lại","p-dang")+T(posts.filter(p=>p.status==="Đã lên lịch"&&(p.date||"")>=td).length,"Bài đã hẹn giờ","Từ hôm nay trở đi, sẽ tự đăng","p-dang");
+  const today=posts.filter(p=>p.date===td).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
   $("#tqToday").innerHTML=today.length?today.map(p=>`<a class="tq-r" href="#p-dang"><span class="tq-h">${esc(p.time||"")}</span><b>${esc(p.topic||"(chưa có chủ đề)")}</b><span class="chip" style="--st:${ST_COLOR[p.status]||"var(--muted)"}">${esc(p.status||"")}</span></a>`).join(""):'<div class="muted">Hôm nay chưa có bài nào trong lịch.</div>';
   const ab=$("#tqAds");if(TQ_ADS){const m=TQ_ADS;const A=(v,l)=>`<div class="tq-t"><b>${v}</b><span>${l}</span></div>`;
     ab.innerHTML=A(vnd(m.sp),"Đã chi")+A(intf(m.rs),"Số mess")+A(m.rs?vnd(m.sp/m.rs):"—","Giá mess")+A(intf(m.pu),"Lượt mua")+A(m.pu?vnd(m.sp/m.pu):"—","Giá lượt mua")}
