@@ -1,6 +1,6 @@
 # FB-MARKETING – Bộ cài đặt SPA MARKETING
 
-Repo **riêng tư**: chỉ người được mời mới cài được.
+Repo **công khai**: ai cũng cài được bằng 2 lệnh dưới.
 
 1. Chấp nhận lời mời vào repo (email từ GitHub).
 2. Máy cài Claude Code phải đăng nhập GitHub (git đã có quyền đọc repo này).

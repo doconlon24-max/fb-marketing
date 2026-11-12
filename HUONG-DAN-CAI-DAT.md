@@ -34,7 +34,7 @@ App chỉ là bảng điều khiển. Các việc như dựng video, viết capt
 4. Dữ liệu trong app là **riêng của bạn**. Người khác dùng cùng link không xem được.
 
 ## 3. Cài nhân viên + skill (plugin) – 2 lệnh
-Người chia sẻ đưa thư mục này lên GitHub, `doconlon24-max/fb-marketing` (riêng tư – chủ repo mời bạn vào trước). Bạn mở Claude Code và gõ:
+Người chia sẻ đưa thư mục này lên GitHub, `doconlon24-max/fb-marketing` (công khai – ai có link cũng cài được). Bạn mở Claude Code và gõ:
 ```
 /plugin marketplace add doconlon24-max/fb-marketing
 /plugin install fb-marketing@fb-marketing-kho
