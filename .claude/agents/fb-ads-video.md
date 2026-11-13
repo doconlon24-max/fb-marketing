@@ -79,7 +79,12 @@ Video quảng cáo phải **luôn có nhạc hay + hiệu ứng âm thanh ở m�
 - **Nhạc:** nhạc nền theo mùa (Giáng sinh: `nhac_giang_sinh.py`) + **nhịp trống nhẹ** (`nhip_bpm` đúng tempo nhạc) cho sôi động; nhạc + trống tự nhỏ khi có giọng đọc (sidechain), SFX KHÔNG bị nhỏ theo.
 - Mức âm: giọng rõ nhất, SFX nghe rõ nhưng không át giọng (-3 đến -10 dB), tổng -14 LUFS. Kiểm tra ebur128 + sóng âm trước khi giao. Không để đoạn nào im quá 1 giây.
 
-## ★ THIẾT KẾ CHUẨN CHO MỌI VIDEO QC: PC07 HyperFrames (sếp đánh giá cao nhất 11/11/2026)
+## ★★ BẮT BUỘC PC07 HyperFrames (sếp chốt lại 13/11/2026 01:20 – thay quy tắc "đa dạng" cùng ngày)
+Sếp xem bản `spy_merah.py` VD1 13/11: "quá xấu, đúng là chỉ có PC07 như các video trước làm là đẹp nhất, dùng phong cách đó". → MỌI video QC dựng bằng **HyperFrames hệ thiết kế PC07** (màu, font, viên thuốc, vòng vàng + pill, glow, trượt trước/sau, thẻ ưu đãi đồng-vàng, CTA). Khác nhau giữa các video chỉ ở bố cục/thứ tự cảnh/hook. **KHÔNG giao bản `spy_merah.py`/`dung_qc_*.py` làm thành phẩm** – đám mây không render được HyperFrames thì chỉ chuẩn bị (tải tư liệu, voice, chọn khung) và để máy render.
+- **Logo MERAH: sát góc trên cùng bên trái** (left 36px, top 36px, rộng ~220px) suốt video – không đặt thấp ở top 176 như bản cũ.
+- **Chiếu chủ yếu KHÁCH:** bỏ hết khung hình nhân viên/bác sĩ tư vấn đứng nói; chỉ giữ cảnh khách (mặt, trước/sau, phản ứng).
+
+## ★ THIẾT KẾ CHUẨN: PC07 HyperFrames (sếp đánh giá cao nhất 11/11/2026)
 Sếp chấm `2026-11-10_VD3_v7_HyperFrames.mp4` đẹp nhất: đồ hoạ đẹp, nội dung đầy đủ, chữ sang, màu tốt. Từ nay MỌI video QC (SPA lẫn SPY) dựng bằng **HyperFrames** theo hệ thiết kế `tai-nguyen/phong-cach-video-qc/PC07-hyperframes/` (đọc `mo-ta.md` + `index.html`):
 - Màu: kem `#f6eee4/#efe3d3`, nâu chocolate `#4a2e22`, đồng `#3b2416→#8a5a32`, vàng `#c9a46a/#e8cfa0`, đỏ gạch `#9c4a3a`. Font: **Playfair Display** (tiêu đề, giá, nghiêng nhấn `<em>` màu vàng kem) + **Montserrat** đậm (nhãn, viên thuốc chữ hoa giãn chữ).
 - Thành phần: nhãn "kick" viên thuốc nâu chữ vàng · tiêu đề serif lớn bóng mờ · dải tối trên/dưới (shade) để chữ nổi trên ảnh · vòng tròn vàng vẽ dần + đường chấm nối + nhãn pill kem viền vàng chấm đỏ · cảnh cơ chế minh hoạ (số lớn "30 min", hình da/HA, ✓ lợi ích) · vệt sáng lướt + lấp lánh "Hello, new glow!" · trượt trước/sau thanh vàng · thẻ ảnh khách thật xoay nghiêng · thẻ ưu đãi nền đồng, giá chữ vàng chuyển màu, quà ₱10,000 · CTA nút nâu "MESSAGE US NOW" + logo · logo MERAH góc trái trên suốt video.

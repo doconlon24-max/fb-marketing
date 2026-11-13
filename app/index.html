@@ -1516,8 +1516,8 @@ function qcProg(r){const st=String(r.st||""),log=String(r.log||""),noTin=log.rep
   const steps=[["Đã duyệt",true,""],["Đã đăng page",dang,tD],["Tin 24h",tin,tT],["Seeding",sd,tS],["Đã lên ads",ads,tA]],k=steps.reduce((a,x,i)=>x[1]?i:a,0);
   return `<div class="fixbar" style="margin-top:6px" aria-label="Tiến độ đăng">${steps.map(([n,on,t],i)=>`<span class="${on?"on":""}${i===k?" cur":""}"><i>${on?"✓":i+1}</i>${n}${t?` <small>${esc(t)}</small>`:""}</span>`).join("")}</div>`}
 async function loadQDang(){const tb=$("#qDangBody");if(!mcp){tb.innerHTML='<tr><td colspan="8" class="muted">App chưa được phép dùng Google Sheets.</td></tr>';return}
-  try{qcRows=await loadQcRows();
-    tb.innerHTML=qcRows.length?qcRows.slice().reverse().map(r=>{const done=/đã đăng|đã duyệt/i.test(r.st);
+  try{qcRows=await loadQcRows();const shown=qcRows.filter(r=>!/đã bỏ/i.test(r.st||""));
+    tb.innerHTML=shown.length?shown.slice().reverse().map(r=>{const done=/đã đăng|đã duyệt/i.test(r.st);
       return `<tr><td>${esc(r.date)}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.name||r.id)}</a>`:esc(r.name||r.id)}<div class="note">${esc(r.src)}</div></td><td>${esc(r.type)}</td><td>${esc(r.style)}</td>
       <td>${done?esc(r.page):`<select id="pg-${r.row}" aria-label="Chọn page cho ${esc(r.name||r.id)}"><option value="">— chọn page —</option>${PAGES.map(p=>`<option${p===r.page?" selected":""}>${esc(p)}</option>`).join("")}</select>`}</td>
       <td><span class="chip" style="--st:${/đã đăng/i.test(r.st)?"var(--accent)":/đã duyệt/i.test(r.st)?"var(--ok)":"var(--warn)"}">${esc(r.st||"Chờ chọn page")}</span>${qcProg(r)}</td><td>${postLink(r.post)}</td>
@@ -1546,8 +1546,8 @@ function dayBar(k,items,rerender){const bar=$("#"+k+"Days");if(!bar)return items
 document.addEventListener("click",e=>{const b=e.target.closest("[data-day]");if(!b)return;const [k,v]=b.dataset.day.split("|");DAYSEL[k]=v;const bar=$("#"+k+"Days");bar&&bar._re&&bar._re()});
 document.addEventListener("change",e=>{const i=e.target.closest("[data-dayin]");if(!i||!i.value)return;const k=i.dataset.dayin;DAYSEL[k]=i.value;const bar=$("#"+k+"Days");bar&&bar._re&&bar._re()});
 function renderQPreview(){const box=$("#qPreview");if(!box)return;const all=qcRows.map(r=>({...r,_d:isoD(r.date)}));
-  let list=dayBar("q",all,renderQPreview);if(DAYSEL.q==="all")list=list.filter(r=>!/đã đăng/i.test(r.st));list=list.slice().reverse();
-  box.innerHTML=list.length?list.map(fbCard).join(""):(DAYSEL.q==="all"?'<div class="empty">Chưa có thành phẩm nào chờ duyệt. Có thành phẩm mới, bản xem trước sẽ hiện ở đây.</div>':'<div class="empty">Ngày này chưa có thành phẩm nào.</div>')}
+  const POSTED=/đã đăng|tin 24h|seeding|đã lên ads/i;let list=dayBar("q",all,renderQPreview);const nDone=list.filter(r=>POSTED.test(r.st||"")).length;list=list.filter(r=>!POSTED.test(r.st||"")&&!/đã bỏ/i.test(r.st||"")).slice().reverse();
+  box.innerHTML=(nDone?`<p class="note" style="margin:0 0 10px">${nDone} thành phẩm đã đăng lên page – xem tiến độ ở mục <a href="#q-dang">Đăng bài lên page</a>.</p>`:"")+(list.length?list.map(fbCard).join(""):(DAYSEL.q==="all"?'<div class="empty">Chưa có thành phẩm nào chờ duyệt. Có thành phẩm mới, bản xem trước sẽ hiện ở đây.</div>':'<div class="empty">Ngày này không còn thành phẩm nào chờ duyệt.</div>'))}
 async function loadPreview(){const box=$("#qPreview");if(!box)return;if(!mcp){box.innerHTML='<div class="empty">App chưa được phép dùng Google Sheets.</div>';return}
   try{qcRows=await loadQcRows();renderQPreview()
   }catch(e){box.innerHTML=`<div class="empty">${esc(errTxt(e))}</div>`}}
@@ -1563,10 +1563,10 @@ function fixProgress(hist,status){const lines=String(hist||"").split(/\r?\n/).ma
 function linkify(t){return esc(t).replace(/https:\/\/drive\.google\.com\/[^\s,|<]+/g,u=>`<a href="${u}" target="_blank" rel="noopener">🖼 ảnh</a>`)}
 function histHTML(h){const lines=String(h||"").split("\n").map(x=>x.trim()).filter(Boolean);if(!lines.length)return "";
   return `<details class="hist"><summary>Lịch sử chỉnh sửa (${lines.length})</summary><ol>${lines.map(l=>`<li>${linkify(l)}</li>`).join("")}</ol></details>`}
-function fbCard(r){const id=driveId(r.link),cap=fmtCap(r.cap)||"(Content QC chưa viết caption)",long=cap.split("\n").length>4||cap.length>260,done=/đã duyệt/i.test(r.st),fix=/cần sửa/i.test(r.st);
+function fbCard(r){const id=driveId(r.link),cap=fmtCap(r.cap)||"(Content QC chưa viết caption)",long=cap.split("\n").length>4||cap.length>260,done=/đã duyệt|đã đăng|tin 24h|seeding|đã lên ads/i.test(r.st||""),posted=/đã đăng|tin 24h|seeding|đã lên ads/i.test(r.st||""),fix=/cần sửa/i.test(r.st);
   const media=id?`<iframe src="https://drive.google.com/file/d/${esc(id)}/preview" allow="autoplay; fullscreen" loading="lazy" title="Video ${esc(r.name)}"></iframe>`:(r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">Mở video trên Drive</a>`:'<span style="color:#ccc;font-size:13px">Chưa có video</span>');
   return `<article class="fb" aria-label="Bản xem trước ${esc(r.name)}">
-    <div class="fb-h"><span class="fb-av">MR</span><span><b>${esc(r.page||"Chưa chọn page")}</b><small>Bản xem trước · chưa đăng · 🌐</small></span></div>
+    <div class="fb-h"><span class="fb-av">MR</span><span><b>${esc(r.page||"Chưa chọn page")}</b><small>${posted?"Đã đăng lên page":"Bản xem trước · chưa đăng"} · 🌐</small></span></div>
     <div class="fb-cap${long?" cut":""}" id="cap-${r.row}">${esc(cap)}</div>${long?`<button class="fb-more" data-more="${r.row}">Xem thêm</button>`:""}
     <div class="fb-media">${media}<span class="fb-tag">${esc((r.date||"").slice(0,5))} · ${esc(r.name||r.id)} · ${/ảnh|anh/i.test(r.type||"")?"Ảnh":"Video"} ${esc(String(r.name||"").replace(/\D/g,""))}</span></div>
     <div class="fb-cta"><span><small>MERAH BEAUTY · Makati</small><br><b>Message us to book</b></span><span class="btnfb">Send message</span></div>
@@ -1576,7 +1576,7 @@ function fbCard(r){const id=driveId(r.link),cap=fmtCap(r.cap)||"(Content QC chư
       <div class="row" style="justify-content:space-between"><span class="note">${esc(r.date)} · ${esc(r.src)} · ${esc(r.style)}</span><span class="chip" style="--st:${done?"var(--ok)":fix?"var(--danger)":"var(--warn)"}">${esc(r.st||"Chờ duyệt đăng")}</span></div>
       ${r.link?`<a class="btn small" href="${esc(r.link)}" target="_blank" rel="noopener" style="justify-self:start">▶ Mở video trên Drive (nếu khung không phát)</a>`:""}
       ${fixProgress(r.hist,r.st)}${(fix||/đang sửa/i.test(r.st))&&r.note?`<p class="note" style="margin:0"><b>Yêu cầu:</b> ${linkify(r.note)}</p>`:""}${histHTML(r.hist)}
-      ${done?'<span class="note">Đã duyệt – lượt kế tiếp sẽ đăng.</span>':`${r.page?"":`<select id="pv-${r.row}" aria-label="Chọn page"><option value="">— chọn page —</option>${PAGES.map(p=>`<option>${esc(p)}</option>`).join("")}</select>`}
+      ${posted?'<span class="note">Đã đăng lên page.</span>':done?'<span class="note">Đã duyệt – lượt kế tiếp sẽ đăng.</span>':`${r.page?"":`<select id="pv-${r.row}" aria-label="Chọn page"><option value="">— chọn page —</option>${PAGES.map(p=>`<option>${esc(p)}</option>`).join("")}</select>`}
       <div class="row"><button class="btn primary" data-pvok="${r.row}">Duyệt đăng</button><button class="btn" data-pvfix="${r.row}">Yêu cầu sửa</button></div>`}
     </div></article>`}
 async function pvApprove(row){const r=qcRows.find(x=>x.row===row);if(!r)return;const pg=r.page||($("#pv-"+row)&&$("#pv-"+row).value);

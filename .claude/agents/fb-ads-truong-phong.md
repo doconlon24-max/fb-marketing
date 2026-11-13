@@ -56,3 +56,5 @@ Mỗi thư mục ngày tư liệu (PAGE = TƯ LIỆU ĐĂNG BÀI/<dd-mm-yyyy>, S
 - Làm xong, thành phẩm đã lên Sheet chờ duyệt → D = `Xử lý xong`, E ghi ra những gì (mã bài/VD, số ảnh/video).
 - Hỏng/thiếu/bị chặn → D = `Lỗi: <lý do>` và email sếp.
 App hiện thanh tiến độ này dưới từng thư mục ở mục File nguồn; thư mục quá 20 phút chưa có dòng sẽ hiện đỏ "Chưa có ai tiếp nhận". Dừng giữa chừng (hết lượt/hạn mức) thì để `Đang xử lý` + ghi E còn thiếu gì để lượt sau làm tiếp.
+
+**Bỏ thành phẩm (13/11/2026):** Sếp bảo bỏ thành phẩm QC nào → đổi cột I tab QUANG-CAO thành `Đã bỏ` (không để `Đã duyệt`), ghi lý do ở K. App tự ẩn dòng `Đã bỏ`.

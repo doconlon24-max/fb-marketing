@@ -1,0 +1,9 @@
+{"vo": "C:/Users/Surface/Downloads/CLAUDE HỌC/SUB AGENT/quang-cao/voice/2026-11-13/vd4b.mp3",
+ "doan": "C:/Users/Surface/Downloads/CLAUDE HỌC/SUB AGENT/quang-cao/voice/2026-11-13/vd4b_doan.json",
+ "kick": "MAXFILL · FULL FACE",
+ "hook": "No makeup.<br><em>No filter.</em>",
+ "aft_len": 1.3, "talk_len": 2.7,
+ "before_h": "This was her<br><em>before MERAH</em>",
+ "quote": "&ldquo;I wanted a <em>fuller, softer</em> look.&rdquo;",
+ "defs": [["a", 380, 825, "HOLLOW TEMPLES"], ["b", 453, 1048, "FLAT MID-FACE"], ["c", 558, 1104, "THIN LIPS"], ["d", 558, 1172, "SHORT CHIN"]],
+ "glow": ["FULLER TEMPLES", "LIFTED MID-FACE", "SOFTER LIPS", "DEFINED CHIN"]}

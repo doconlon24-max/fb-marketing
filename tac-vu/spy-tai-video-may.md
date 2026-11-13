@@ -16,7 +16,12 @@ Sếp dán link video (Facebook, TikTok, Instagram, Thư viện quảng cáo…)
 - **Khoá:** `FB-<id>` / `TT-<id>` / `IG-<mã>` lấy từ link (không có id thì `LINK-<hhmmss>`); **đối thủ:** tên page/kênh đọc trên trang.
 - Tải theo Bước 2 (mục 2–6): mở tab Chrome, chạy JS tải về Downloads tên `SPY_<khoá>.mp4`, `python tai-nguyen/scripts/spy_tai_ve.py --key <khoá> --who "<đối thủ>" --tu-downloads --date <ngày>`, ghi dòng `SPY/<ngày>` ở tab TIEN-DO-TU-LIEU, đóng tab.
 - Thêm 1 dòng tab SPY-ADS để app hiện bài: A ngày, C nền tảng, D đối thủ, F link, I `Đã tải về SPY <ngày>`, H `Sếp gửi trong chat · File: <tên file>`, J khoá.
+- **Instagram reel và link Facebook `share/r/…`: thử yt-dlp trước, khỏi mở Chrome** (13/11 cả hai tải được không cần đăng nhập; FB lấy id + tên page bằng `--print "%(id)s|%(uploader)s"`, khoá `FB-<id>`): trong Downloads chạy `python -m yt_dlp --no-playlist -o "SPY_IG-<mã>.%(ext)s" <link>`, tên kênh lấy bằng `--skip-download --print "%(channel)s"`, rồi `spy_tai_ve.py --tu-downloads`. Lỗi thì mới dùng Chrome.
+- **Không bắt sếp thao tác** (sếp nhắc 13/11): tự lưu tạm, tự đẩy, tự xoá. Chrome đang bật "Hỏi nơi lưu" nên tệp nằm dưới dạng `Downloads/<uuid>.tmp` (đã đủ dữ liệu) trong khi hộp thoại chờ → copy thẳng các `.tmp` mới nhất (ffprobe để biết hình/tiếng), không chờ sếp bấm Lưu.
+- **IG bị giới hạn người xem** (yt-dlp báo "isn't available to everyone"): dùng Chrome đã đăng nhập. Bài ảnh: ảnh carousel là `main li img` rộng ≥1000, bấm Next/Go back gom đủ, lấy srcset lớn nhất, fetch → tải. Reel: video là DASH, lấy `performance.getEntriesByType('resource')` các `.mp4`, bỏ `bytestart/byteend`, 2 tệp đầu = hình + tiếng → `ffmpeg -i v -i a -c copy -map 0:v -map 1:a`. Tên kênh: thẻ `meta` og:title.
+- Ảnh (bài ảnh) đẩy bằng `rclone copyto` vào cùng thư mục ngày; sếp ghi chú (vd "chạy ảnh 3") thì đặt tiền tố tên file `CHAY-ANH-3_…` và ghi vào cột H.
 - Đẩy lên Drive xong là xoá trên máy (script tự xoá tệp trong Downloads + thư mục tạm). Kết quả `da_xoa_tren_may:false` thì xoá tay `SPY_<khoá>*.mp4` trong Downloads, chỉ khi đã chắc file nằm trên Drive.
+- **TẢI XONG LÀ LÀM LUÔN (sếp nhắc 13/11):** đẩy hết link lên Drive thì ngay lập tức chạy routine Quét chính `{{ID_ROUTINE}}` (RemoteTrigger `run`) để Trưởng phòng QC dựng thành phẩm, hoặc tự dựng trên máy. Không để tư liệu chờ lượt quét kế tiếp.
 - Nhiều link một lúc thì tải lần lượt. Trả lời sếp 1 dòng mỗi link: đã vào `SPY/<ngày>` (tên file), hoặc lý do không tải được (ảnh, cần đăng nhập/captcha – không tự vượt).
 
 ## Bước 1 – kiểm tra nhanh

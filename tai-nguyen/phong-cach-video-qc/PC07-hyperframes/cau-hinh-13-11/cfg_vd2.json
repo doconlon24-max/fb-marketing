@@ -1,0 +1,9 @@
+{"vo": "C:/Users/Surface/Downloads/CLAUDE HỌC/SUB AGENT/quang-cao/voice/2026-11-13/vd2.mp3",
+ "doan": "C:/Users/Surface/Downloads/CLAUDE HỌC/SUB AGENT/quang-cao/voice/2026-11-13/vd2_doan.json",
+ "kick": "ULTRA LIFT · FOCUSED ULTRASOUND",
+ "hook": "Always looking<br><em>upset?</em>",
+ "hook_len": 2.8, "s2_kick_top": 150,
+ "defs": [["a", 440, 448, 62, "FOREHEAD LINES"], ["b", 540, 500, 52, "FROWN LINES"], ["c", 318, 622, 52, "CROW'S FEET"], ["d", 360, 1225, 68, "LOOSE SKIN"]],
+ "glow": ["SMOOTHER FOREHEAD", "SOFTER FROWN LINES", "FIRMER SKIN", "BRIGHTER LOOK"],
+ "mech_sub": "ULTRA LIFT · COLLAGEN BOOST", "mech_lbl": "LOOSE SKIN", "checks": ["LIFTED", "FIRMER", "SMOOTHER"],
+ "svc": "ULTRA LIFT", "from": "SAVE UP TO", "price": "40% OFF", "off": "until Nov 30 · limited slots"}
