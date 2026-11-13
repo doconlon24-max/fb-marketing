@@ -1341,17 +1341,25 @@ function sheetMsg(t,bad){const el=$("#sheetSync");if(el){el.textContent=t;el.sty
 async function sheetTool(tool,input){const srv=await mcp.server(SHEET_SERVER);const r=await srv[tool](input);return r&&r.payload!==undefined?r.payload:r}
 function valuesOf(x){if(!x)return [];if(Array.isArray(x))return x;if(x.values)return x.values;if(x.valueRanges&&x.valueRanges[0])return x.valueRanges[0].values||[];
   if(typeof x==="string"){try{return valuesOf(JSON.parse(x))}catch{}}if(x.content&&x.content[0]&&x.content[0].text)return valuesOf(x.content[0].text);return []}
+/* ---- hợp đồng trạng thái app <-> Sheet (13/11/2026): mọi chữ nhân viên ghi ở cột TRẠNG THÁI quy về đúng 1 trạng thái của app ---- */
+function stNorm(x){x=String(x||"").trim();if(!x)return "";const l=x.toLowerCase();
+  if(/^đã đăng/.test(l))return "Đã đăng";if(/lên lịch|hẹn giờ/.test(l))return "Đã lên lịch";
+  if(/^đã bỏ|^bỏ|đã gộp|^gộp|trùng|huỷ|hủy/.test(l))return "Đã bỏ";if(/^đã duyệt|^duyệt/.test(l))return "Đã duyệt";
+  if(/cần sửa|yêu cầu sửa/.test(l))return "Cần sửa";if(/đang sửa|đang làm|đã tiếp nhận/.test(l))return "Đang sửa";
+  if(/chờ duyệt|sửa xong/.test(l))return "Chờ duyệt";return STATUSES.includes(x)?x:null}
+const ST_RANK={"Đã đăng":9,"Đã lên lịch":8,"Đã bỏ":7,"Đã duyệt":6,"Chờ duyệt":5,"Đang sửa":4,"Cần sửa":3};
 async function sheetPull(){
   if(!mcp)return;
   try{
     const v=valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"A1:L1000"}));
     sheetRows=new Map();sheetNext=Math.max(2,v.length+1);
     for(let i=1;i<v.length;i++){const r=v[i]||[];const id=(r[0]||"").trim();if(!/^\d{8}-\d{4}/.test(id))continue;
-      if(sheetRows.has(id)||/TRÙNG/i.test(r[10]||""))continue;
-      sheetRows.set(id,{row:i+1,date:r[1]||"",time:r[2]||"",format:r[4]||"",topic:r[5]||"",link:r[6]||"",caption:r[7]||"",status:(r[8]||"").trim(),note:r[9]||"",log:r[10]||"",hist:r[11]||""});}
+      const st0=/TRÙNG|đã gộp/i.test(r[10]||"")&&!/^đã đăng|lên lịch/i.test(r[8]||"")?"Đã bỏ":stNorm(r[8]);
+      const old=sheetRows.get(id);if(old&&(ST_RANK[old.status]||0)>=(ST_RANK[st0]||0))continue;
+      sheetRows.set(id,{row:i+1,raw:(r[8]||"").trim(),date:r[1]||"",time:r[2]||"",format:r[4]||"",topic:r[5]||"",link:r[6]||"",caption:r[7]||"",status:st0||"",note:r[9]||"",log:r[10]||"",hist:r[11]||""});}
     for(const [id,r] of sheetRows){
       const cur0=S.posts.get(id);const cur=cur0&&r.hist&&cur0.sheetHist!==r.hist?{...cur0,sheetHist:r.hist}:cur0;if(cur&&cur!==cur0)S.posts.set(id,cur);
-      if(!cur){ if(!r.status)continue;
+      if(!cur){ if(!r.status||["Đã bỏ","Đã đăng"].includes(r.status))continue;
         const p={id,date:r.date||(id.slice(0,4)+"-"+id.slice(4,6)+"-"+id.slice(6,8)),time:r.time||(id.slice(9,11)+":"+id.slice(11,13)),page:"Tất cả 10 page",
           format:FORMATS.includes(r.format)?r.format:"Ảnh đơn",group:"",status:STATUSES.includes(r.status)?r.status:"Chờ duyệt",ai:"",topic:r.topic,caption:r.caption,
           brief:(r.link?"Ảnh/video trên Drive: "+r.link+"\n":"")+(r.log?"Nhật ký: "+r.log:""),media:[],driveLink:r.link,fromSheet:true,updatedAt:new Date().toISOString()};
@@ -1362,6 +1370,8 @@ async function sheetPull(){
        if(nd&&/^\d{1,2}:\d{2}$/.test(nt)&&(nd!==cur.date||nt.padStart(5,"0")!==cur.time)){const c0=S.posts.get(id);
          const p={...c0,date:nd,time:nt.padStart(5,"0"),history:[...(c0.history||[]),`${nowVN()} – Dời lịch: ${fmtDate(c0.date)} ${c0.time} → ${fmtDate(nd)} ${nt.padStart(5,"0")}`],updatedAt:new Date().toISOString()};
          S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}}}
+      // Sheet báo đã đăng / đã hẹn giờ = sự thật trên page -> luôn thắng (kể cả bài app đang để Đã bỏ)
+      if((r.status==="Đã đăng"||r.status==="Đã lên lịch")&&S.posts.get(id).status!==r.status&&!(r.status==="Đã lên lịch"&&S.posts.get(id).status==="Đã đăng")){const p={...S.posts.get(id),status:r.status,sheetLog:r.log||S.posts.get(id).sheetLog,updatedAt:new Date().toISOString()};S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}continue}
       if(S.posts.get(id).status==="Đã bỏ")continue;
       if(r.status==="Đã bỏ"){const p={...S.posts.get(id),status:"Đã bỏ",updatedAt:new Date().toISOString()};S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}continue}
       if(r.link&&!(cur.media||[]).length&&(r.link!==cur.driveLink||(/Chờ duyệt|Đang sửa|Cần sửa/.test(cur.status)&&r.caption&&r.caption!==cur.caption))){const c1=S.posts.get(id),p={...c1,driveLink:r.link,caption:/Chờ duyệt|Đang sửa|Cần sửa/.test(c1.status)&&r.caption?r.caption:c1.caption,updatedAt:new Date().toISOString()};S.posts.set(id,p);if(db)try{await db.collection("posts").doc(id).set(p)}catch(e){}}
@@ -1373,6 +1383,9 @@ async function sheetPull(){
       // bạn duyệt trong app mà Sheet chưa có -> đẩy lên
       else if((cur.status==="Đã duyệt"||cur.status==="Cần sửa")&&r.status==="Chờ duyệt")sheetPush(cur);
     }
+    // bài đã hẹn giờ mà giờ đăng đã qua 2 tiếng -> Meta đã tự đăng: chuyển Đã đăng (không để treo ở "đã hẹn giờ")
+    {const lim=new Date(Date.now()+6*3600e3).toISOString().slice(0,16).replace("T"," ");
+     for(const p of [...S.posts.values()])if(p.status==="Đã lên lịch"&&p.date&&(p.date+" "+(p.time||"00:00"))<lim){const n={...p,status:"Đã đăng",history:[...(p.history||[]),`${nowVN()} – Tự chuyển Đã đăng: đã qua giờ hẹn ${fmtDate(p.date)} ${p.time}`],updatedAt:new Date().toISOString()};S.posts.set(p.id,n);if(db)try{await db.collection("posts").doc(p.id).set(n)}catch(e){}}}
     sheetOk=true;render();sheetMsg("Đã đồng bộ Google Sheet lúc "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"}));
   }catch(e){sheetOk=false;sheetMsg("Chưa đồng bộ được Google Sheet"+(e&&e.code?" ("+e.code+")":"")+". Bấm Đồng bộ để thử lại.",true);console.warn("sheetPull",e)}
 }

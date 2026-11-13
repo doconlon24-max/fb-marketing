@@ -108,3 +108,19 @@ Dòng tab `QUANG-CAO` I = `Đã duyệt` → đăng công khai lên đúng page 
 - Dữ liệu trong app lưu riêng từng người (`data/users/<uid>/app/`); Sheet/Drive/Meta/Manifold là của chính người mở app. Lượt Manifold tính theo tài khoản từng người (250 lượt/tháng bản miễn phí).
 - Khác bản MERAH: Đo lường không ghi sẵn page (mặc định "Toàn tài khoản"); Sheet tự có thêm tab DO-LUONG, SPY-ADS, SPY-DOI-THU (Sheet cũ được bổ sung khi mở app); bấm SPY chỉ LƯU bài vào tab SPY-ADS (trạng thái `Dùng làm ý tưởng`), không tự tải video vì không có máy tải hộ.
 - Sửa giao diện ở `merah-studio/src.html` xong phải chạy lại script trên để kiểm tra các chuỗi nó thay còn khớp.
+
+## Hợp đồng TRẠNG THÁI app ↔ Google Sheet (chốt 13/11/2026 – mọi nhân viên phải theo)
+Cột TRẠNG THÁI (tab bài fanpage cột I, QUANG-CAO cột I) CHỈ được ghi đúng một trong các chữ sau, không thêm chữ khác vào cột này (giải thích ghi ở cột Nhật ký):
+| Ghi đúng chữ | Nghĩa | App hiện |
+|---|---|---|
+| `Chờ duyệt` | Nhân viên làm xong, chờ sếp xem | nút Duyệt / Yêu cầu sửa |
+| `Cần sửa` | Sếp yêu cầu sửa (app ghi) | chờ nhân viên |
+| `Đang sửa` | Nhân viên đã nhận việc sửa | tiến độ sửa |
+| `Đã duyệt` | Sếp duyệt (app ghi) | chờ đăng |
+| `Đã lên lịch` | Đã hẹn giờ trên page | đã hẹn giờ |
+| `Đã đăng` (quảng cáo: `Đã đăng page`) | Đã lên page | xong, không còn nút |
+| `Đã bỏ` | Sếp bỏ / bài trùng / đã gộp | ẩn khỏi app |
+- Bài trùng hoặc đã gộp vào bài khác: ghi `Đã bỏ` (không ghi "Đã gộp", "TRÙNG"…). Mỗi mã bài chỉ nên có 1 dòng; nếu lỡ có 2 dòng cùng mã, app lấy dòng có trạng thái tiến xa nhất (Đã đăng > Đã lên lịch > Đã bỏ > Đã duyệt > Chờ duyệt > Đang sửa > Cần sửa).
+- Đăng/hẹn giờ xong phải đổi ngay cột TRẠNG THÁI (`Đã lên lịch` / `Đã đăng`), không chỉ ghi vào Nhật ký. App tự chuyển bài `Đã lên lịch` sang `Đã đăng` khi đã qua giờ hẹn 2 tiếng.
+- Chữ lạ không có trong bảng: app BỎ QUA dòng đó (không hiện), nên nhân viên ghi sai chữ = sếp không thấy bài.
+- Ngày (cột B, yyyy-mm-dd) và giờ PH (cột C, HH:MM) là lịch đăng thật; sếp dời ngày trong app thì app sửa B–D, nhân viên đăng đúng theo đó.
