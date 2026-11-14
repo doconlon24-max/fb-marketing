@@ -583,7 +583,7 @@ a.tq-t:hover{border-color:var(--accent)}
       </div>
       <p class="note" id="lkMsg" style="margin:0"></p>
     </article>
-    <article class="panel stack"><h3 style="margin:0">Link đã gửi</h3><div id="lkList"></div></article>
+    <article class="panel stack"><h3 style="margin:0">Link đã gửi</h3><div id="lkDays" class="daybar" role="group" aria-label="Chọn ngày"></div><div id="lkList"></div></article>
   </section>
   <section class="view" id="v-q-spy">
     <div class="head"><div>
@@ -617,6 +617,7 @@ a.tq-t:hover{border-color:var(--accent)}
       <p>Thư mục tư liệu theo ngày trên Google Drive (<b>MERAH / TƯ LIỆU ĐĂNG BÀI</b>). Bấm "Mở" để xem trên Drive, "Xem file" để biết trong ngày có bao nhiêu ảnh, video.</p>
     </div><div class="row"><a class="btn" target="_blank" rel="noopener" data-fold="p-nguon" href="#">Mở thư mục gốc</a><button class="btn" data-reload="p-nguon">Tải lại</button></div></div>
     <div id="hoiP" class="stack" style="margin-bottom:14px"></div>
+    <div id="pnDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div id="pNguon" class="stack"><div class="empty">Đang tải…</div></div>
   </section>
 
@@ -638,6 +639,7 @@ a.tq-t:hover{border-color:var(--accent)}
       <p>Drive <b>MERAH / TƯ LIỆU QUẢNG CÁO</b> chia 2 thư mục: <b>SPA</b> (spa tự quay) và <b>SPY</b> (sưu tầm), bên trong mỗi thư mục là thư mục theo ngày dd-mm-yyyy. Câu hỏi của Trưởng phòng QC hiện ở trên cùng.</p>
     </div><div class="row"><a class="btn" target="_blank" rel="noopener" data-fold="q-nguon" href="#">Mở thư mục gốc</a><button class="btn" data-reload="q-nguon">Tải lại</button></div></div>
     <div id="hoiQ" class="stack" style="margin-bottom:14px"></div>
+    <div id="qnDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div id="qNguon" class="stack"><div class="empty">Đang tải…</div></div>
   </section>
 
@@ -661,6 +663,7 @@ a.tq-t:hover{border-color:var(--accent)}
       <h2>Đăng bài quảng cáo lên page</h2>
       <p>Theo dõi thành phẩm đã duyệt: page đăng, tiến độ đăng, Tin 24h, seeding, lên ads. Duyệt đăng và chọn page làm ở mục <a href="#q-tp">Media &amp; thành phẩm</a> (chỉ 1 chỗ duyệt).</p>
     </div><div class="row"><button class="btn" data-reload="q-dang">Tải lại</button></div></div>
+    <div id="qdDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div class="panel" style="overflow-x:auto"><table class="q"><thead><tr><th>Ngày</th><th>Thành phẩm</th><th>Dạng</th><th>Phong cách</th><th>Page đăng</th><th>Trạng thái</th><th>ID post</th><th></th></tr></thead><tbody id="qDangBody"><tr><td colspan="8" class="muted">Đang tải…</td></tr></tbody></table></div>
   </section>
 
@@ -681,6 +684,7 @@ a.tq-t:hover{border-color:var(--accent)}
       <h2>Thành phẩm đã test</h2>
       <p>Mỗi video/ảnh quảng cáo, chia theo ngày thành phẩm. Vòng 1 (camp tin nhắn): Win khi giá mess ≤ 10.000đ. Vòng 2 (camp lượt mua): Win khi CPO ≤ 500.000đ. Giá mess của camp lượt mua chỉ để tham khảo. CPO tổng = tổng tiền cả 2 loại camp ÷ tổng lượt mua.</p>
     </div><div class="row"><div class="adr" data-adr="cre"></div><span class="note" id="creTime"></span><button class="btn primary" id="creSync">Đồng bộ quảng cáo</button></div></div>
+    <div id="atDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div id="creList" class="stack"><div class="empty">Bấm "Đồng bộ quảng cáo" để tải kết quả.</div></div>
   </section>
 
@@ -1504,10 +1508,11 @@ async function loadTp(key){const box=$(key==="p-tp"?"#pTp":"#qTp");
     for(const f of loose)put((f.createdTime||"").slice(0,10),{fo:null,files:[f]});
     const ds=[...days.keys()].sort().reverse();
     box.innerHTML=ds.length?ds.map(d=>{const items=days.get(d);const fl=items.flatMap(i=>i.files);const n=t=>fl.filter(f=>kindOf(f)===t).length;
-      return `<article class="panel"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${fmtDate(d)} <span class="note">${d.split("-").reverse().join("/")}</span></h3><span class="note">${n("Ảnh")} ảnh · ${n("Video")} video</span></div>
+      return `<article class="panel" data-d="${esc(d)}"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${fmtDate(d)} <span class="note">${d.split("-").reverse().join("/")}</span></h3><span class="note">${n("Ảnh")} ảnh · ${n("Video")} video</span></div>
       ${items.map(i=>`${i.fo?`<div class="row" style="justify-content:space-between;margin-top:8px"><b>${esc(i.fo.title)}</b><a class="btn small" href="${esc(i.fo.viewUrl)}" target="_blank" rel="noopener">Mở thư mục</a></div>`:""}
         <div class="marks">${i.files.length?i.files.filter(f=>["Ảnh","Video"].includes(kindOf(f))).map(fileRow).join(""):'<span class="note">Chưa có ảnh/video (hoặc file cũ hơn 60 ngày – bấm Mở thư mục).</span>'}</div>`).join("")}</article>`}).join("")
       :'<div class="empty">Chưa có thành phẩm trên Drive.</div>';
+    dayFilterDom(key==="p-nguon"?"pn":"qn",box);
   }catch(e){box.innerHTML=`<div class="empty">${esc(errTxt(e))}</div>`}}
 
 /* ---- Hỏi sếp (tab HOI-SEP) ---- */
@@ -1558,11 +1563,11 @@ function qcProg(r){const st=String(r.st||""),log=String(r.log||""),noTin=log.rep
 async function loadQDang(){const tb=$("#qDangBody");if(!mcp){tb.innerHTML='<tr><td colspan="8" class="muted">App chưa được phép dùng Google Sheets.</td></tr>';return}
   try{qcRows=await loadQcRows();const shown=qcRows.filter(r=>!/đã bỏ/i.test(r.st||""));
     tb.innerHTML=shown.length?shown.slice().reverse().map(r=>{const done=/đã đăng|đã duyệt/i.test(r.st);
-      return `<tr><td>${esc(r.date)}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.name||r.id)}</a>`:esc(r.name||r.id)}<div class="note">${esc(r.src)}</div></td><td>${esc(r.type)}</td><td>${esc(r.style)}</td>
+      return `<tr data-d="${esc(isoD(r.date)||"")}"><td>${esc(r.date)}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.name||r.id)}</a>`:esc(r.name||r.id)}<div class="note">${esc(r.src)}</div></td><td>${esc(r.type)}</td><td>${esc(r.style)}</td>
       <td>${esc(r.page||"—")}</td>
       <td><span class="chip" style="--st:${/đã đăng/i.test(r.st)?"var(--accent)":/đã duyệt/i.test(r.st)?"var(--ok)":"var(--warn)"}">${esc(r.st||"Chờ chọn page")}</span>${qcProg(r)}</td><td>${postLink(r.post)}</td>
       <td>${done?"":`<a class="btn small" href="#q-tp">Duyệt ở Media &amp; thành phẩm</a>`}</td></tr>`}).join("")
-      :'<tr><td colspan="8" class="muted">Chưa có thành phẩm quảng cáo chờ đăng.</td></tr>';
+      :'<tr><td colspan="8" class="muted">Chưa có thành phẩm quảng cáo chờ đăng.</td></tr>';dayFilterDom("qd",tb);
   }catch(e){tb.innerHTML=`<tr><td colspan="8" class="muted">${esc(errTxt(e))}</td></tr>`}}
 async function duyetQDang(row){const r=qcRows.find(x=>x.row===row);const pg=$("#pg-"+row)&&$("#pg-"+row).value;
   if(!pg){toast("Chọn page trước");return}
@@ -1571,7 +1576,9 @@ async function duyetQDang(row){const r=qcRows.find(x=>x.row===row);const pg=$("#
 
 /* ---- Bản xem trước bài đăng (giống Facebook, chưa đăng) ---- */
 const driveId=u=>{const m=String(u||"").match(/\/d\/([\w-]{10,})/)||String(u||"").match(/[?&]id=([\w-]{10,})/);return m?m[1]:""};
-const DAYSEL={p:null,q:null,d:null};
+const DAYSEL={p:null,q:null,d:null,pn:null,qn:null,qd:null,lk:null,at:null};
+/* lọc ngày cho danh sách đã vẽ sẵn: phần tử có data-d="yyyy-mm-dd"; mặc định hiện hôm nay (hoặc ngày gần nhất), bấm Tất cả mới hiện hết */
+function dayFilterDom(k,root){if(!root)return;const els=[...root.querySelectorAll("[data-d]")];const keep=new Set(dayBar(k,els.map(e=>({_d:e.dataset.d,e})),()=>dayFilterDom(k,root)).map(x=>x.e));els.forEach(e=>{e.hidden=!keep.has(e)})}
 function isoD(x){x=String(x||"").trim();let m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
   m=x.match(/^(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?/);if(m){let y=m[3]||String(new Date().getFullYear());if(y.length===2)y="20"+y;return `${y}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`}return ""}
 function dayLabel(d){const [y,m,dd]=d.split("-");const w=WD[new Date(d+"T12:00:00").getDay()];return `${w} ${dd}/${m}`}
@@ -1791,14 +1798,14 @@ function renderCre(){const s=S.creSnap;if(!s)return;const rows=new Map();
   const v2=r=>!r.lSpend?"—":r.lPur&&r.lSpend/r.lPur<=KPI_CPO?"Win":r.lSpend>LM_STOP?"Không win":"Đang test";
   const chip=t=>t==="—"?"—":`<span class="chip" style="--st:${LB_COL[t]||"var(--warn)"}">${esc(t)}</span>`;
   $("#creTime").textContent="Cập nhật lúc "+new Date(s.at).toLocaleString("vi-VN")+" · số liệu: "+(s.label||"30 ngày qua");
-  $("#creList").innerHTML=days.size?[...days.keys()].sort().reverse().map(d=>`<article class="panel" style="overflow-x:auto"><h3>${d?fmtDate(d)+" · "+d.split("-").reverse().join("/"):"Không rõ ngày"}</h3>
+  $("#creList").innerHTML=days.size?[...days.keys()].sort().reverse().map(d=>`<article class="panel" style="overflow-x:auto" data-d="${esc(d||"")}"><h3>${d?fmtDate(d)+" · "+d.split("-").reverse().join("/"):"Không rõ ngày"}</h3>
     <table class="q"><thead><tr><th>Tên tư liệu</th><th>ID post</th><th>Thể loại</th><th>Tình trạng</th><th class="n">Đã chi</th><th>Giá mess</th><th>CPO (camp lượt mua)</th><th>CPO tổng</th><th>Đánh giá</th></tr></thead><tbody>
     ${days.get(d).map(r=>{const dg=danhGia.get(r.name)||{};const tot=r.mSpend+r.lSpend;
       return `<tr><td>${r.link?`<a href="${esc(driveOpen(r.link))}" target="_blank" rel="noopener" title="Mở video trên Google Drive">▶ ${esc(r.name)}</a>`:esc(r.name)}${r.old?'<div class="note">quảng cáo cũ (theo tên chiến dịch)</div>':""}${r.page?`<div class="note">${esc(r.page)}</div>`:""}</td><td>${r.post?postLink(r.post):"—"}</td><td>${esc(r.type)}</td>
       <td>${r.ads?'<span class="chip" style="--st:var(--ok)">Đã lên camp</span>':'<span class="chip" style="--st:var(--muted)">Chưa lên camp</span>'}</td>
       <td class="n">${vnd(tot)}</td><td>${r.mRes?vnd(r.mSpend/r.mRes):r.mSpend?"chưa có tin":"—"}</td><td>${r.lPur?vnd(r.lSpend/r.lPur):r.lSpend?"chưa có lượt mua":"—"}</td><td>${r.allPur?vnd(tot/r.allPur):"—"}</td>
       <td>${dg.label?chip(dg.label):`Mess: ${chip(v1(r))}<br>Lượt mua: ${chip(v2(r))}`}${dg.note?`<div class="note">${esc(dg.note)}</div>`:""}</td></tr>`}).join("")}</tbody></table></article>`).join("")
-    :'<div class="empty">Chưa có thành phẩm nào được duyệt. Sếp duyệt ở Quản trị quảng cáo → Đăng bài lên page, rồi bấm Đồng bộ quảng cáo.</div>';}
+    :'<div class="empty">Chưa có thành phẩm nào được duyệt. Sếp duyệt ở Sản xuất quảng cáo → Media &amp; thành phẩm, rồi bấm Đồng bộ quảng cáo.</div>';dayFilterDom("at",$("#creList"));}
 
 /* ---- ĐO LƯỜNG (slide) ---- */
 const DL_SL=[["TONG-QUAN","Tổng quan"],["CHAN-DUNG","Chân dung khách"],["NEN-TANG","Nền tảng & vị trí"],["KHU-VUC","Khu vực"],["VIDEO","Video khách muốn xem"],["RA-DON","Ra mess & ra đơn"],["DE-XUAT","Insight & đề xuất"]];
@@ -2126,11 +2133,11 @@ function lkState(x){const st=String(x.st||""),h=String(x.note||"");const bad=/kh
   const m=(st+" "+h).match(/SPY[\/ ]+(\d{2}-\d{2}-\d{4})/i);
   return {bad,got,drive:got?(m?m[1]:"có"):"",edit,done,qc:(st.match(/\((QC[^)]*)\)/)||[])[1]||""}}
 function renderSpyLinks(){const box=$("#lkList");if(!box)return;const sel=$("#lkPage");if(sel&&!sel.options.length)sel.innerHTML=PAGES.map(p=>`<option>${esc(p)}</option>`).join("");
-  const all=(SPY.saved||[]).filter(x=>String(x.note).includes(LK_TAG)&&!/bỏ qua|bỏ hẳn/i.test(x.st)).reverse(),rows=LK_ALL?all:all.slice(0,15);
+  const all=(SPY.saved||[]).filter(x=>String(x.note).includes(LK_TAG)&&!/bỏ qua|bỏ hẳn/i.test(x.st)).reverse(),rows=all;
   const Y=t=>`<span style="color:var(--ok);font-weight:600">✓ ${t||"Rồi"}</span>`,N=t=>`<span class="note">${t||"Chưa"}</span>`;
   box.innerHTML=all.length?`<table class="q"><thead><tr><th>Ngày gửi</th><th>Link</th><th>Dịch vụ</th><th>Đã tải</th><th>Lên Drive</th><th>Đã xử lý (edit + content)</th></tr></thead><tbody>${rows.map(x=>{const k=lkState(x);
-    return `<tr><td>${esc(x.day)}</td><td><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.plat||"Link")} ↗</a></td><td>${esc(x.svc)}</td>
-      ${k.bad?`<td colspan="3"><span class="chip" style="--st:var(--danger)">${esc(x.st)}</span></td>`:`<td>${k.got?Y():N("⏳ Đang tải")}</td><td>${k.drive?Y(k.drive==="có"?"":"SPY/"+k.drive):N()}</td><td>${k.done?Y(k.qc||"Chờ Sếp duyệt"):k.edit?N("⏳ Đang làm"):N()}</td>`}</tr>`}).join("")}</tbody></table>${all.length>15&&!LK_ALL?`<button class="btn small" id="lkMore">Xem thêm ${all.length-15} link cũ</button>`:""}`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>'}
+    return `<tr data-d="${esc(x.day)}"><td>${esc(x.day)}</td><td><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.plat||"Link")} ↗</a></td><td>${esc(x.svc)}</td>
+      ${k.bad?`<td colspan="3"><span class="chip" style="--st:var(--danger)">${esc(x.st)}</span></td>`:`<td>${k.got?Y():N("⏳ Đang tải")}</td><td>${k.drive?Y(k.drive==="có"?"":"SPY/"+k.drive):N()}</td><td>${k.done?Y(k.qc||"Chờ Sếp duyệt"):k.edit?N("⏳ Đang làm"):N()}</td>`}</tr>`}).join("")}</tbody></table>`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>';dayFilterDom("lk",box)}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#lkMore")){LK_ALL=true;renderSpyLinks()}});
 async function spyLinkSend(){const msg=t=>$("#lkMsg").textContent=t;if(!mcp){msg("App chưa được phép dùng Google Sheets.");return}
   const urls=[...new Set($("#lkUrls").value.split(/\s+/).map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x)))];if(!urls.length){msg("Dán ít nhất 1 link video (bắt đầu bằng https://).");return}
