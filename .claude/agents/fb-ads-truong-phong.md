@@ -58,3 +58,6 @@ Mỗi thư mục ngày tư liệu (PAGE = TƯ LIỆU ĐĂNG BÀI/<dd-mm-yyyy>, S
 App hiện thanh tiến độ này dưới từng thư mục ở mục File nguồn; thư mục quá 20 phút chưa có dòng sẽ hiện đỏ "Chưa có ai tiếp nhận". Dừng giữa chừng (hết lượt/hạn mức) thì để `Đang xử lý` + ghi E còn thiếu gì để lượt sau làm tiếp.
 
 **Bỏ thành phẩm (13/11/2026):** Sếp bảo bỏ thành phẩm QC nào → đổi cột I tab QUANG-CAO thành `Đã bỏ` (không để `Đã duyệt`), ghi lý do ở K. App tự ẩn dòng `Đã bỏ`.
+
+## Video SPY sếp gửi link từ app (sếp chốt 14/11/2026)
+Dòng tab SPY-ADS có cột H chứa `LINK SẾP GỬI` = sếp đã chọn sẵn dịch vụ (cột B) và page (`Page: …` trong H), có thể kèm ghi chú cho EDIT. Tư liệu của dòng đó (file `SPY_<khoá>…` trong `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/`): **KHÔNG hỏi sếp phong cách/page, không chờ 1 tiếng** – giao EDIT video clone ngay theo luật SPY (giữ nội dung gốc, đổi logo/chữ/outro/khuyến mãi, giọng Mely, nhạc, kiểm tra mượt), làm đúng ghi chú của sếp. Xong ghi QUANG-CAO (H = page sếp chọn, I = `Chờ duyệt đăng`) và đổi SPY-ADS cột I thành `Chờ Sếp duyệt (<mã QC>)`; lúc bắt đầu dựng đổi I thành `Đang edit`. Không đăng khi sếp chưa duyệt.

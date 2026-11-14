@@ -570,6 +570,18 @@ a.tq-t:hover{border-color:var(--accent)}
       <h2>SPY đối thủ</h2>
       <p>Quảng cáo và video của đối thủ theo từng dịch vụ. Bấm SPY ở bài muốn làm lại – bài được lưu vào danh sách SPY để làm lại thành quảng cáo của bạn.</p>
     </div></div>
+    <article class="panel stack" id="linkBox" style="border-left:3px solid var(--accent)">
+      <div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="margin:0">Gửi link SPY</h3><span class="note">Dán link video → lưu vào danh sách SPY → đội EDIT làm lại → chờ duyệt</span></div>
+      <label class="f" for="lkUrls">Link video (mỗi dòng 1 link: TikTok, Facebook, Thư viện quảng cáo, Instagram Reels, YouTube Shorts)<textarea id="lkUrls" rows="3" placeholder="https://www.tiktok.com/@.../video/...&#10;https://www.facebook.com/ads/library/?id=..."></textarea></label>
+      <div class="row" style="gap:10px;align-items:end;flex-wrap:wrap">
+        <label class="f" for="lkSvc" style="flex:1;min-width:180px">Dịch vụ<input id="lkSvc" list="spySvcList" placeholder="vd: Maxfill, Botox, Ultra Lift"></label>
+        <label class="f" for="lkPage" style="flex:1;min-width:180px">Page đăng<select id="lkPage"></select></label>
+        <label class="f" for="lkNote" style="flex:2;min-width:220px">Ghi chú cho EDIT (không bắt buộc)<input id="lkNote" placeholder="vd: giữ nhạc gốc, đổi khuyến mãi 40%"></label>
+        <button class="btn primary" id="lkSend" type="button">Gửi</button>
+      </div>
+      <p class="note" id="lkMsg" style="margin:0"></p>
+      <div id="lkList"></div>
+    </article>
     <article class="panel stack" id="spyBox">
       <div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="margin:0">SPY ADS đối thủ</h3><span class="row" style="gap:10px"><a class="btn small" data-fold="q-spy" href="#" target="_blank" rel="noopener">📁 Thư mục SPY trên Drive</a><span class="note" id="spyTime"></span></span></div>
       <p class="note" style="margin:0">Chọn dịch vụ, quốc gia, nền tảng rồi bấm <b>Quét</b>. Bài xếp theo hiệu quả, số 1 là mạnh nhất. Bấm <b>SPY</b> ở bài muốn làm lại.</p>
@@ -1353,7 +1365,9 @@ async function sheetPull(){
   try{
     const v=valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"A1:L1000"}));
     sheetRows=new Map();sheetNext=Math.max(2,v.length+1);
+    const isDup=r=>/TRÙNG|đã gộp/i.test(r[10]||"")&&!/^đã đăng|lên lịch/i.test(r[8]||"");const realIds=new Set(v.slice(1).filter(r=>r&&!isDup(r)).map(r=>(r[0]||"").trim()));
     for(let i=1;i<v.length;i++){const r=v[i]||[];const id=(r[0]||"").trim();if(!/^\d{8}-\d{4}/.test(id))continue;
+      if(isDup(r)&&realIds.has(id))continue; // dòng TRÙNG có dòng thật cùng mã -> bỏ qua, không đè trạng thái bài
       const st0=/TRÙNG|đã gộp/i.test(r[10]||"")&&!/^đã đăng|lên lịch/i.test(r[8]||"")?"Đã bỏ":stNorm(r[8]);
       const old=sheetRows.get(id);if(old&&(ST_RANK[old.status]||0)>=(ST_RANK[st0]||0))continue;
       sheetRows.set(id,{row:i+1,raw:(r[8]||"").trim(),date:r[1]||"",time:r[2]||"",format:r[4]||"",topic:r[5]||"",link:r[6]||"",caption:r[7]||"",status:st0||"",note:r[9]||"",log:r[10]||"",hist:r[11]||""});}
@@ -1913,7 +1927,7 @@ async function spyScanFb(){saveKw();const kws=$("#spyKw").value.split(",").map(x
       const relPage=new Set(SPY.res.filter(a=>a.rel===2).map(a=>String(a.page_id)));for(const a of SPY.res)if(!before.has(String(a.id))&&relPage.has(String(a.page_id)))a.aiRel=2;spyScore(kws)}
     SPY.tab="new";SPY.q={kws,cc,media,plats,kinds};$("#spyTime").textContent=`${spyLabel(SPY.svc)} · ${SPY.res.length} quảng cáo · ${ccName(cc)} · ${new Date().toLocaleString("vi-VN")}`;renderSpy();if(!SPY.saved.length)loadSpySaved()
   }catch(e){$("#spyTime").textContent=errTxt(e)}finally{btn.disabled=false}}
-const BEAUTY_RE=/(clinic|aesthetic|esthetic|derma|skin|beaut|spa\b|medical|medi|doctor|\bdr\.?\b|\bmd\b|surg|cosmetic|laser|slim|wellness|glow|plastic|inject|botox|filler|lips?|face|body|contour|klinik|clínica|thẩm mỹ|tham my|da liễu|bệnh viện|hospital|centre|center)/i;
+const BEAUTY_RE=/(clinic|aesthetic|esthetic|derma|skin|beaut|spa\b|medical|medi|doctor|\bdr\.?\b|\bmd\b|surg|cosmetic|laser|slim|wellness|glow|plastic|inject|botox|filler|\blips?\b|\bface\b|\bbody\b|contour|klinik|clínica|thẩm mỹ|tham my|da liễu|bệnh viện|hospital|centre|center)/i;
 function spyScore(kws){const per=new Map();for(const a of SPY.res)per.set(String(a.page_id),(per.get(String(a.page_id))||0)+1);
   const toks=[...new Set(kws.join(" ").toLowerCase().split(/[^a-z0-9à-ỹ]+/i).filter(w=>w.length>=4&&!/^(injection|treatment|non|surgical|facial|removal)$/.test(w)))];
   for(const a of SPY.res){const txt=((a.page_name||"")+" "+(a.ad_creative_link_title||"")).toLowerCase();const kh=String(a._kw||"").split(",").filter(Boolean).length;
@@ -2039,8 +2053,8 @@ async function mfSpy(key,on){const a=(SPY.items||[]).find(x=>x.key===key);if(!a)
       SPY.savedIds.add(key);toast("Đã ghi vào danh sách chờ tải – video sẽ vào thư mục SPY hôm nay khi máy tính tải xong");await loadSpySaved()}
     else await spyUngive(key);
     renderSpy()}catch(e){toast(errTxt(e));renderSpy()}}
-async function spyPing(key,who,url){let cm=null;try{cm=await claude.use("comments")}catch(e){}if(!cm||!cm.sendToClaude)return "off";
-  const text=`TẢI SPY NGAY | ${key} | ${String(who).replace(/\|/g," ")} | ${url} | ${spyLabel(SPY.svc)}`;
+async function spyPing(key,who,url,svc,extra){let cm=null;try{cm=await claude.use("comments")}catch(e){}if(!cm||!cm.sendToClaude)return "off";
+  const text=`TẢI SPY NGAY | ${key} | ${String(who).replace(/\|/g," ")} | ${url} | ${svc||spyLabel(SPY.svc)}${extra?" | "+extra:""}`;
   try{const st=await cm.canSendToClaude();if(st!=="available")return st}catch(e){return "off"}
   try{const tid=lsGet("merah_spythread");if(tid){try{await cm.sendToClaude({threadId:tid,text});return "sent"}catch(e){if(!e||e.code!=="not_found")throw e}}
     const anchor=await cm.anchorFor($("#spyBox h3"));const r=await cm.sendToClaude({anchor,text});lsSet("merah_spythread",r.threadId);return "sent"}catch(e){return (e&&e.code)||"err"}}
@@ -2072,7 +2086,34 @@ async function oldSpy(id,on){const a=SPY.res.find(x=>String(x.id)===id);if(!a)re
   try{if(on){if(await spyDup(key))return;await spyAppend([ymdL(new Date()),spyLabel(SPY.svc),"Quảng cáo Facebook/Instagram (từng bài)",a.page_name||"",CUR_CC[a.currency]||a.currency||"",a.ad_snapshot_url||`https://www.facebook.com/ads/library/?id=${id}`,`Điểm spy ${a.score??0} · chạy ${a.days} ngày`,`SPY-CLONE · EDIT video dựng lại theo cách MERAH · page_id ${a.page_id||""} · ${a.ad_creative_link_title||"chưa có nội dung – nhân viên lấy chi tiết bằng ads_get_ad"}`,"Dùng làm ý tưởng",key]);SPY.savedIds.add(key);toast("Đã ghi vào danh sách chờ tải – video sẽ vào thư mục SPY hôm nay khi máy tính tải xong");await loadSpySaved()}
     else await spyUngive(key);renderSpy()}catch(e){toast(errTxt(e));renderSpy()}}
 async function spyRows(){return valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"SPY-ADS!A1:J3000"}))}
-async function loadSpySaved(){if(!mcp)return;try{const v=await spyRows();SPY.saved=v.slice(1).map((r,i)=>({row:i+2,day:r[0]||"",svc:r[1]||"",plat:r[2]||"",who:r[3]||"",cc:r[4]||"",link:r[5]||"",met:r[6]||"",note:r[7]||"",st:r[8]||"",id:r[9]||""})).filter(x=>x.day||x.link);SPY.savedIds=new Set(SPY.saved.filter(x=>!/bỏ qua/i.test(x.st)).map(x=>String(x.id)).filter(Boolean));renderSpyReq();if(SPY.tab==="saved")renderSpy()}catch(e){}}
+async function loadSpySaved(){if(!mcp)return;try{const v=await spyRows();SPY.saved=v.slice(1).map((r,i)=>({row:i+2,day:r[0]||"",svc:r[1]||"",plat:r[2]||"",who:r[3]||"",cc:r[4]||"",link:r[5]||"",met:r[6]||"",note:r[7]||"",st:r[8]||"",id:r[9]||""})).filter(x=>x.day||x.link);SPY.savedIds=new Set(SPY.saved.filter(x=>!/bỏ qua/i.test(x.st)).map(x=>String(x.id)).filter(Boolean));renderSpyReq();renderSpyLinks();if(SPY.tab==="saved")renderSpy()}catch(e){}}
+/* ---------- Gửi link SPY (sếp chốt 14/11/2026): dán link -> máy tải -> EDIT clone -> chờ duyệt ---------- */
+const LK_TAG="LINK SẾP GỬI";
+function linkKey(u){let m;
+  if(m=u.match(/tiktok\.com\/.*\/video\/(\d+)/))return "TT-"+m[1];
+  if(m=u.match(/ads\/library\/?\?[^#]*\bid=(\d+)/))return "FB-"+m[1];
+  if(m=u.match(/facebook\.com\/(?:.*\/videos\/|reel\/|watch\/?\?v=)(\d+)/))return "FBV-"+m[1];
+  if(m=u.match(/instagram\.com\/(?:reel|reels|p)\/([\w-]+)/))return "IG-"+m[1];
+  if(m=u.match(/(?:youtube\.com\/shorts\/|youtu\.be\/|[?&]v=)([\w-]{6,})/))return "YT-"+m[1];
+  let h=0;for(const c of u)h=(h*31+c.charCodeAt(0))>>>0;return "LK-"+h.toString(36)}
+function linkPlat(u){return /tiktok/.test(u)?"TikTok":/ads\/library/.test(u)?"Quảng cáo Facebook/Instagram (từng bài)":/instagram/.test(u)?"Instagram":/youtu/.test(u)?"YouTube":/facebook|fb\.watch/.test(u)?"Facebook":"Link khác"}
+const LK_STEPS=["Chờ tải","Đã tải về SPY","Đang edit","Chờ Sếp duyệt"];
+function lkStep(st){st=String(st||"");if(/không tải được|lỗi/i.test(st))return -1;if(/chờ.*duyệt|đã duyệt|đã đăng/i.test(st))return 3;if(/đang edit|đang dựng|đã giao/i.test(st))return 2;if(/đã tải về/i.test(st))return 1;return 0}
+function renderSpyLinks(){const box=$("#lkList");if(!box)return;const sel=$("#lkPage");if(sel&&!sel.options.length)sel.innerHTML=PAGES.map(p=>`<option>${esc(p)}</option>`).join("");
+  const rows=(SPY.saved||[]).filter(x=>String(x.note).includes(LK_TAG)&&!/bỏ qua|bỏ hẳn/i.test(x.st)).slice(-12).reverse();
+  box.innerHTML=rows.length?`<table class="q"><thead><tr><th>Ngày</th><th>Link</th><th>Dịch vụ</th><th>Tiến độ</th></tr></thead><tbody>${rows.map(x=>{const k=lkStep(x.st);
+    return `<tr><td>${esc(x.day)}</td><td><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.plat||"Link")} ↗</a><div class="note">${esc(x.id)}</div></td><td>${esc(x.svc)}</td><td>${k<0?`<span class="chip" style="--st:var(--danger)">${esc(x.st)}</span>`:`<div class="fixbar">${LK_STEPS.map((n,i)=>`<span class="${i<=k?"on":""}${i===k?" cur":""}"><i>${i<=k?"✓":i+1}</i>${n}</span>`).join("")}</div>${k>0?`<div class="note">${esc(x.st)}</div>`:""}`}</td></tr>`}).join("")}</tbody></table>`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>'}
+async function spyLinkSend(){const msg=t=>$("#lkMsg").textContent=t;if(!mcp){msg("App chưa được phép dùng Google Sheets.");return}
+  const urls=[...new Set($("#lkUrls").value.split(/\s+/).map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x)))];if(!urls.length){msg("Dán ít nhất 1 link video (bắt đầu bằng https://).");return}
+  const svc=$("#lkSvc").value.trim(),pg=$("#lkPage").value,note=$("#lkNote").value.trim();if(!svc){msg("Chọn hoặc gõ dịch vụ để EDIT clone đúng dịch vụ.");return}
+  $("#lkSend").disabled=true;msg("Đang ghi…");await loadSpySaved();let ok=0,dup=0,sent=0,last="";
+  try{for(const u of urls){const key=linkKey(u);const old=(SPY.saved||[]).find(x=>String(x.id)===key&&!/bỏ qua|bỏ hẳn/i.test(x.st));if(old){dup++;continue}
+      await spyAppend([ymdL(new Date()),svc,linkPlat(u),"Sếp gửi link","",u,"",`SPY-CLONE · ${LK_TAG} · Page: ${pg}${note?" · Ghi chú: "+note:""} · EDIT clone ngay sau khi tải, không cần hỏi Sếp phong cách/page`,"Dùng làm ý tưởng",key]);ok++;
+      last=await spyPing(key,"Sếp gửi link",u,svc,`Page: ${pg}${note?" | Ghi chú: "+note:""}`);if(last==="sent")sent++}
+    $("#lkUrls").value="";$("#lkNote").value="";await loadSpySaved();
+    msg(`Đã gửi ${ok} link`+(dup?` · ${dup} link đã gửi trước đó (bỏ qua để không tải trùng)`:"")+(ok?" · đã lưu vào tab SPY-ADS để đội EDIT làm lại":""))}
+  catch(e){msg("Chưa gửi được: "+(errTxt?errTxt(e):e))}finally{$("#lkSend").disabled=false}}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#lkSend"))spyLinkSend()});
 async function spyAppend(row){const v=await spyRows();const r=Math.max(v.length,1)+1;await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`SPY-ADS!A${r}:J${r}`,values:[row]});return r}
 async function spySave(id,use){const a=SPY.res.find(x=>String(x.id)===id);if(!a)return;if(SPY.savedIds.has(id)){toast("Đã lưu rồi");return}
   try{await spyAppend([ymdL(new Date()),spyLabel(SPY.svc),"Facebook/Instagram (Ad Library)",a.page_name||"",CUR_CC[a.currency]||a.currency||"",`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&view_all_page_id=${a.page_id}&media_type=${(SPY.q&&SPY.q.media)||"all"}&search_type=page`,`Điểm spy ${a.score??0} · chạy ${a.days} ngày${a.pageN>=3?` · page chạy ${a.pageN} QC`:""}`,`Từ khoá: ${a._kw}${a.ad_creative_link_title?" · "+a.ad_creative_link_title:""}`,use?"Dùng làm ý tưởng":"Đã lưu",id]);

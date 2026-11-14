@@ -166,10 +166,53 @@ def story_video(pid, p, vid):
     return requests.post(f"{G}/{pid}/video_stories", data={"upload_phase": "finish", "video_id": vid_id, "access_token": tok}, timeout=120)
 
 
+def _norm(s):
+    return " ".join((s or "").split()).lower()[:80]
+
+
+def da_co_bai(pid, p, cap, hours=12):
+    """Chống đăng trùng (14/11/2026): page đã có bài (đã đăng / đã hẹn giờ / reel) cùng caption trong 12h → True."""
+    key = _norm(cap)
+    if not key:
+        return False
+    since = int(time.time() - hours * 3600)
+    tok = p["token"]
+    for edge, field in (("published_posts", "message"), ("scheduled_posts", "message"), ("video_reels", "description")):
+        try:
+            r = requests.get(f"{G}/{pid}/{edge}", params={"fields": field + ",created_time", "limit": 25, "access_token": tok}, timeout=30)
+            for x in (r.json().get("data", []) if r.ok else []):
+                ct = x.get("created_time", "")
+                try:
+                    t = datetime.datetime.strptime(ct[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=datetime.timezone.utc).timestamp()
+                except Exception:
+                    t = time.time()
+                if t >= since and _norm(x.get(field)) == key:
+                    return True
+        except Exception:
+            pass
+    return False
+
+
+def da_co_tin(pid, p, minutes=15):
+    """Chống đăng trùng Tin 24h: page vừa có Tin trong 15 phút → True."""
+    try:
+        r = requests.get(f"{G}/{pid}/stories", params={"limit": 5, "access_token": p["token"]}, timeout=30)
+        for x in (r.json().get("data", []) if r.ok else []):
+            t = int(x.get("creation_time") or 0)
+            if t and t >= time.time() - minutes * 60:
+                return True
+    except Exception:
+        pass
+    return False
+
+
 def main():
     a = sys.argv[1:]
     if not a:
         print(__doc__); return
+    force = "--force" in a
+    if force:
+        a.remove("--force")
     at = None
     if "--at" in a:
         i = a.index("--at"); at = a[i + 1]; del a[i:i + 2]
@@ -179,6 +222,12 @@ def main():
     pages = load_pages(a[1])
     ok = 0
     for pid, p in pages:
+        if not force:
+            capf = {"photo": 3, "carousel": 2, "reel": 3}.get(cmd)
+            if capf is not None and da_co_bai(pid, p, open(a[capf], encoding="utf-8").read()):
+                ok += 1; print(f"BỎ QUA {p['name']}: đã có bài cùng caption trong 12h (chống đăng trùng). Dùng --force nếu thật sự muốn đăng lại."); continue
+            if cmd.startswith("story") and da_co_tin(pid, p):
+                ok += 1; print(f"BỎ QUA {p['name']}: page vừa có Tin 24h trong 15 phút (chống đăng trùng). Dùng --force nếu cần."); continue
         if cmd == "photo":
             r = photo(pid, p, a[2], open(a[3], encoding="utf-8").read(), at)
         elif cmd == "carousel":

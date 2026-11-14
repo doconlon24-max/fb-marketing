@@ -27,6 +27,9 @@ def js_ok(html, ten):
 src = io.open(os.path.join(GOC, "merah-studio/src.html"), encoding="utf-8").read()
 idx = io.open(os.path.join(GOC, "merah-studio/index.html"), encoding="utf-8").read()
 js_ok(src, "src")
+bad = sorted({hex(ord(c)) for c in src if ord(c) < 32 and c not in "\n\r\t"})
+if bad:
+    loi.append("src.html có ký tự điều khiển lạ " + str(bad) + r" (thường do vá mã bằng Python làm hỏng \b trong regex)")
 if "__LOGO_LIGHT__" in idx:
     loi.append("index.html còn __LOGO_LIGHT__ – chưa dựng lại từ src.html")
 # index phải khớp src (trừ logo)

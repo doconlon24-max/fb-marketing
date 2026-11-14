@@ -194,3 +194,8 @@ Cột TRẠNG THÁI (tab bài fanpage cột I, QUANG-CAO cột I) CHỈ được
 - Ngày (cột B, yyyy-mm-dd) và giờ PH (cột C, HH:MM) là lịch đăng thật; sếp dời ngày trong app thì app sửa B–D, nhân viên đăng đúng theo đó.
 
 **Dòng trùng mã trên Sheet (14/11/2026):** khi gặp 2 dòng cùng Mã bài, KHÔNG đổi dòng thừa sang `Đã bỏ` đơn thuần – phải ghi cột K bắt đầu bằng `TRÙNG – …` (app bỏ qua dòng TRÙNG, nếu chỉ ghi Đã bỏ thì app ẩn luôn bài thật).
+
+**Chống đăng trùng (14/11/2026 – bài 11h bị đăng 2 lần do 2 lượt cùng đọc Sheet):** `fb_api.py` tự BỎ QUA page đã có bài cùng caption trong 12h và Tin 24h trong 15 phút – KHÔNG dùng `--force` trừ khi Sếp yêu cầu đăng lại. Trước khi đăng: đọc lại Sheet ngay lúc đó, dòng đã `Đã đăng`/`Đã lên lịch` hoặc K có `Đang đăng` (<30 phút) thì bỏ qua; nếu đăng thì ghi K `Đang đăng <giờ>` TRƯỚC rồi mới gọi fb_api.
+
+## SPY từ link sếp gửi trong app (14/11/2026)
+Dòng SPY-ADS có H chứa `LINK SẾP GỬI`: I = `Chờ máy tải` là việc của máy (đám mây không tải được video – bỏ qua). I = `Đã tải về SPY …` mà chưa có thành phẩm → Trưởng phòng QC giao EDIT ngay, KHÔNG hỏi sếp (page + dịch vụ đã có trong dòng), đổi I `Đang edit`, xong ghi QUANG-CAO `Chờ duyệt đăng` + đổi I `Chờ Sếp duyệt (<mã QC>)`. Xem `quang-cao/quy-trinh-tu-lieu-qc.md` mục "Video SPY sếp gửi link từ app".

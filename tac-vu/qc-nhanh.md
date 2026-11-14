@@ -68,3 +68,5 @@ Ghi chú kiểu "KHÔNG LÀM LẠI / đã làm trên máy" ở cột K chỉ áp
 Mỗi lượt chạy đều đọc tab `SPY-ADS` A1:K3000 của Sheet `{{ID_DRIVE}}`: dòng I = `Chờ quét` hoặc `Dùng làm ý tưởng` là CÓ VIỆC → làm ngay theo mục "SPY ADS ĐỐI THỦ" trong `tac-vu/nhan-vien-truc.md` (agent `fb-spy`). Nhận việc là đổi I thành `Đang quét` NGAY (app hiện tiến độ cho Sếp), xong đổi thành `Đã quét (n video)`. Nhiều dòng `Chờ quét` trùng dịch vụ + nền tảng thì làm 1 lần, các dòng còn lại ghi `Đã quét (gộp với dòng trên)`.
 
 **Bỏ thành phẩm (13/11/2026):** Sếp bảo bỏ thành phẩm QC nào → đổi cột I tab QUANG-CAO thành `Đã bỏ` (không để `Đã duyệt`), ghi lý do ở K. App tự ẩn dòng `Đã bỏ`.
+
+**Chống đăng trùng (14/11/2026 – bài 11h bị đăng 2 lần do 2 lượt cùng đọc Sheet):** `fb_api.py` tự BỎ QUA page đã có bài cùng caption trong 12h và Tin 24h trong 15 phút – KHÔNG dùng `--force` trừ khi Sếp yêu cầu đăng lại. Trước khi đăng: đọc lại Sheet ngay lúc đó, dòng đã `Đã đăng`/`Đã lên lịch` hoặc K có `Đang đăng` (<30 phút) thì bỏ qua; nếu đăng thì ghi K `Đang đăng <giờ>` TRƯỚC rồi mới gọi fb_api.
