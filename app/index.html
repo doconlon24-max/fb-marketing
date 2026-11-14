@@ -371,6 +371,56 @@ a.tq-t:hover{border-color:var(--accent)}
 .tq-h{color:var(--muted);font-variant-numeric:tabular-nums}
 .tq-late{grid-template-columns:74px minmax(0,1fr) auto}
 @media (max-width:560px){.tq-late{grid-template-columns:64px minmax(0,1fr)}.tq-late>.row{grid-column:1/-1;justify-content:flex-end}}
+
+/* ===== Giao diện 14/11/2026: cảm hứng Facebook – nền xám nhạt, thẻ trắng, nhấn xanh, tối giản ===== */
+:root{--bg:#f0f2f5;--card:#ffffff;--surface:#f0f2f5;--line:#e4e6eb;--ink:#050505;--muted:#65676b;--accent:#1877f2;--accent-soft:#e7f3ff;
+  --ok:#31a24c;--warn:#e07a00;--info:#1877f2;--danger:#e41e3f;--brand:#9a6b3f;
+  --shadow:0 1px 2px rgba(0,0,0,.12);--r:10px;--body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+:root[data-theme="dark"]{--bg:#18191a;--card:#242526;--surface:#3a3b3c;--line:#3e4042;--ink:#e4e6eb;--muted:#b0b3b8;--accent:#2d88ff;--accent-soft:#263951;--ok:#45bd62;--warn:#f7b928;--danger:#f3425f;--brand:#d1a370}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#18191a;--card:#242526;--surface:#3a3b3c;--line:#3e4042;--ink:#e4e6eb;--muted:#b0b3b8;--accent:#2d88ff;--accent-soft:#263951;--ok:#45bd62;--warn:#f7b928;--danger:#f3425f;--brand:#d1a370}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px}
+h2,h3,.head h2,.panel h3,.side h2,.idea h4{font-family:var(--body);font-weight:700;letter-spacing:-.01em}
+.head h2{font-size:24px}.panel h3{font-size:17px}.stage b,.tq-t b{font-family:var(--body);font-weight:700}
+.brand h1{font-family:var(--display);color:var(--brand);white-space:nowrap}
+.banner{border:0;border-radius:8px;box-shadow:var(--shadow)}
+.brand::before{background:var(--brand);color:#fff;border:0}
+header.top{background:var(--card);border-bottom:0;box-shadow:0 1px 2px rgba(0,0,0,.1);backdrop-filter:none}
+.head{border-bottom:0;padding-bottom:4px;margin-bottom:14px}
+.panel,.day,.idea,.stage,.empty,.tq-t,.side{border:0;box-shadow:var(--shadow);border-radius:var(--r);background:var(--card)}
+.stack>article.panel{border-left:0}
+.btn{border:0;background:var(--surface);color:var(--ink);border-radius:6px;font-weight:600;padding:8px 14px;box-shadow:none}
+.btn:hover{filter:brightness(.95)}
+.btn.small{padding:5px 10px;font-size:13px}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:none}
+.btn.ghost{background:transparent}
+input,select,textarea{border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--accent) 40%,transparent);border-color:var(--accent)}
+.chip{font-size:12px;padding:3px 9px}
+table.q th{text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:600;color:var(--muted);background:transparent;border-bottom:1px solid var(--line)}
+table.q tbody tr:hover td{background:var(--surface)}
+.tag{background:var(--accent-soft);color:var(--accent)}
+.daybar .dchip{border:0;background:var(--surface);font-weight:600}
+.daybar .dchip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.daybar .dchip small{color:var(--muted);margin-left:4px}
+.tq-t.hot{background:color-mix(in srgb,var(--warn) 8%,var(--card));border:0;box-shadow:inset 3px 0 0 var(--warn),var(--shadow)}
+.tq-t.hot b{color:var(--warn)}
+a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.mark,.flink{background:var(--surface);border:0}
+/* thanh bên như menu Facebook */
+.steps .gh{color:var(--muted);letter-spacing:.02em;text-transform:none;font-size:13px;font-weight:700;padding:6px 8px}
+.steps .grp.cur .gh{color:var(--ink)}
+.steps a{border-left:0!important;border-radius:8px;gap:10px;align-items:center}
+.steps a .ic{width:32px;height:32px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:16px;flex:none}
+.steps a[aria-current="page"]{background:var(--accent-soft)}
+.steps a[aria-current="page"] b{color:var(--accent)}
+.steps a[aria-current="page"] .ic{background:var(--accent);filter:saturate(1.1)}
+.steps a:hover{background:var(--surface)}
+@media (min-width:901px){.steps a{grid-template-columns:32px 1fr;display:grid;padding:6px 8px}.steps a b{font-weight:600;font-size:14.5px}.steps a[aria-current="page"] small{display:none}}
+@media (max-width:900px){#connText,#sheetSync{display:none}.bar{flex-wrap:nowrap;justify-content:space-between}.brand h1{font-size:18px}.steps a .ic{display:none}.steps a[aria-current="page"] .n{background:var(--accent);border-color:var(--accent)}#grpNav{background:var(--card)}#grpNav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}}
+/* nút (!) lưu ý */
+.info-btn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:0;background:var(--line);color:var(--muted);font:700 12px var(--body);cursor:pointer;margin-left:8px;vertical-align:middle;padding:0}
+.info-btn[aria-expanded="true"]{background:var(--accent);color:#fff}
+.info-txt{background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:10px 12px!important;margin:8px 0!important;font-size:13.5px!important;line-height:1.5}
 </style>
 </head>
 <body>
@@ -572,7 +622,7 @@ a.tq-t:hover{border-color:var(--accent)}
   <!-- ===== QUẢN TRỊ QC: SPY ĐỐI THỦ ===== -->
   <section class="view" id="v-q-link">
     <div class="head"><div><h2>SPY bằng link</h2><p>Dán link video → lưu vào danh sách SPY (tab SPY-ADS) → đội EDIT làm lại → chờ duyệt.</p></div></div>
-    <article class="panel stack" id="linkBox" style="border-left:3px solid var(--accent)">
+    <article class="panel stack" id="linkBox">
       <h3 style="margin:0">Gửi link</h3>
       <label class="f" for="lkUrls">Link video (mỗi dòng 1 link: TikTok, Facebook, Thư viện quảng cáo, Instagram Reels, YouTube Shorts)<textarea id="lkUrls" rows="3" placeholder="https://www.tiktok.com/@.../video/...&#10;https://www.facebook.com/ads/library/?id=..."></textarea></label>
       <div class="row" style="gap:10px;align-items:end;flex-wrap:wrap">
@@ -1210,6 +1260,14 @@ function openFix(a){const d=$("#confirmDlg");$("#cfTitle").textContent="Yêu c�
   $("#cfNo").onclick=()=>{d.close();$("#cfTitle").textContent="Xác nhận"}}
 
 /* ---------- routing ---------- */
+const NAV_IC={"t-tq":"🏠","p-nguon":"📁","p-y":"💡","p-tp":"🖼️","p-dang":"📅","q-nguon":"📂","q-spy":"🔍","q-link":"🔗","q-y":"✍️","q-tp":"🎬","q-dang":"📣","a-camp":"📊","a-tp":"🏆","a-dl":"📈","f-all":"🗂️"};
+/* chữ hướng dẫn dài -> nút (!) cạnh tiêu đề, bấm mới hiện (sếp chốt 14/11/2026) */
+function infoize(){document.querySelectorAll(".view .head p:not([data-inf]), .view .panel > p.note:not([id]):not([data-inf]), .view .panel > .stack > p.note:not([id]):not([data-inf])").forEach(p=>{
+  p.dataset.inf="1";if((p.textContent||"").trim().length<70)return;
+  const box=p.closest(".head")||p.closest(".panel");const h=box&&box.querySelector("h2,h3");if(!h||h.querySelector(".info-btn")&&p.closest(".head"))return;
+  const b=document.createElement("button");b.type="button";b.className="info-btn";b.textContent="!";b.title="Xem lưu ý";b.setAttribute("aria-label","Xem lưu ý");b.setAttribute("aria-expanded","false");
+  p.hidden=true;p.classList.add("info-txt");b.onclick=()=>{p.hidden=!p.hidden;b.setAttribute("aria-expanded",String(!p.hidden))};h.appendChild(b)})}
+let infoQ=false;new MutationObserver(()=>{if(infoQ)return;infoQ=true;requestAnimationFrame(()=>{infoQ=false;infoize()})}).observe(document.documentElement,{childList:true,subtree:true});
 const SUB={t:[["t-tq","Tổng quan","Việc chờ Sếp, bài hôm nay, số quảng cáo"]],
   p:[["p-nguon","File nguồn tư liệu","Tư liệu theo ngày trên Drive"],["p-y","Content ý tưởng","Ý tưởng, câu hỏi cho Sếp"],["p-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["p-dang","Đăng bài lên fanpage","Lịch, duyệt, lên lịch"]],
   q:[["q-nguon","File nguồn tư liệu","SPA · SPY · theo ngày"],["q-spy","SPY đối thủ","Quảng cáo, video đối thủ"],["q-link","SPY bằng link","Dán link → tự tải, tự edit"],["q-y","Content ý tưởng","Hook, nội dung quảng cáo"],["q-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["q-dang","Đăng bài lên page","Chọn page, duyệt đăng"]],
@@ -1224,7 +1282,7 @@ function route(){let h=location.hash.slice(1);h=OLD[h]||h;if(!SHOW[h])h="t-tq";c
   document.querySelectorAll("section.view").forEach(s=>s.classList.toggle("active",SHOW[h].includes(s.id.slice(2))));
   document.querySelectorAll("#grpNav a").forEach(a=>{if(a.dataset.g===g)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   $("#subNav").innerHTML=Object.keys(SUB).map(gk=>{const ga=document.querySelector(`#grpNav a[data-g="${gk}"]`);const bd=(ga&&ga.dataset.badge)||"";
-    return `<div class="grp${gk===g?" cur":""}"><div class="gh"><span>${GRP[gk][1]}</span>${bd?`<i class="bdg">${bd}</i>`:""}</div>`+SUB[gk].map(([k,l,d],i)=>`<a href="#${k}"${k===h?' aria-current="page"':""}><span class="n">${i+1}</span><span><b>${l}</b><small>${d}</small></span></a>`).join("")+`</div>`}).join("");
+    return `<div class="grp${gk===g?" cur":""}"><div class="gh"><span>${GRP[gk][1]}</span>${bd?`<i class="bdg">${bd}</i>`:""}</div>`+SUB[gk].map(([k,l,d],i)=>`<a href="#${k}"${k===h?' aria-current="page"':""}><span class="ic" aria-hidden="true">${NAV_IC[k]||"•"}</span><span class="n">${i+1}</span><span><b>${l}</b><small>${d}</small></span></a>`).join("")+`</div>`}).join("");
   $("#sideK").textContent=GRP[g][0];$("#sideT").textContent=GRP[g][1];$("#sideD").textContent=GRP[g][2];
   if(SHOW[h].includes("anh"))draw();
   document.querySelector(".side").classList.toggle("one",SUB[g].length<2);
