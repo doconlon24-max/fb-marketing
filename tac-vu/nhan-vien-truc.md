@@ -199,3 +199,8 @@ Cột TRẠNG THÁI (tab bài fanpage cột I, QUANG-CAO cột I) CHỈ được
 
 ## SPY từ link sếp gửi trong app (14/11/2026)
 Dòng SPY-ADS có H chứa `LINK SẾP GỬI`: I = `Chờ máy tải` là việc của máy (đám mây không tải được video – bỏ qua). I = `Đã tải về SPY …` mà chưa có thành phẩm → Trưởng phòng QC giao EDIT ngay, KHÔNG hỏi sếp (page + dịch vụ đã có trong dòng), đổi I `Đang edit`, xong ghi QUANG-CAO `Chờ duyệt đăng` + đổi I `Chờ Sếp duyệt (<mã QC>)` (chỉ khi video đã edit xong VÀ caption/content đã viết vào QUANG-CAO cột M; giữ nguyên chữ `Drive: SPY/<ngày>` trong cột H). Xem `quang-cao/quy-trinh-tu-lieu-qc.md` mục "Video SPY sếp gửi link từ app".
+
+## Bản xem nhẹ cho app (14/11/2026 – bắt buộc)
+Kết nối Google Drive của app chỉ tải được file dưới 10 MB, nên video 20–30 MB không phát được trong app. Mỗi khi đưa 1 VIDEO lên Drive để sếp xem (thành phẩm fanpage, thành phẩm quảng cáo, video mẫu phong cách): ngay sau khi upload, chạy
+`python tai-nguyen/scripts/tao_ban_xem.py <link hoặc id Drive của video>`
+→ tạo `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/_xem/<id>_xem.mp4` (≤9,3 MB, 540p). App tự tìm bản này để phát; không có thì app chỉ hiện nút mở Drive. Không xoá thư mục `_xem` khi dọn Drive.

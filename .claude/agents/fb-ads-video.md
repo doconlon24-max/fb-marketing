@@ -185,3 +185,8 @@ Trước khi làm chuyển cảnh / chữ hiện / trượt nhóm: đọc `cut-t
 
 ## Album phong cách trên app (14/11/2026)
 Phong cách mới được sếp duyệt hoặc thay video mẫu → thêm/sửa dòng tab `PHONG-CACH` (xem `tai-nguyen/phong-cach-video-qc/README.md`), ảnh bìa + video mẫu đẩy vào Drive `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/`. Cột G tab QUANG-CAO luôn bắt đầu bằng mã PCxx.
+
+## Bản xem nhẹ cho app (14/11/2026 – bắt buộc)
+Kết nối Google Drive của app chỉ tải được file dưới 10 MB, nên video 20–30 MB không phát được trong app. Mỗi khi đưa 1 VIDEO lên Drive để sếp xem (thành phẩm fanpage, thành phẩm quảng cáo, video mẫu phong cách): ngay sau khi upload, chạy
+`python tai-nguyen/scripts/tao_ban_xem.py <link hoặc id Drive của video>`
+→ tạo `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/_xem/<id>_xem.mp4` (≤9,3 MB, 540p). App tự tìm bản này để phát; không có thì app chỉ hiện nút mở Drive. Không xoá thư mục `_xem` khi dọn Drive.

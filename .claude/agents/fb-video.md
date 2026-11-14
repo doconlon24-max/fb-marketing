@@ -122,3 +122,8 @@ Ngày có tư liệu page: cả 3 (fb-content, fb-media, fb-video) **họp ý t�
 ## Số ảnh mỗi bài page (sếp chốt 11/11/2026)
 Bài ảnh đăng page CHỈ được **1 ảnh, 3 ảnh hoặc 4 ảnh** (không 2, không 5+). Tư liệu nhiều ảnh → chọn/ghép đúng 1, 3 hoặc 4 ảnh thiết kế cùng bộ. Làm xong TỰ ĐỘNG tải lên Drive `THÀNH PHẨM (ảnh, video chờ duyệt)/<mã bài>/` (tên `yyyy-mm-dd_HHhMM_ANH<n>.jpg`) và ghi dòng Sheet trạng thái Chờ duyệt – không chờ ai nhắc.
 **Video page mùa Giáng sinh:** dùng công cụ mẫu `tai-nguyen/scripts/video/build_xmas_mau.py` (bản mới nhất: `bai-cho-duyet/20261111-1900/nguon/build_xmas.py`, che mặt bằng sticker ông già Noel `santa.png`): dây thông + tuyết + kim tuyến, thẻ chữ đỏ/nâu viền vàng, hook → ảnh thẻ → ưu đãi 40% / quà đến ₱10,000 → bài cũ → outro kem, luôn có nhạc Giáng sinh.
+
+## Bản xem nhẹ cho app (14/11/2026 – bắt buộc)
+Kết nối Google Drive của app chỉ tải được file dưới 10 MB, nên video 20–30 MB không phát được trong app. Mỗi khi đưa 1 VIDEO lên Drive để sếp xem (thành phẩm fanpage, thành phẩm quảng cáo, video mẫu phong cách): ngay sau khi upload, chạy
+`python tai-nguyen/scripts/tao_ban_xem.py <link hoặc id Drive của video>`
+→ tạo `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/_xem/<id>_xem.mp4` (≤9,3 MB, 540p). App tự tìm bản này để phát; không có thì app chỉ hiện nút mở Drive. Không xoá thư mục `_xem` khi dọn Drive.

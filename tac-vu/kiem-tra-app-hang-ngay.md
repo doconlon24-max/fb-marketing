@@ -22,6 +22,7 @@ Theo "Hợp đồng TRẠNG THÁI" trong `tai-nguyen/app-fb-studio.md`:
 - Bài trong app khác trạng thái với Sheet quá 1 lượt đồng bộ → tìm nguyên nhân trong `sheetPull` và sửa mã, không sửa tay từng bài.
 - Bài quá giờ chưa đăng: KHÔNG tự bỏ/dời – để sếp chọn trên app (chỉ nhắc trong báo cáo).
 - HOI-SEP: câu hỏi chưa trả lời quá 1 ngày → nhắc.
+- Video chưa có bản xem nhẹ: lấy link video ở tab QUANG-CAO cột F (dòng chưa `Đã bỏ`), tab bài fanpage cột G (dạng Reels/Video) và tab PHONG-CACH cột F → chạy `python tai-nguyen/scripts/tao_ban_xem.py <các link>` (đã có thì tự bỏ qua).
 - Nhật ký có lỗi lặp lại (vd `storageQuotaExceeded` Drive đầy, hết credit, token Facebook) → báo sếp, không tự mua/nâng cấp.
 
 ## 5. Sửa + đăng

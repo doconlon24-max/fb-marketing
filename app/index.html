@@ -431,7 +431,8 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
 /* album phong cách */
 .pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .pc-card{background:var(--card);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
-.pc-media{aspect-ratio:9/16;max-height:340px;background:#111;position:relative;display:grid;place-items:center}
+.pc-media{aspect-ratio:9/16;max-height:340px;background:#111;position:relative;display:grid;place-items:center;overflow:hidden}
+.pc-media .fb-play,.pc-media .fb-vid{width:100%;height:100%}
 .pc-media img{width:100%;height:100%;object-fit:cover}
 .pc-media .pc-std{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
 .pc-body{padding:10px 12px;display:grid;gap:4px}.pc-body b{font-size:14.5px}.pc-flow{font-size:12.5px;color:var(--muted);line-height:1.45}
@@ -1744,8 +1745,10 @@ document.addEventListener("click",e=>{const see=e.target.closest&&e.target.close
 /* video Drive: tải về qua kết nối Google Drive rồi phát ngay trong app (khung xem trước của Drive bị chặn trong app nên hiện màn đen) */
 function vidBox(id){return `<div class="fb-play" data-vfid="${esc(id)}" role="button" tabindex="0"><span class="fb-pbtn">▶</span><small>Bấm để phát video</small></div>`}
 async function playVid(el){const id=el.dataset.vfid;el.innerHTML='<small>Đang tải video… (video dài cần vài giây)</small>';
-  try{const u=await driveBlob(id,"video/mp4");const v=document.createElement("video");v.src=u;v.controls=true;v.autoplay=true;v.playsInline=true;v.setAttribute("playsinline","");v.className="fb-vid";el.replaceWith(v);v.play().catch(()=>{})}
-  catch(err){el.innerHTML=`<small>Chưa phát được trong app (${esc(errTxt(err))}).</small><a href="https://drive.google.com/file/d/${esc(id)}/view" target="_blank" rel="noopener">Mở video trên Drive ↗</a>`}}
+  try{/* kết nối Drive chỉ tải được file < 10 MB: ưu tiên bản xem nhẹ <id>_xem.mp4 (tạo bằng tai-nguyen/scripts/tao_ban_xem.py) */
+    let use=id;try{const xs=await driveList(`title = '${id}_xem.mp4'`);if(xs[0])use=xs[0].id}catch(e){}
+    const u=await driveBlob(use,"video/mp4");const v=document.createElement("video");v.src=u;v.controls=true;v.autoplay=true;v.playsInline=true;v.setAttribute("playsinline","");v.className="fb-vid";el.replaceWith(v);v.play().catch(()=>{})}
+  catch(err){const big=/10 ?MB|too large|limit/i.test(String(err&&err.message||err));el.innerHTML=`<small>${big?"Video lớn hơn 10 MB và chưa có bản xem nhẹ – nhân viên sẽ tạo ở lượt kiểm tra kế tiếp.":"Chưa phát được trong app ("+esc(errTxt(err))+")."}</small><a href="https://drive.google.com/file/d/${esc(id)}/view" target="_blank" rel="noopener">Mở video trên Drive ↗</a>`}}
 document.addEventListener("click",e=>{const p=e.target.closest&&e.target.closest("[data-vfid]");if(p&&!p.querySelector("a"))playVid(p)});
 function driveView(link,fmt){const ids=driveIds(link),id=ids[0];
   if(!id)return `<a href="${esc(link)}" target="_blank" rel="noopener">Mở ảnh/video trên Drive</a>`;
