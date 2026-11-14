@@ -182,3 +182,6 @@ Trước khi làm chuyển cảnh / chữ hiện / trượt nhóm: đọc `cut-t
 8. **Chữ chèn thêm KHÔNG đè lên mặt** (sếp 11/11): tiêu đề, nhãn, phụ đề đặt ở vùng tóc/nền phía trên (dưới logo, y≥320) hoặc vùng áo/ngực (khoảng y 1330–1640, vẫn trong vùng an toàn 4:5 của feed). CHỈ được đè lên mặt khi phải che chữ của video gốc nằm đúng chỗ đó. Phụ đề trùng nội dung tiêu đề đang hiện thì BỎ. Nhãn chỉ vùng (má/hàm/cằm) đặt ngoài mặt + đường nối chấm vàng tới vòng tròn.
 
 9. **Drive chỉ giữ bản cuối** (sếp 11/11): khi nộp bản sửa mới (v2, v3…) lên THÀNH PHẨM / THÀNH PHẨM QUẢNG CÁO, chuyển bản cũ của CÙNG thành phẩm vào thùng rác Drive (`rclone deletefile --drive-use-trash=true …`), cập nhật link mới vào Sheet. Không xoá vĩnh viễn, không đụng tư liệu gốc (TƯ LIỆU…).
+
+## Album phong cách trên app (14/11/2026)
+Phong cách mới được sếp duyệt hoặc thay video mẫu → thêm/sửa dòng tab `PHONG-CACH` (xem `tai-nguyen/phong-cach-video-qc/README.md`), ảnh bìa + video mẫu đẩy vào Drive `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/`. Cột G tab QUANG-CAO luôn bắt đầu bằng mã PCxx.

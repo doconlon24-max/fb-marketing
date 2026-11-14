@@ -21,6 +21,8 @@ rep('const ARTIFACT_NAME="MERAH Studio";', 'const ARTIFACT_NAME="SPA MARKETING";
 rep('{{ID_KET_NOI}}', '__APP_SLUG__', cnt=99)
 rep('const LOGO_LIGHT="__LOGO_LIGHT__", LOGO_DARK="__LOGO_DARK__";', 'let LOGO_LIGHT="", LOGO_DARK="";')
 
+# ---- logo MERAH ở thanh trên: bản chia sẻ không dùng (người dùng có logo riêng trong Cài đặt)
+sub(r'const BRAND_LOGO_LT="data:image/png;base64,[^"]*",BRAND_LOGO_DK="data:image/png;base64,[^"]*";', 'const BRAND_LOGO_LT="",BRAND_LOGO_DK="";')
 # ---- hằng số MERAH -> cấu hình riêng từng người
 sub(r'const PAGES=\[[^\]]*\];', 'let PAGES=["Page của tôi"];')
 rep('const GROUPS=', 'let GROUPS=')

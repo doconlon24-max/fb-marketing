@@ -16,6 +16,8 @@ Mỗi phong cách = 1 thư mục `PCxx-<ten>/` gồm `bia.jpg` (ảnh bìa để
 
 Thêm phong cách mới: sếp gửi video tham khảo → học (ghi `tai-nguyen/hoc-video/`) → dựng thử → sếp duyệt → tạo thư mục PCxx + ảnh bìa + dòng trong bảng trên.
 
+**App hiện album từ tab `PHONG-CACH` trên Google Sheet (14/11/2026)** – mục Sản xuất quảng cáo → Content ý tưởng. Mỗi phong cách mới (hoặc đổi video mẫu) PHẢI thêm/sửa 1 dòng: A mã PCxx · B tên · C hợp với tư liệu · D luồng cảnh ngăn bằng `→` · E link Drive ảnh bìa (jpg dọc ~540px) · F link Drive video mẫu · G `x` nếu là phong cách chuẩn · H ghi chú. Ảnh bìa + video mẫu để trong Drive `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/` (không xoá thư mục này khi dọn Drive). Cột G tab QUANG-CAO phải ghi đúng mã PCxx để app đếm "đã dùng".
+
 Quy tắc: trong một đợt, mỗi video một phong cách khác nhau; chọn theo loại tư liệu (cột "Hợp với tư liệu"). Ghi phong cách đã dùng vào cột G tab `QUANG-CAO`.
 
 ## LUẬT CỨNG TỪ SẾP (11/11/2026) – ÁP DỤNG MỌI VIDEO

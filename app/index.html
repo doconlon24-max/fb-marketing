@@ -421,6 +421,22 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .info-btn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:0;background:var(--line);color:var(--muted);font:700 12px var(--body);cursor:pointer;margin-left:8px;vertical-align:middle;padding:0}
 .info-btn[aria-expanded="true"]{background:var(--accent);color:#fff}
 .info-txt{background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:10px 12px!important;margin:8px 0!important;font-size:13.5px!important;line-height:1.5}
+
+/* thanh trên: logo MERAH tách nền + chữ MERAH Studio (sếp chốt 14/11/2026) */
+.brand::before{display:none!important}.brand span{display:none!important}
+.brand-logo{height:34px;width:auto;display:block}.brand-logo.dk{display:none}
+:root[data-theme="dark"] .brand-logo.lt{display:none}:root[data-theme="dark"] .brand-logo.dk{display:block}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand-logo.lt{display:none}:root:not([data-theme="light"]) .brand-logo.dk{display:block}}
+@media (max-width:900px){.brand-logo{height:28px}}
+/* album phong cách */
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.pc-card{background:var(--card);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.pc-media{aspect-ratio:9/16;max-height:340px;background:#111;position:relative;display:grid;place-items:center}
+.pc-media img{width:100%;height:100%;object-fit:cover}
+.pc-media .pc-std{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+.pc-body{padding:10px 12px;display:grid;gap:4px}.pc-body b{font-size:14.5px}.pc-flow{font-size:12.5px;color:var(--muted);line-height:1.45}
+.pc-steps{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 0;padding:0;list-style:none}
+.pc-steps li{background:var(--surface);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600}
 </style>
 </head>
 <body>
@@ -618,6 +634,13 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
     </div></div>
     <div id="hoiQ" class="stack" style="margin-bottom:14px"></div>
     <div id="adsList" class="stack"></div>
+    <article class="panel stack" style="margin-top:14px"><h3 style="margin:0">Album phong cách video</h3>
+      <p class="note" style="margin:0">Các phong cách video quảng cáo MERAH đang dùng. Bấm Xem video mẫu để xem trước khi chọn phong cách cho Trưởng phòng QC. Số "đã dùng" đếm từ các thành phẩm trong tab QUANG-CAO. Phong cách mới: nhân viên thêm 1 dòng ở tab PHONG-CACH trên Google Sheet, app tự hiện.</p>
+      <div id="pcList" class="pc-grid"><div class="empty">Đang tải…</div></div></article>
+    <article class="panel stack" style="margin-top:14px"><h3 style="margin:0">Hướng xây dựng nội dung video</h3>
+      <ul class="pc-steps"><li>1 · Hook 3 giây đầu</li><li>2 · Vấn đề khách gặp</li><li>3 · Giải pháp / dịch vụ</li><li>4 · Bằng chứng: trước/sau, khách thật</li><li>5 · Ưu đãi</li><li>6 · Kêu gọi nhắn tin</li></ul>
+      <p class="note" style="margin:0">Luật cứng cho mọi video: không còn chữ nước ngoài ở bất kỳ khung nào; không quay chậm video gốc (thay bằng cắt nhanh ảnh tĩnh nét); khung đầu tiên đã có chữ hook; logo MERAH tách nền ở góc trái trên; chữ chèn không đè lên mặt; không in "Sample result" lên video (chỉ để trong caption); video SPY giữ nội dung gốc, chỉ đổi logo, chữ, outro, khuyến mãi; giọng Mely + nhạc trend; kiểm tra mượt trước khi gửi duyệt.</p>
+    </article>
   </section>
 
   <!-- ===== QUẢN TRỊ QC: SPY ĐỐI THỦ ===== -->
@@ -1270,6 +1293,9 @@ function infoize(){document.querySelectorAll(".view .head p:not([data-inf]), .vi
   const b=document.createElement("button");b.type="button";b.className="info-btn";b.textContent="!";b.title="Xem lưu ý";b.setAttribute("aria-label","Xem lưu ý");b.setAttribute("aria-expanded","false");
   p.hidden=true;p.classList.add("info-txt");b.onclick=()=>{p.hidden=!p.hidden;b.setAttribute("aria-expanded",String(!p.hidden))};h.appendChild(b)})}
 let infoQ=false;new MutationObserver(()=>{if(infoQ)return;infoQ=true;requestAnimationFrame(()=>{infoQ=false;infoize()})}).observe(document.documentElement,{childList:true,subtree:true});
+const BRAND_LOGO_LT="",BRAND_LOGO_DK="";
+(function(){const b=document.querySelector(".brand");if(!b||document.getElementById("brandName")||!BRAND_LOGO_LT)return;const h=b.querySelector("h1");
+  for(const [src,c] of [[BRAND_LOGO_LT,"lt"],[BRAND_LOGO_DK,"dk"]]){const im=document.createElement("img");im.src=src;im.alt="";im.className="brand-logo "+c;b.insertBefore(im,h)}})();
 const SUB={t:[["t-tq","Tổng quan","Việc chờ Sếp, bài hôm nay, số quảng cáo"]],
   p:[["p-nguon","File nguồn tư liệu","Tư liệu theo ngày trên Drive"],["p-y","Content ý tưởng","Ý tưởng, câu hỏi cho Sếp"],["p-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["p-dang","Đăng bài lên fanpage","Lịch, duyệt, lên lịch"]],
   q:[["q-nguon","File nguồn tư liệu","SPA · SPY · theo ngày"],["q-spy","SPY đối thủ","Quảng cáo, video đối thủ"],["q-link","SPY bằng link","Dán link → tự tải, tự edit"],["q-y","Content ý tưởng","Hook, nội dung quảng cáo"],["q-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["q-dang","Đăng bài lên page","Chọn page, duyệt đăng"]],
@@ -2277,7 +2303,18 @@ async function loadTq(){renderTq();loadHoi();
   try{qcRows=await loadQcRows()}catch(e){}renderTq();
   try{$("#tqAdLbl").textContent=adrLabel();const cs=(await adsAll("campaign",["id","name","effective_status",...MET_F],[TEST_F])).filter(c=>isTest(c.name)&&!gone(c));TQ_ADS=met(cs)}
   catch(e){TQ_ERR="Chưa lấy được số quảng cáo – mở mục Hiệu quả quảng cáo rồi bấm Đồng bộ."}renderTq()}
-const LOADERS={"t-tq":loadTq,"p-nguon":()=>{loadNguon("p-nguon");loadHoi()},"q-nguon":()=>{loadNguon("q-nguon");loadHoi()},"p-tp":()=>{renderPagePreview();loadTp("p-tp")},"q-tp":()=>{loadTp("q-tp");loadPreview()},"q-dang":loadQDang,"p-y":loadHoi,"a-dl":loadDL,"q-spy":loadSpySaved,"q-link":loadSpySaved};
+/* ---------- Album phong cách video (tab PHONG-CACH) ---------- */
+async function loadPc(){const box=$("#pcList");if(!box)return;if(!mcp){box.innerHTML='<div class="empty">App chưa được phép dùng Google Sheets.</div>';return}
+  try{const v=valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"PHONG-CACH!A1:H100"}));let qc=[];try{qc=qcRows.length?qcRows:await loadQcRows()}catch(e){}
+    const rows=v.slice(1).filter(r=>r[0]).map(r=>({code:String(r[0]).trim(),name:r[1]||"",fit:r[2]||"",flow:r[3]||"",cover:(driveIds(r[4])[0]||""),vid:(driveIds(r[5])[0]||""),std:/x/i.test(r[6]||""),note:r[7]||""}));
+    rows.forEach(p=>{p.used=qc.filter(q=>String(q.style||"").toUpperCase().includes(p.code.toUpperCase())).length});
+    rows.sort((a,b)=>(b.std-a.std)||(b.used-a.used));
+    box.innerHTML=rows.length?rows.map(p=>`<div class="pc-card"><div class="pc-media" id="pcm-${esc(p.code)}">${p.cover?`<img data-fid="${esc(p.cover)}" alt="Ảnh bìa ${esc(p.code)}">`:'<small style="color:#aaa">Chưa có ảnh bìa</small>'}${p.std?'<span class="pc-std">Chuẩn</span>':""}</div>
+      <div class="pc-body"><b>${esc(p.code)} · ${esc(p.name)}</b><span class="pc-flow">${esc(p.flow)}</span><span class="note">Hợp với: ${esc(p.fit)}</span><span class="note">Đã dùng: ${p.used} video${p.note?" · "+esc(p.note):""}</span>
+      ${p.vid?`<button class="btn small" data-pcvid="${esc(p.code)}|${esc(p.vid)}">▶ Xem video mẫu</button>`:'<span class="note">Chưa có video mẫu</span>'}</div></div>`).join(""):'<div class="empty">Chưa có phong cách nào trong tab PHONG-CACH.</div>'}
+  catch(e){box.innerHTML=`<div class="empty">Chưa đọc được tab PHONG-CACH: ${esc(errTxt(e))}</div>`}}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-pcvid]");if(!b)return;const [code,id]=b.dataset.pcvid.split("|");const m=document.getElementById("pcm-"+code);if(!m)return;m.innerHTML=vidBox(id);b.remove();playVid(m.querySelector("[data-vfid]"))});
+const LOADERS={"q-y":()=>{loadHoi();loadPc()},"t-tq":loadTq,"p-nguon":()=>{loadNguon("p-nguon");loadHoi()},"q-nguon":()=>{loadNguon("q-nguon");loadHoi()},"p-tp":()=>{renderPagePreview();loadTp("p-tp")},"q-tp":()=>{loadTp("q-tp");loadPreview()},"q-dang":loadQDang,"p-y":loadHoi,"a-dl":loadDL,"q-spy":loadSpySaved,"q-link":loadSpySaved};
 function lazyLoad(h){if(!LOADERS[h]||loaded[h]||!mcp)return;loaded[h]=true;LOADERS[h]()}
 document.addEventListener("click",e=>{
   const rl=e.target.closest("[data-reload]");if(rl){const h=rl.dataset.reload;loaded[h]=true;LOADERS[h]&&LOADERS[h]();return}
