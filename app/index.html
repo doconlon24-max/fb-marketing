@@ -220,8 +220,13 @@ label[for=pageFilter]{display:none}
 .fb{background:#fff;color:#050505;border:1px solid #dadde1;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.1);overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
 .fb-h{display:flex;gap:9px;align-items:center;padding:12px 14px 6px}
 .fb-av{width:40px;height:40px;border-radius:50%;background:#f3e8db;color:#9a6b3f;display:grid;place-items:center;font:600 15px var(--display);border:1px solid #e6d5c2;flex:none}
-.fb-h b{display:block;font-size:14.5px;line-height:1.2}.fb-h small{color:#65676b;font-size:12.5px}
-.fb-cap{padding:4px 14px 10px;font-size:14.5px;line-height:1.38;white-space:pre-line}
+.fb-h b{display:block;font-size:15px;line-height:1.25;font-weight:600}.fb-h small{color:#65676b;font-size:13px}
+.fb-cap{padding:4px 12px 10px;font-size:15px;line-height:20px;white-space:pre-line;word-wrap:break-word}
+.fb-lk{color:#0064d1}.fb-see{color:#65676b;font-weight:600;cursor:pointer;white-space:nowrap}
+.fbgrid .fb{max-width:400px;width:100%;justify-self:center}
+.fb-play{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;cursor:pointer;background:#111}
+.fb-play a{color:#fff;text-decoration:underline}.fb-pbtn{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:26px;padding-left:4px}
+.fb-vid{width:100%;height:100%;object-fit:contain;background:#000}
 .fb-cap.cut{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .fb-more{border:0;background:none;color:#65676b;font-weight:600;padding:0 14px 8px;cursor:pointer;font-size:14px}
 .fb-media{background:#000;aspect-ratio:9/16;max-height:620px;width:100%;display:grid;place-items:center;position:relative}
@@ -1599,10 +1604,10 @@ function linkify(t){return esc(t).replace(/https:\/\/drive\.google\.com\/[^\s,|<
 function histHTML(h){const lines=String(h||"").split("\n").map(x=>x.trim()).filter(Boolean);if(!lines.length)return "";
   return `<details class="hist"><summary>Lịch sử chỉnh sửa (${lines.length})</summary><ol>${lines.map(l=>`<li>${linkify(l)}</li>`).join("")}</ol></details>`}
 function fbCard(r){const id=driveId(r.link),cap=fmtCap(r.cap)||"(Content QC chưa viết caption)",long=cap.split("\n").length>4||cap.length>260,done=/đã duyệt|đã đăng|tin 24h|seeding|đã lên ads/i.test(r.st||""),posted=/đã đăng|tin 24h|seeding|đã lên ads/i.test(r.st||""),fix=/cần sửa/i.test(r.st);
-  const media=id?`<iframe src="https://drive.google.com/file/d/${esc(id)}/preview" allow="autoplay; fullscreen" loading="lazy" title="Video ${esc(r.name)}"></iframe>`:(r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">Mở video trên Drive</a>`:'<span style="color:#ccc;font-size:13px">Chưa có video</span>');
+  const media=id?(/ảnh|anh/i.test(r.type||"")?driveView(r.link,"Ảnh"):vidBox(id)):(r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">Mở video trên Drive</a>`:'<span style="color:#ccc;font-size:13px">Chưa có video</span>');
   return `<article class="fb" aria-label="Bản xem trước ${esc(r.name)}">
     <div class="fb-h"><span class="fb-av">MR</span><span><b>${esc(r.page||"Chưa chọn page")}</b><small>${posted?"Đã đăng lên page":"Bản xem trước · chưa đăng"} · 🌐</small></span></div>
-    <div class="fb-cap${long?" cut":""}" id="cap-${r.row}">${esc(cap)}</div>${long?`<button class="fb-more" data-more="${r.row}">Xem thêm</button>`:""}
+    ${fbCap(cap)}
     <div class="fb-media">${media}<span class="fb-tag">${esc((r.date||"").slice(0,5))} · ${esc(r.name||r.id)} · ${/ảnh|anh/i.test(r.type||"")?"Ảnh":"Video"} ${esc(String(r.name||"").replace(/\D/g,""))}</span></div>
     <div class="fb-cta"><span><small>MERAH BEAUTY · Makati</small><br><b>Message us to book</b></span><span class="btnfb">Send message</span></div>
     <div class="fb-r"><span>👍❤️ 0</span><span>0 bình luận · 0 lượt chia sẻ</span></div>
@@ -1628,16 +1633,28 @@ function tpName(p){const sameDay=[...S.posts.values()].filter(x=>x.date===p.date
   const n=sameDay.filter(x=>/reel|video/i.test(x.format||"")===isV).findIndex(x=>x.id===p.id)+1;return `${p.date.slice(8,10)}/${p.date.slice(5,7)} · ${p.time} · ${isV?"Video":"Ảnh"} ${n||1}`}
 const driveIds=link=>[...new Set([...String(link||"").matchAll(/(?:\/d\/|[?&]id=)([\w-]{20,})/g)].map(m=>m[1]))];
 const BLOB={};
-function driveBlob(id){return BLOB[id]||(BLOB[id]=(async()=>{if(!mcp)throw new Error("App chưa được phép dùng Google Drive");
-  const r=await callT(DRIVE,"download_file_content",{fileId:id});const b64=r&&(r.content||r.data);if(!b64)throw new Error("Không tải được ảnh");
+function driveBlob(id,mime){return BLOB[id]||(BLOB[id]=(async()=>{if(!mcp)throw new Error("App chưa được phép dùng Google Drive");
+  const r=await callT(DRIVE,"download_file_content",{fileId:id});const b64=r&&(r.content||r.data);if(!b64)throw new Error(mime?"Drive không trả nội dung video":"Không tải được ảnh");
   const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
-  return URL.createObjectURL(new Blob([u],{type:r.mimeType||"image/jpeg"}))})().catch(e=>{delete BLOB[id];throw e}))}
+  return URL.createObjectURL(new Blob([u],{type:mime||r.mimeType||"image/jpeg"}))})().catch(e=>{delete BLOB[id];throw e}))}
 function hydrateImgs(root){if(!mcp)return;(root||document).querySelectorAll("img[data-fid]:not([src])").forEach(im=>{im.setAttribute("src","data:image/gif;base64,R0lGODlhAQABAAAAACw=");
   driveBlob(im.dataset.fid).then(u=>{im.src=u}).catch(e=>{const s=document.createElement("span");s.style.cssText="font-size:12px;color:#999;padding:6px";s.textContent="Không tải được ảnh: "+errTxt(e);im.replaceWith(s)})})}
 setInterval(()=>hydrateImgs(),1500);new MutationObserver(()=>hydrateImgs()).observe(document.documentElement,{childList:true,subtree:true});
+/* bản xem trước giống Facebook trên điện thoại (14/11/2026): chữ 15px, 3 dòng đầu + "… Xem thêm" nằm cuối dòng, hashtag/link màu xanh */
+function fbTxt(t){return esc(t).replace(/(https?:\/\/[^\s<]+)/g,'<span class="fb-lk">$1</span>').replace(/(^|[\s(])(#[\p{L}\p{N}_]+)/gu,'$1<span class="fb-lk">$2</span>')}
+function fbCap(cap){const lines=String(cap||"").split("\n");let head=lines.slice(0,3).join("\n");const cut=lines.length>3||head.length>150;
+  if(head.length>150)head=head.slice(0,head.lastIndexOf(" ",150)>90?head.lastIndexOf(" ",150):150);
+  return `<div class="fb-cap"><span class="fb-short">${fbTxt(cut?head.replace(/\s+$/,""):cap)}${cut?'<span class="fb-see" role="button" tabindex="0">… Xem thêm</span>':""}</span>${cut?`<span class="fb-full" hidden>${fbTxt(cap)}</span>`:""}</div>`}
+document.addEventListener("click",e=>{const see=e.target.closest&&e.target.closest(".fb-see");if(!see)return;const c=see.closest(".fb-cap");c.querySelector(".fb-short").hidden=true;c.querySelector(".fb-full").hidden=false});
+/* video Drive: tải về qua kết nối Google Drive rồi phát ngay trong app (khung xem trước của Drive bị chặn trong app nên hiện màn đen) */
+function vidBox(id){return `<div class="fb-play" data-vfid="${esc(id)}" role="button" tabindex="0"><span class="fb-pbtn">▶</span><small>Bấm để phát video</small></div>`}
+async function playVid(el){const id=el.dataset.vfid;el.innerHTML='<small>Đang tải video… (video dài cần vài giây)</small>';
+  try{const u=await driveBlob(id,"video/mp4");const v=document.createElement("video");v.src=u;v.controls=true;v.autoplay=true;v.playsInline=true;v.setAttribute("playsinline","");v.className="fb-vid";el.replaceWith(v);v.play().catch(()=>{})}
+  catch(err){el.innerHTML=`<small>Chưa phát được trong app (${esc(errTxt(err))}).</small><a href="https://drive.google.com/file/d/${esc(id)}/view" target="_blank" rel="noopener">Mở video trên Drive ↗</a>`}}
+document.addEventListener("click",e=>{const p=e.target.closest&&e.target.closest("[data-vfid]");if(p&&!p.querySelector("a"))playVid(p)});
 function driveView(link,fmt){const ids=driveIds(link),id=ids[0];
   if(!id)return `<a href="${esc(link)}" target="_blank" rel="noopener">Mở ảnh/video trên Drive</a>`;
-  if(/reel|video/i.test(fmt||""))return `<iframe src="https://drive.google.com/file/d/${esc(id)}/preview" allow="autoplay" style="width:100%;height:100%;border:0" title="Video"></iframe>`;
+  if(/reel|video/i.test(fmt||""))return vidBox(id);
   const img=(x,n,st)=>`<img data-fid="${esc(x)}" alt="Ảnh ${n}" data-zoom="1" style="width:100%;height:100%;background:#f3ede4;object-fit:${ids.length>1?"cover":"contain"};cursor:zoom-in;${st||""}">`;
   if(ids.length===1)return img(id,1);
   return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;width:100%;height:100%">${ids.slice(0,4).map((x,i)=>img(x,i+1,i===0&&ids.length===3?"grid-row:span 2;":"")).join("")}</div>`}
@@ -1653,7 +1670,7 @@ function pageCard(p){const m=(p.media||[])[0],cap=fmtCap(p.caption)||"(chưa có
     :(p.driveLink?driveView(p.driveLink,p.format):'<span style="color:#ccc;font-size:13px">Chưa có hình</span>');
   return `<article class="fb" aria-label="Bản xem trước ${esc(p.id)}">
     <div class="fb-h"><span class="fb-av">MR</span><span><b>${esc(p.page||"MERAH Beauty Makati")}</b><small>${fmtDate(p.date)} · ${esc(p.time)} PH · bản xem trước</small></span></div>
-    <div class="fb-cap${long?" cut":""}" id="pcap-${esc(p.id)}">${esc(cap)}</div>${long?`<button class="fb-more" data-pmore="${esc(p.id)}">Xem thêm</button>`:""}
+    ${fbCap(cap)}
     <div class="fb-media" style="aspect-ratio:${p.format==="Reels"?"9/16":"4/5"}">${media}<span class="fb-tag">${esc(tpName(p))}</span></div>
     <div class="fb-a"><span>👍 Thích</span><span>💬 Bình luận</span><span>↗ Chia sẻ</span></div>
     <div class="fb-ok"><div class="row" style="justify-content:space-between"><b style="font-weight:500">${esc(p.topic||"")}</b><span class="chip" style="--st:${ST_COLOR[p.status]}">${esc(p.status)}</span></div>
