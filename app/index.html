@@ -614,8 +614,9 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
   <section class="view" id="v-quang-cao">
     <div class="head"><div>
       <h2>Content ý tưởng – Quảng cáo</h2>
-      <p>Ý tưởng, hook, nội dung quảng cáo do Trưởng phòng QC và Content QC lên từ tư liệu. Muốn sửa thì bấm Yêu cầu sửa. Duyệt đăng và chọn page ở mục "Media &amp; thành phẩm".</p>
+      <p>Nơi Trưởng phòng QC hỏi Sếp trước khi làm: chọn phong cách video, page đăng, cách xử lý tư liệu SPA/SPY. Sếp chọn xong, đội EDIT làm video + content; thành phẩm hiện ở "Media &amp; thành phẩm" để duyệt đăng.</p>
     </div></div>
+    <div id="hoiQ" class="stack" style="margin-bottom:14px"></div>
     <div id="adsList" class="stack"></div>
   </section>
 
@@ -679,7 +680,7 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
     </div><div class="row"><a class="btn" target="_blank" rel="noopener" data-fold="p-tp" href="#">Mở thư mục gốc</a><button class="btn" data-reload="p-tp">Tải lại</button></div></div>
     <div id="pDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div id="pPreview" class="fbgrid"><div class="empty">Đang tải…</div></div>
-    <details style="margin-top:20px"><summary class="note">Xem tất cả file trên Drive theo ngày</summary><div id="pTp" class="stack" style="margin-top:10px"><div class="empty">Đang tải…</div></div></details>
+    <details style="margin-top:20px"><summary class="note">Xem tất cả file trên Drive theo ngày</summary><div id="ptDays" class="daybar" role="group" aria-label="Chọn ngày"></div><div id="pTp" class="stack" style="margin-top:10px"><div class="empty">Đang tải…</div></div></details>
   </section>
 
   <!-- ===== QUẢN TRỊ QC: FILE NGUỒN ===== -->
@@ -688,7 +689,7 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
       <h2>File nguồn tư liệu – Quảng cáo</h2>
       <p>Drive <b>MERAH / TƯ LIỆU QUẢNG CÁO</b> chia 2 thư mục: <b>SPA</b> (spa tự quay) và <b>SPY</b> (sưu tầm), bên trong mỗi thư mục là thư mục theo ngày dd-mm-yyyy. Câu hỏi của Trưởng phòng QC hiện ở trên cùng.</p>
     </div><div class="row"><a class="btn" target="_blank" rel="noopener" data-fold="q-nguon" href="#">Mở thư mục gốc</a><button class="btn" data-reload="q-nguon">Tải lại</button></div></div>
-    <div id="hoiQ" class="stack" style="margin-bottom:14px"></div>
+    <div id="hoiQn" class="stack" style="margin-bottom:14px"></div>
     <div id="qnDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div id="qNguon" class="stack"><div class="empty">Đang tải…</div></div>
   </section>
@@ -704,6 +705,7 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
     <div id="qDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div id="qPreview" class="fbgrid"><div class="empty">Đang tải…</div></div>
     <h3 style="font-size:22px;margin:22px 0 10px">Tất cả file thành phẩm theo ngày</h3>
+    <div id="qtDays" class="daybar" role="group" aria-label="Chọn ngày"></div>
     <div id="qTp" class="stack"><div class="empty">Đang tải…</div></div>
   </section>
 
@@ -1247,7 +1249,7 @@ function renderAds(){
       ${a.notes?`<p class="note" style="white-space:pre-line"><b>Ghi chú cho người chạy QC:</b> ${esc(a.notes)}</p>`:""}
       ${a.feedback?`<p class="note"><b>Bạn yêu cầu sửa:</b> ${esc(a.feedback)}</p>`:""}
       <div class="row">${st==="Đã đăng page"||st==="Đã duyệt"?"":`<button class="btn" data-adfix="${esc(a.id)}">Yêu cầu sửa</button>`}</div></article>`}).join("")
-    :'<div class="empty">Chưa có chiến dịch quảng cáo. Tạo thư mục ngày (dd-mm-yyyy) và bỏ tư liệu vào C:\MERAH\TƯ LIỆU QUẢNG CÁO.</div>';
+    :'<div class="empty">Hiện không có câu hỏi hay ý tưởng nào chờ Sếp. Khi có tư liệu mới (SPA/SPY), Trưởng phòng QC sẽ hỏi ở đây.</div>';
 }
 async function saveAd(a){a.updatedAt=new Date().toISOString();S.ads.set(a.id,a);renderAds();if(db)try{await db.collection("ads").doc(a.id).set(a)}catch(e){handleWriteErr(e)}}
 document.addEventListener("click",async e=>{
@@ -1532,18 +1534,18 @@ function tdoHTML(kind,f){const t=TDO.get((kind+"/"+f.title).toUpperCase());const
   const chips=steps.map(([x,on],i)=>`<span class="${on?(i===k+1&&k<2&&!bad?"now":"on"):""}">${on?"✓ ":""}${x}</span>`).join("<i>›</i>");
   const warn=!t&&age>20?`<span class="bad">Chưa có ai tiếp nhận (${Math.round(age/60)>=1?Math.round(age/60)+" giờ":Math.round(age)+" phút"})</span>`:bad?`<span class="bad">${esc(st)}</span>`:"";
   return `<div class="tdo" aria-label="Tiến độ xử lý">${chips}${warn}${t&&t.at?`<i>· cập nhật ${esc(t.at)}</i>`:""}</div>${t&&t.note?`<p class="tdo-note">${linkify(t.note)}</p>`:""}${t&&t.hist?histHTML(t.hist):""}`}
-function dayCards(fs,kind="PAGE"){return fs.length?fs.map(f=>`<article class="panel"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${fmtDate(folderDate(f))} <span class="note">${esc(f.title)}</span></h3>
+function dayCards(fs,kind="PAGE"){return fs.length?fs.map(f=>`<article class="panel" data-d="${esc(folderDate(f))}"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${fmtDate(folderDate(f))} <span class="note">${esc(f.title)}</span></h3>
       <span class="row"><a class="btn small" href="${esc(f.viewUrl)}" target="_blank" rel="noopener">Mở</a><button class="btn small" data-xem="${esc(f.id)}">Xem file</button></span></div>${tdoHTML(kind,f)}<div class="marks" id="x-${esc(f.id)}"></div></article>`).join("")
       :'<div class="empty">Chưa có thư mục ngày nào.</div>'}
 const dayFolders=fs=>fs.filter(f=>kindOf(f)==="Thư mục"&&!f.title.startsWith("_")).sort((a,b)=>folderDate(b).localeCompare(folderDate(a)));
 async function loadNguon(key){const box=$(key==="p-nguon"?"#pNguon":"#qNguon");
   if(!mcp){box.innerHTML='<div class="empty">App chưa được phép dùng Google Drive.</div>';return}
   box.innerHTML='<div class="empty">Đang tải từ Google Drive…</div>';
-  try{await loadTdo();if(key==="p-nguon"){box.innerHTML=dayCards(dayFolders(await kids(FOLD[key])),"PAGE");return}
+  try{await loadTdo();if(key==="p-nguon"){box.innerHTML=dayCards(dayFolders(await kids(FOLD[key])),"PAGE");dayFilterDom("pn",box);return}
     const parts=await Promise.all(QC_SUB.map(([,id])=>kids(id).catch(()=>[])));
     const root=dayFolders(await kids(FOLD[key])).filter(f=>!QC_SUB.some(([n])=>n===f.title));
     box.innerHTML=QC_SUB.map(([n,id,d],i)=>`<section class="stack" style="margin-bottom:18px"><div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="margin:0;font-size:22px">${n} <span class="note">${esc(d)}</span></h3><a class="btn small" href="https://drive.google.com/drive/folders/${id}" target="_blank" rel="noopener">Mở thư mục ${n}</a></div>${dayCards(dayFolders(parts[i]),n)}</section>`).join("")
-      +(root.length?`<section class="stack"><h3 style="margin:0;font-size:20px">Thư mục ngày kiểu cũ <span class="note">(đặt thẳng trong gốc)</span></h3>${dayCards(root,"QC")}</section>`:"");
+      +(root.length?`<section class="stack"><h3 style="margin:0;font-size:20px">Thư mục ngày kiểu cũ <span class="note">(đặt thẳng trong gốc)</span></h3>${dayCards(root,"QC")}</section>`:"");dayFilterDom("qn",box);
   }catch(e){box.innerHTML=`<div class="empty">${esc(errTxt(e))}</div>`}}
 async function xemFile(id,el){el.innerHTML='<span class="note">Đang tải…</span>';
   try{const fs=await kids(id);const subs=fs.filter(f=>kindOf(f)==="Thư mục");let all=fs.filter(f=>kindOf(f)!=="Thư mục").map(f=>({...f,_sub:""}));
@@ -1570,7 +1572,7 @@ async function loadTp(key){const box=$(key==="p-tp"?"#pTp":"#qTp");
       ${items.map(i=>`${i.fo?`<div class="row" style="justify-content:space-between;margin-top:8px"><b>${esc(i.fo.title)}</b><a class="btn small" href="${esc(i.fo.viewUrl)}" target="_blank" rel="noopener">Mở thư mục</a></div>`:""}
         <div class="marks">${i.files.length?i.files.filter(f=>["Ảnh","Video"].includes(kindOf(f))).map(fileRow).join(""):'<span class="note">Chưa có ảnh/video (hoặc file cũ hơn 60 ngày – bấm Mở thư mục).</span>'}</div>`).join("")}</article>`}).join("")
       :'<div class="empty">Chưa có thành phẩm trên Drive.</div>';
-    dayFilterDom(key==="p-nguon"?"pn":"qn",box);
+    dayFilterDom(key==="p-tp"?"pt":"qt",box);
   }catch(e){box.innerHTML=`<div class="empty">${esc(errTxt(e))}</div>`}}
 
 /* ---- Hỏi sếp (tab HOI-SEP) ---- */
@@ -1593,7 +1595,9 @@ function renderHoi(){
   const open=hoiRows.filter(r=>!r.a);
   const pq=open.filter(r=>!/qc|quảng/i.test(r.phong));$("#hoiP2").innerHTML=pq.map(card).join("");
   $("#hoiP").innerHTML=pq.length?`<p class="note" style="margin:0">${pq.length} câu hỏi đang chờ Sếp – trả lời ở mục <a href="#p-y">Content ý tưởng</a>.</p>`:"";
-  $("#hoiQ").innerHTML=open.filter(r=>/qc|quảng/i.test(r.phong)).map(card).join("");
+  const qq=open.filter(r=>/qc|quảng/i.test(r.phong));$("#hoiQ").innerHTML=qq.map(card).join("");
+  $("#hoiQn").innerHTML=qq.length?`<p class="note" style="margin:0">${qq.length} câu hỏi quảng cáo đang chờ Sếp – trả lời ở mục <a href="#q-y">Content ý tưởng</a>.</p>`:"";
+  const al=$("#adsList");if(al&&al.querySelector(".empty"))al.hidden=!!qq.length;
   const n=open.length;const g=document.querySelector('#grpNav a[data-g="p"]');if(g)g.dataset.badge=n?String(n):"";if(typeof renderTq==="function")renderTq();}
 function tickAnswer(row){const r=hoiRows.find(x=>x.row===row);if(!r)return "";const o=r.opt||{},parts=[];
   const pa=document.querySelector(`input[name="pa-${row}"]:checked`);if(pa)parts.push("Phương án: "+pa.value);
@@ -1634,7 +1638,7 @@ async function duyetQDang(row){const r=qcRows.find(x=>x.row===row);const pg=$("#
 
 /* ---- Bản xem trước bài đăng (giống Facebook, chưa đăng) ---- */
 const driveId=u=>{const m=String(u||"").match(/\/d\/([\w-]{10,})/)||String(u||"").match(/[?&]id=([\w-]{10,})/);return m?m[1]:""};
-const DAYSEL={p:null,q:null,d:null,pn:null,qn:null,qd:null,lk:null,at:null};
+const DAYSEL={p:null,q:null,d:null,pn:null,qn:null,qd:null,lk:null,at:null,pt:null,qt:null};
 /* lọc ngày cho danh sách đã vẽ sẵn: phần tử có data-d="yyyy-mm-dd"; mặc định hiện hôm nay (hoặc ngày gần nhất), bấm Tất cả mới hiện hết */
 function dayFilterDom(k,root){if(!root)return;const els=[...root.querySelectorAll("[data-d]")];const keep=new Set(dayBar(k,els.map(e=>({_d:e.dataset.d,e})),()=>dayFilterDom(k,root)).map(x=>x.e));els.forEach(e=>{e.hidden=!keep.has(e)})}
 function isoD(x){x=String(x||"").trim();let m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
@@ -1651,7 +1655,7 @@ function dayBar(k,items,rerender){const bar=$("#"+k+"Days");if(!bar)return items
 document.addEventListener("click",e=>{const b=e.target.closest("[data-day]");if(!b)return;const [k,v]=b.dataset.day.split("|");DAYSEL[k]=v;const bar=$("#"+k+"Days");bar&&bar._re&&bar._re()});
 document.addEventListener("change",e=>{const i=e.target.closest("[data-dayin]");if(!i||!i.value)return;const k=i.dataset.dayin;DAYSEL[k]=i.value;const bar=$("#"+k+"Days");bar&&bar._re&&bar._re()});
 function renderQPreview(){const box=$("#qPreview");if(!box)return;const all=qcRows.map(r=>({...r,_d:isoD(r.date)}));
-  const POSTED=/đã đăng|tin 24h|seeding|đã lên ads/i;let list=dayBar("q",all,renderQPreview);const nDone=list.filter(r=>POSTED.test(r.st||"")).length;list=list.filter(r=>!POSTED.test(r.st||"")&&!/đã bỏ/i.test(r.st||"")).slice().reverse();
+  const POSTED=/đã đăng|tin 24h|seeding|đã lên ads/i;const pend=all.filter(r=>!POSTED.test(r.st||"")&&!/đã bỏ/i.test(r.st||""));let list=dayBar("q",pend,renderQPreview).slice().reverse();const nDone=all.filter(r=>POSTED.test(r.st||"")&&(DAYSEL.q==="all"||r._d===DAYSEL.q)).length;
   box.innerHTML=(nDone?`<p class="note" style="margin:0 0 10px">${nDone} thành phẩm đã đăng lên page – xem tiến độ ở mục <a href="#q-dang">Đăng bài lên page</a>.</p>`:"")+(list.length?list.map(fbCard).join(""):(DAYSEL.q==="all"?'<div class="empty">Chưa có thành phẩm nào chờ duyệt. Có thành phẩm mới, bản xem trước sẽ hiện ở đây.</div>':'<div class="empty">Ngày này không còn thành phẩm nào chờ duyệt.</div>'))}
 async function loadPreview(){const box=$("#qPreview");if(!box)return;if(!mcp){box.innerHTML='<div class="empty">App chưa được phép dùng Google Sheets.</div>';return}
   try{qcRows=await loadQcRows();renderQPreview()
@@ -2259,7 +2263,7 @@ let TQ_ADS=null,TQ_ERR="";
 function renderTq(){const box=$("#tqTodo");if(!box)return;try{hoiRows;qcRows;TQ_ADS;ST_COLOR}catch(e){return}const td=todayPH();const posts=[...S.posts.values()],cnt=st=>posts.filter(p=>p.status===st).length;
   const hoi=hoiRows.filter(r=>!r.a),hq=hoi.filter(r=>/qc|quảng/i.test(r.phong)).length,qcW=qcRows.filter(r=>/chờ.*duyệt|chờ sếp/i.test(r.st||"")).length;
   const T=(n,l,d,href,hot)=>`<a class="tq-t${hot&&n?" hot":""}" href="#${href}"><b>${n}</b><span>${l}</span><small>${d}</small></a>`;
-  box.innerHTML=T(hoi.length-hq,"Câu hỏi fanpage","Nhân viên đang chờ Sếp trả lời","p-y",1)+T(hq,"Câu hỏi quảng cáo","Phong cách, page đăng","q-nguon",1)
+  box.innerHTML=T(hoi.length-hq,"Câu hỏi fanpage","Nhân viên đang chờ Sếp trả lời","p-y",1)+T(hq,"Câu hỏi quảng cáo","Phong cách, page đăng","q-y",1)
     +T(cnt("Chờ duyệt"),"Bài fanpage chờ duyệt","Xem, duyệt hoặc yêu cầu sửa","p-tp",1)+T(qcW,"Quảng cáo chờ duyệt","Chọn page, duyệt đăng","q-tp",1)
     +T(cnt("Cần sửa")+cnt("Đang sửa"),"Bài đang sửa","Nhân viên đang làm lại","p-dang")+T(posts.filter(p=>p.status==="Đã lên lịch"&&(p.date||"")>=td).length,"Bài đã hẹn giờ","Từ hôm nay trở đi, sẽ tự đăng","p-dang");
   const late=posts.filter(isOverdue).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));$("#tqLateBox").hidden=!late.length;
