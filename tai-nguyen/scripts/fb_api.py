@@ -9,7 +9,7 @@ python fb_api.py story-photo <page> <ảnh>    # Tin 24h (API chỉ cho đăng n
 python fb_api.py story-video <page> <video>
 <page> = page id, tên page, hoặc "all" (cả 10 page).
 """
-import json, os, sys, time, datetime
+import json, os, sys, time, datetime, hashlib, shutil, socket, subprocess
 import requests
 
 V = "v22.0"
@@ -193,6 +193,118 @@ def da_co_bai(pid, p, cap, hours=12):
     return False
 
 
+def da_co_video(pid, p, cap, hours=12):
+    """Reel vừa tải lên còn đang xử lý / đã hẹn giờ chưa hiện ở video_reels → xem thêm /videos."""
+    key = _norm(cap)
+    if not key:
+        return False
+    since = time.time() - hours * 3600
+    try:
+        r = requests.get(f"{G}/{pid}/videos", params={"fields": "description,created_time", "limit": 25, "access_token": p["token"]}, timeout=30)
+        for x in (r.json().get("data", []) if r.ok else []):
+            try:
+                t = datetime.datetime.strptime(x.get("created_time", "")[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=datetime.timezone.utc).timestamp()
+            except Exception:
+                t = time.time()
+            if t >= since and _norm(x.get("description")) == key:
+                return True
+    except Exception:
+        pass
+    return False
+
+
+# ---- KHOÁ ĐĂNG BÀI dùng chung mọi máy + đám mây (15/11/2026, sếp yêu cầu chống đăng trùng tuyệt đối) ----
+# Mỗi lần đăng 1 page tạo tệp trên Drive  merah:"KHÓA ĐĂNG BÀI"/<khoá>__<epoch>__<máy>__CHO.txt
+# - đã có tệp ...__XONG trong 24h  -> bài này đã đăng, bỏ qua
+# - đang có tệp ...__CHO < 20 phút của lượt khác -> lượt khác đang đăng, bỏ qua
+# - 2 lượt tạo khoá cùng lúc -> chờ 4 giây, lượt có epoch nhỏ nhất thắng, lượt kia rút
+# Không có rclone (hoặc Drive lỗi) -> vẫn chống trùng bằng kiểm tra trên Facebook như cũ.
+KHOA_DIR = os.environ.get("MERAH_KHOA_DIR", "")  # tự dò: máy (gốc = thư mục MERAH) / đám mây (gốc = My Drive → MERAH/)
+MAY = os.environ.get("MERAH_MAY") or socket.gethostname()
+
+
+def _rc(*args, timeout=60):
+    exe = shutil.which("rclone")
+    if not exe:
+        return None
+    try:
+        return subprocess.run([exe, *args], capture_output=True, text=True, encoding="utf-8", timeout=timeout,
+                              creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    except Exception:
+        return None
+
+
+def _thu_muc_khoa():
+    global KHOA_DIR
+    if not KHOA_DIR:
+        r = _rc("lsf", "merah:", "--dirs-only", "--max-depth", "1")
+        goc_drive = r is not None and r.returncode == 0 and "MERAH/" in (r.stdout or "").split()
+        KHOA_DIR = "merah:MERAH/KHÓA ĐĂNG BÀI" if goc_drive else "merah:KHÓA ĐĂNG BÀI"
+    return KHOA_DIR
+
+
+def _ds_khoa(key):
+    _thu_muc_khoa()
+    r = _rc("lsf", KHOA_DIR, "--files-only", "--include", key + "__*")
+    if r is None or (r.returncode != 0 and "not found" not in (r.stderr or "")):
+        return None
+    out = []
+    for n in (r.stdout or "").split():
+        parts = n[:-4].split("__") if n.endswith(".txt") else []
+        if len(parts) == 4 and parts[1].isdigit():
+            out.append((int(parts[1]), n, parts[3]))
+    return out
+
+
+def khoa_key(pid, cmd, cap, media):
+    if cmd.startswith("story"):
+        try:
+            sig = os.path.basename(media) + str(os.path.getsize(media))
+        except Exception:
+            sig = os.path.basename(media or "")
+        raw = f"{pid}|tin|{sig}"
+    else:
+        raw = f"{pid}|bai|{' '.join((cap or '').split()).lower()}"
+    return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
+
+
+def giu_khoa(key):
+    """Trả (True, tên tệp khoá) nếu được đăng; (False, lý do) nếu phải bỏ qua; (True, None) nếu không khoá được (Drive lỗi)."""
+    now = time.time()
+    ds = _ds_khoa(key)
+    if ds is None:
+        return True, None
+    if any(st == "XONG" and t > now - 24 * 3600 for t, _, st in ds):
+        return False, "đã đăng trong 24h (khoá Drive)"
+    if any(st == "CHO" and t > now - 20 * 60 for t, _, st in ds):
+        return False, "lượt/máy khác đang đăng bài này"
+    ten = f"{key}__{int(now)}__{MAY.replace('__', '_')}__CHO.txt"
+    r = _rc("touch", f"{KHOA_DIR}/{ten}")
+    if r is None or r.returncode != 0:
+        return True, None
+    time.sleep(4)
+    ds = _ds_khoa(key) or []
+    cho = sorted((t, n) for t, n, st in ds if st == "CHO" and t > now - 20 * 60)
+    if any(st == "XONG" and t > now - 24 * 3600 for t, _, st in ds) or (cho and cho[0][1] != ten):
+        _rc("deletefile", f"{KHOA_DIR}/{ten}", "--drive-use-trash=false")
+        return False, "lượt/máy khác nhận đăng trước"
+    return True, ten
+
+
+def tha_khoa(ten, ok):
+    if not ten:
+        return
+    if ok:
+        _rc("moveto", f"{KHOA_DIR}/{ten}", f"{KHOA_DIR}/{ten[:-len('__CHO.txt')]}__XONG.txt")
+    else:
+        _rc("deletefile", f"{KHOA_DIR}/{ten}", "--drive-use-trash=false")
+
+
+def don_khoa_cu():
+    _thu_muc_khoa()
+    _rc("delete", KHOA_DIR, "--min-age", "3d", "--drive-use-trash=false", timeout=120)
+
+
 def da_co_tin(pid, p, minutes=15):
     """Chống đăng trùng Tin 24h: page vừa có Tin trong 15 phút → True."""
     try:
@@ -221,12 +333,22 @@ def main():
         return check()
     pages = load_pages(a[1])
     ok = 0
+    capf = {"photo": 3, "carousel": 2, "reel": 3}.get(cmd)
+    cap = open(a[capf], encoding="utf-8").read() if capf is not None else ""
+    media = a[2] if cmd in ("photo", "reel", "story-photo", "story-video") else (a[3] if len(a) > 3 else "")
+    if not force:
+        don_khoa_cu()
     for pid, p in pages:
+        ten_khoa = None
         if not force:
-            capf = {"photo": 3, "carousel": 2, "reel": 3}.get(cmd)
-            if capf is not None and da_co_bai(pid, p, open(a[capf], encoding="utf-8").read()):
+            duoc, ten_khoa = giu_khoa(khoa_key(pid, cmd, cap, media))
+            if not duoc:
+                ok += 1; print(f"BỎ QUA {p['name']}: {ten_khoa} (chống đăng trùng)."); continue
+            if capf is not None and (da_co_bai(pid, p, cap) or (cmd == "reel" and da_co_video(pid, p, cap))):
+                tha_khoa(ten_khoa, True)  # trên page đã có → ghi XONG để lượt sau khỏi kiểm tra lại
                 ok += 1; print(f"BỎ QUA {p['name']}: đã có bài cùng caption trong 12h (chống đăng trùng). Dùng --force nếu thật sự muốn đăng lại."); continue
             if cmd.startswith("story") and da_co_tin(pid, p):
+                tha_khoa(ten_khoa, False)
                 ok += 1; print(f"BỎ QUA {p['name']}: page vừa có Tin 24h trong 15 phút (chống đăng trùng). Dùng --force nếu cần."); continue
         if cmd == "photo":
             r = photo(pid, p, a[2], open(a[3], encoding="utf-8").read(), at)
@@ -239,7 +361,9 @@ def main():
         elif cmd == "story-video":
             r = story_video(pid, p, a[2])
         else:
+            tha_khoa(ten_khoa, False)
             die("Lệnh không hợp lệ: " + cmd)
+        tha_khoa(ten_khoa, r.ok)
         if r.ok:
             ok += 1; print(f"OK  {p['name']}: {r.json()}")
         else:

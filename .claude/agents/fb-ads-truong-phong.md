@@ -81,4 +81,5 @@ Trên Drive và trên máy chỉ để lại: **tư liệu gốc SPA** (spa tự
 - Thành phẩm làm từ tư liệu trong thư mục ngày X (`SPY/<X>`, `SPA/<X>`, `TƯ LIỆU ĐĂNG BÀI/<X>`, link sếp gửi ngày X) thì MỌI THỨ mang ngày X, dù dựng xong vào hôm sau: mã `QC-<yyyymmdd của X>-VDn`, tên file `<yyyy-mm-dd của X>_VDn.mp4`, thư mục Drive `THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy của X>/`, cột B tab QUANG-CAO = X. KHÔNG lấy ngày dựng/ngày hôm nay.
 - Số VDn = số kế tiếp chưa dùng của NGÀY X (đọc tab QUANG-CAO các mã `QC-<X>-VD…`).
 - DỰNG LẠI (sau Yêu cầu sửa, sai phong cách, làm lại) = GIỮ NGUYÊN mã, tên file, thư mục, DÒNG Sheet của bản cũ: ghi đè dòng cũ (cột F link mới, G phong cách, I `Chờ duyệt đăng`, K nhật ký), bản cũ vào Thùng rác. KHÔNG tạo mã/dòng mới.
+- **Trước khi đặt mã cho video dựng từ tư liệu SPY/SPA: TÌM trong tab QUANG-CAO dòng cũ cùng nguồn** (khoá `IG-…`/`TT-…`/`FB-…` hoặc tên file `SPY_<khoá>` xuất hiện ở cột G hoặc K). Có dòng cũ (kể cả trạng thái "Bỏ – sai phong cách… đang dựng lại") → đây là DỰNG LẠI: dùng đúng mã + dòng đó. Chỉ khi không có dòng cũ mới lấy số VDn kế tiếp của ngày tư liệu.
 - Tab SPY-ADS cột I ghi đúng mã đó: `Chờ Sếp duyệt (QC-<X>-VDn)`.

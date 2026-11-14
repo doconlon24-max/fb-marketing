@@ -17,7 +17,7 @@ STATE = os.path.join(TMP, "da_goi.json")
 LOCK = os.path.join(TMP, "dang_chay.lock")
 LOG = os.path.join(TMP, "nhat_ky.txt")
 MOC_CHAT = "2026-11-15"  # video sếp gửi trong chat (H "File: SPY_…") từ ngày này tự dựng; cũ hơn chờ sếp quyết
-TOI_DA = {"truc": 4, "laptop": 3}  # video dựng/lượt: dựng lần lượt ~15 phút/video, vừa khung 150 phút; laptop ARM yếu hơn
+TOI_DA = {"truc": 1, "laptop": 1}  # 15/11 sếp: 1 video/lượt, xong cái nào lịch 1 phút nhận ngay cái kế (không ôm lô, máy kia rảnh được chia việc)
 CHROME = {"truc": "{{ID_KET_NOI}}", "laptop": "{{ID_KET_NOI}}"}
 NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 RID = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
@@ -127,8 +127,8 @@ def khoa_cu(i, now):
     return now - ts > 3 * 3600
 
 
-HAN = {"tai": 40, "dung": 160}        # phút: khoá luồng quá hạn coi như treo (máy tắt giữa chừng)
-GIOI_HAN = {"tai": 35, "dung": 150}   # phút: thời gian tối đa 1 lượt Claude
+HAN = {"tai": 40, "dung": 65}         # phút: khoá luồng quá hạn coi như treo (máy tắt giữa chừng)
+GIOI_HAN = {"tai": 35, "dung": 60}    # phút: thời gian tối đa 1 lượt Claude (1 video ~10–15 phút)
 
 
 def khoa(luong):
@@ -137,7 +137,12 @@ def khoa(luong):
 
 def ban(luong):
     """Luồng đang có lượt Claude chạy?"""
-    ds = [khoa(luong)] + ([LOCK] if luong == "dung" else [])  # LOCK cũ (bản 1 luồng) coi như luồng dựng
+    ds = [khoa(luong)]  # 15/11: bỏ khoá cũ dang_chay.lock (bản 1 luồng) – từng làm laptop tưởng đang bận, không nhận dựng
+    try:
+        if os.path.exists(LOCK):
+            os.remove(LOCK)
+    except OSError:
+        pass
     return any(os.path.exists(f) and time.time() - os.path.getmtime(f) < HAN[luong] * 60 for f in ds)
 
 
@@ -212,19 +217,31 @@ def main():
             viec.append((k, "tai"))
         elif (("Drive: SPY/" in h) or ("File: SPY_" in h and ngay_iso(r.get("A", "")) >= MOC_CHAT)) and (i.startswith("Đã tải về SPY") or khoa_cu(i, now)):
             viec.append((k, "dung"))
+    # 15/11: yêu cầu sửa video quảng cáo (tab QUANG-CAO cột I 'Cần sửa') – máy nhận và sửa ngay, đi chung luồng DỰNG, ưu tiên trước video mới
+    try:
+        qc = doc_tab(tai_sheet(), "QUANG-CAO")
+    except Exception as e:
+        qc = []
+        log(f"không đọc được tab QUANG-CAO: {e}")
+    sua = []
+    for r in qc[1:]:
+        ma, i = r.get("A", "").strip(), r.get("I", "").strip()
+        if ma.startswith("QC-") and "-VD" in ma and (i.startswith("Cần sửa") or (i.startswith("Đang sửa") and khoa_cu(i.replace("Đang sửa", "Đang edit", 1), now))):
+            sua.append((ma, "sua"))
+    viec = sua + viec
     st = json.load(open(STATE, encoding="utf-8")) if os.path.exists(STATE) else {}
     keys = {k + "|" + t for k, t in viec}
     st = {k: v for k, v in st.items() if k in keys}  # dòng đã xử lý xong thì bỏ khỏi sổ
     can = []
     for k, t in viec:
         e = st.setdefault(k + "|" + t, {"thay": now, "goi": 0})
-        if (t == "tai" and ban_tai) or (t == "dung" and ban_dung):
+        if (t == "tai" and ban_tai) or (t in ("dung", "sua") and ban_dung):
             continue  # luồng đó đang bận, lượt sau
         if now - e["thay"] < cho * 60:
             continue  # laptop nhường máy trực
         if e["goi"] and now - e["goi"] < (30 if t == "tai" else 120) * 60:
             continue  # đã gọi Claude cho dòng này gần đây
-        if t == "dung" and sum(1 for _, x in can if x == "dung") >= TOI_DA[a.may]:
+        if t in ("dung", "sua") and sum(1 for _, x in can if x in ("dung", "sua")) >= TOI_DA[a.may]:
             continue  # giới hạn video dựng/lượt (dựng lần lượt), còn lại lượt sau
         can.append((k, t))
     json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False)
@@ -242,6 +259,7 @@ def main():
     chung = "Không vượt đăng nhập/captcha, không in token, không đăng bài hay bật quảng cáo. Trả lời ngắn gọn bằng tiếng Việt."
     tai = [k for k, t in can if t == "tai"]
     dung = [k for k, t in can if t == "dung"]
+    sua = [k for k, t in can if t == "sua"]
     if tai:
         log("gọi Claude TẢI: " + ", ".join(tai))
         tach_roi(a.may, "tai", (
@@ -250,14 +268,20 @@ def main():
             f"đổi I sang 'Đang tải' trước khi tải để máy kia không làm trùng, tải video (yt-dlp trước nếu hợp), đẩy Drive TƯ LIỆU QUẢNG CÁO/SPY/<ngày>, "
             f"cập nhật Sheet (I = 'Đã tải về SPY <ngày>', H giữ 'Drive: SPY/<ngày>'), xoá hẳn tệp tạm + thùng rác. CHỈ TẢI, KHÔNG dựng: "
             f"luồng DỰNG của máy sẽ tự nhận video ở phút kế tiếp. {chung}"))
-    if dung:
-        log("gọi Claude DỰNG: " + ", ".join(dung))
-        tach_roi(a.may, "dung", (
-            f"Canh SPY (máy {may}) – luồng DỰNG. Làm mục 'DỰNG LUÔN TRÊN MÁY' trong tac-vu/spy-tai-video-may.md cho ĐÚNG các video: {', '.join(dung)} "
+    if dung or sua:
+        log("gọi Claude DỰNG/SỬA: " + ", ".join(sua + dung))
+        phan_sua = (f"TRƯỚC TIÊN SỬA các video quảng cáo Sếp yêu cầu sửa: {', '.join(sua)} (tab QUANG-CAO, cột J = yêu cầu của Sếp, cột N/K = lịch sử). "
+                    f"Mỗi video: đổi I = 'Đang sửa (máy {may} <dd/MM HH:mm>)' (= ĐÃ TIẾP NHẬN, app hiện bước 2–3) và thêm 1 dòng cột N '<giờ> – Video – đã tiếp nhận', "
+                    f"tải bản cũ + tư liệu gốc, sửa ĐÚNG yêu cầu cột J (xem ảnh khoanh lỗi nếu có link), PC07 HyperFrames, kiem_tra_muot, GIỮ NGUYÊN mã/tên file/thư mục/dòng Sheet "
+                    f"(ghi đè file trên Drive cùng tên, bản cũ vào Thùng rác, tạo lại bản xem nhẹ tao_ban_xem.py), ghi I = 'Chờ duyệt đăng', thêm dòng N '<giờ> – Video – sửa xong (vN): <đã sửa gì> – chờ Sếp duyệt'. "
+                    f"Không sửa được thì I = 'Cần sửa' + ghi lý do cột K. ") if sua else ""
+        tach_roi(a.may, "dung", phan_sua + (
+            (f"Canh SPY (máy {may}) – luồng DỰNG. Làm mục 'DỰNG LUÔN TRÊN MÁY' trong tac-vu/spy-tai-video-may.md cho ĐÚNG các video: {', '.join(dung)} " if dung else "") + (
             f"(KHÔNG giao đám mây). Trước mỗi video khoá dòng I = 'Đang edit (máy {may} <dd/MM HH:mm>)' (dòng đã bị máy khác khoá còn mới thì bỏ qua), "
             f"dựng LẦN LƯỢT từng video, không song song, PC07 HyperFrames theo .claude/agents/merah-ads-video.md, up THÀNH PHẨM QUẢNG CÁO, "
-            f"thêm dòng QUANG-CAO 'Chờ duyệt đăng' + caption M, SPY-ADS I = 'Chờ Sếp duyệt (<mã QC>)', lỗi thì I = 'Lỗi dựng (<lý do>)'. "
-            f"Xoá hẳn tệp tạm trên máy và thùng rác. {chung}"))
+            f"ĐẶT MÃ: ngày = ngày thư mục tư liệu (SPY/<ngày>, KHÔNG phải hôm nay); trước khi đặt mã TÌM dòng QUANG-CAO cũ cùng khoá nguồn (cột G/K) – có thì ghi đè dòng + giữ mã/tên file cũ (dựng lại), không có mới lấy VDn kế tiếp của ngày tư liệu. "
+            f"Ghi dòng QUANG-CAO 'Chờ duyệt đăng' + caption M, SPY-ADS I = 'Chờ Sếp duyệt (<mã QC>)', lỗi thì I = 'Lỗi dựng (<lý do>)'. "
+            f"Xoá hẳn tệp tạm trên máy và thùng rác. " if dung else "") + chung))
 
 
 if __name__ == "__main__":
