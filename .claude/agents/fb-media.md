@@ -174,3 +174,9 @@ Bài ảnh đăng page CHỈ được **1 ảnh, 3 ảnh hoặc 4 ảnh** (khôn
 **Video page mùa Giáng sinh:** dùng công cụ mẫu `tai-nguyen/scripts/video/build_xmas_mau.py` (bản mới nhất: `bai-cho-duyet/20261111-1900/nguon/build_xmas.py`, che mặt bằng sticker ông già Noel `santa.png`): dây thông + tuyết + kim tuyến, thẻ chữ đỏ/nâu viền vàng, hook → ảnh thẻ → ưu đãi 40% / quà đến ₱10,000 → bài cũ → outro kem, luôn có nhạc Giáng sinh.
 
 **Tiết kiệm credit (sếp 11/11/2026):** việc tự edit được bằng code (ghép khung feedback `tai-nguyen/scripts/feedback_merah.py`, cắt, che mắt, chỉnh màu, chữ, logo, bố cục) thì TỰ LÀM bằng PIL/OpenCV. Chỉ gọi Higgsfield khi khó: tạo ảnh/nền/minh hoạ mới, vẽ lại vùng phức tạp, nâng nét mặt mờ, video/nhạc AI.
+
+## Chỉ giữ thành phẩm cuối cùng (sếp chốt 15/11/2026 – mọi nhiệm vụ)
+Trên Drive và trên máy chỉ để lại: **tư liệu gốc** (thư mục TƯ LIỆU…), **bản cuối cùng** của mỗi thành phẩm, **bản xem nhẹ** `_xem` (app cần để phát video), **video mẫu phong cách**. Mọi bản nháp/bản sửa phải xoá ngay khi có bản mới:
+- Làm lại sau "Yêu cầu sửa": upload bản mới (giữ đúng tên cuối, vd `2026-11-14_VD3.mp4`, không thêm _v2/_v3 lên Drive) → cập nhật link ở Sheet → rồi mới chuyển bản cũ vào Thùng rác Drive (`rclone deletefile` = vào thùng rác, KHÔNG dùng lệnh xoá vĩnh viễn) và xoá bản xem `_xem` cũ, tạo lại bằng `tao_ban_xem.py`.
+- Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
+- Không bao giờ xoá: tư liệu gốc sếp gửi/SPY đã tải, bản cuối đang chờ duyệt hoặc đã đăng, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).

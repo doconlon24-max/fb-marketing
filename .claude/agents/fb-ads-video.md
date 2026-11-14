@@ -190,3 +190,9 @@ Phong cách mới được sếp duyệt hoặc thay video mẫu → thêm/sửa
 Kết nối Google Drive của app chỉ tải được file dưới 10 MB, nên video 20–30 MB không phát được trong app. Mỗi khi đưa 1 VIDEO lên Drive để sếp xem (thành phẩm fanpage, thành phẩm quảng cáo, video mẫu phong cách): ngay sau khi upload, chạy
 `python tai-nguyen/scripts/tao_ban_xem.py <link hoặc id Drive của video>`
 → tạo `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/_xem/<id>_xem.mp4` (≤9,3 MB, 540p). App tự tìm bản này để phát; không có thì app chỉ hiện nút mở Drive. Không xoá thư mục `_xem` khi dọn Drive.
+
+## Chỉ giữ thành phẩm cuối cùng (sếp chốt 15/11/2026 – mọi nhiệm vụ)
+Trên Drive và trên máy chỉ để lại: **tư liệu gốc** (thư mục TƯ LIỆU…), **bản cuối cùng** của mỗi thành phẩm, **bản xem nhẹ** `_xem` (app cần để phát video), **video mẫu phong cách**. Mọi bản nháp/bản sửa phải xoá ngay khi có bản mới:
+- Làm lại sau "Yêu cầu sửa": upload bản mới (giữ đúng tên cuối, vd `2026-11-14_VD3.mp4`, không thêm _v2/_v3 lên Drive) → cập nhật link ở Sheet → rồi mới chuyển bản cũ vào Thùng rác Drive (`rclone deletefile` = vào thùng rác, KHÔNG dùng lệnh xoá vĩnh viễn) và xoá bản xem `_xem` cũ, tạo lại bằng `tao_ban_xem.py`.
+- Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
+- Không bao giờ xoá: tư liệu gốc sếp gửi/SPY đã tải, bản cuối đang chờ duyệt hoặc đã đăng, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).

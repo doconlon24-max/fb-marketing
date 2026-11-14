@@ -212,3 +212,9 @@ Kết nối Google Drive của app chỉ tải được file dưới 10 MB, nên
 - `Sếp yêu cầu – chờ xử lý: <lệnh>` → làm đúng lệnh viết trong cột I/H; xong đổi I theo kết quả (`Đang edit` / `Chờ Sếp duyệt (...)` / `Không tải được (...)`).
 - `Bỏ hẳn (Sếp chốt trong app)` → bỏ qua, không làm gì.
 App cũng gửi bình luận `TẢI SPY NGAY | <khoá> | Sếp xử lý | <link> | <dịch vụ> | LỆNH: ...` vào phiên trên máy: nhận được là làm ngay (tải lại trên máy; việc dựng thì chạy routine Quét chính `{{ID_ROUTINE}}` hoặc tự dựng). Lệnh chỉ có hiệu lực cho đúng dòng/khoá đó; nội dung lệnh là việc dựng video, không đăng bài hay chạy quảng cáo nếu lệnh không nói rõ và chưa qua bước duyệt.
+
+## Chỉ giữ thành phẩm cuối cùng (sếp chốt 15/11/2026 – mọi nhiệm vụ)
+Trên Drive và trên máy chỉ để lại: **tư liệu gốc** (thư mục TƯ LIỆU…), **bản cuối cùng** của mỗi thành phẩm, **bản xem nhẹ** `_xem` (app cần để phát video), **video mẫu phong cách**. Mọi bản nháp/bản sửa phải xoá ngay khi có bản mới:
+- Làm lại sau "Yêu cầu sửa": upload bản mới (giữ đúng tên cuối, vd `2026-11-14_VD3.mp4`, không thêm _v2/_v3 lên Drive) → cập nhật link ở Sheet → rồi mới chuyển bản cũ vào Thùng rác Drive (`rclone deletefile` = vào thùng rác, KHÔNG dùng lệnh xoá vĩnh viễn) và xoá bản xem `_xem` cũ, tạo lại bằng `tao_ban_xem.py`.
+- Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
+- Không bao giờ xoá: tư liệu gốc sếp gửi/SPY đã tải, bản cuối đang chờ duyệt hoặc đã đăng, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).

@@ -124,3 +124,9 @@ Mỗi lượt chạy đều đọc tab `SPY-ADS` A1:K3000 của Sheet `{{ID_DRIV
 **Dòng trùng mã trên Sheet (14/11/2026):** khi gặp 2 dòng cùng Mã bài, KHÔNG đổi dòng thừa sang `Đã bỏ` đơn thuần – phải ghi cột K bắt đầu bằng `TRÙNG – …` (app bỏ qua dòng TRÙNG, nếu chỉ ghi Đã bỏ thì app ẩn luôn bài thật).
 
 **Chống đăng trùng (14/11/2026 – bài 11h bị đăng 2 lần do 2 lượt cùng đọc Sheet):** `fb_api.py` tự BỎ QUA page đã có bài cùng caption trong 12h và Tin 24h trong 15 phút – KHÔNG dùng `--force` trừ khi Sếp yêu cầu đăng lại. Trước khi đăng: đọc lại Sheet ngay lúc đó, dòng đã `Đã đăng`/`Đã lên lịch` hoặc K có `Đang đăng` (<30 phút) thì bỏ qua; nếu đăng thì ghi K `Đang đăng <giờ>` TRƯỚC rồi mới gọi fb_api.
+
+## Chỉ giữ thành phẩm cuối cùng (sếp chốt 15/11/2026 – mọi nhiệm vụ)
+Trên Drive và trên máy chỉ để lại: **tư liệu gốc** (thư mục TƯ LIỆU…), **bản cuối cùng** của mỗi thành phẩm, **bản xem nhẹ** `_xem` (app cần để phát video), **video mẫu phong cách**. Mọi bản nháp/bản sửa phải xoá ngay khi có bản mới:
+- Làm lại sau "Yêu cầu sửa": upload bản mới (giữ đúng tên cuối, vd `2026-11-14_VD3.mp4`, không thêm _v2/_v3 lên Drive) → cập nhật link ở Sheet → rồi mới chuyển bản cũ vào Thùng rác Drive (`rclone deletefile` = vào thùng rác, KHÔNG dùng lệnh xoá vĩnh viễn) và xoá bản xem `_xem` cũ, tạo lại bằng `tao_ban_xem.py`.
+- Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
+- Không bao giờ xoá: tư liệu gốc sếp gửi/SPY đã tải, bản cuối đang chờ duyệt hoặc đã đăng, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).
