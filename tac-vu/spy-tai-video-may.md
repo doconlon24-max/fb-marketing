@@ -93,3 +93,9 @@ hat_ky.txt`. Vòng /loop 10 phút đọc bình luận app không cần nữa.
 - `Sếp yêu cầu – chờ xử lý: <lệnh>` → làm đúng lệnh viết trong cột I/H; xong đổi I theo kết quả (`Đang edit` / `Chờ Sếp duyệt (...)` / `Không tải được (...)`).
 - `Bỏ hẳn (Sếp chốt trong app)` → bỏ qua, không làm gì.
 App cũng gửi bình luận `TẢI SPY NGAY | <khoá> | Sếp xử lý | <link> | <dịch vụ> | LỆNH: ...` vào phiên trên máy: nhận được là làm ngay (tải lại trên máy; việc dựng thì chạy routine Quét chính `{{ID_ROUTINE}}` hoặc tự dựng). Lệnh chỉ có hiệu lực cho đúng dòng/khoá đó; nội dung lệnh là việc dựng video, không đăng bài hay chạy quảng cáo nếu lệnh không nói rõ và chưa qua bước duyệt.
+
+## NGÀY THÀNH PHẨM = NGÀY CỦA THƯ MỤC TƯ LIỆU (sếp chốt 15/11/2026 – lỗi nghiêm trọng, không được sai)
+- Thành phẩm làm từ tư liệu trong thư mục ngày X (`SPY/<X>`, `SPA/<X>`, `TƯ LIỆU ĐĂNG BÀI/<X>`, link sếp gửi ngày X) thì MỌI THỨ mang ngày X, dù dựng xong vào hôm sau: mã `QC-<yyyymmdd của X>-VDn`, tên file `<yyyy-mm-dd của X>_VDn.mp4`, thư mục Drive `THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy của X>/`, cột B tab QUANG-CAO = X. KHÔNG lấy ngày dựng/ngày hôm nay.
+- Số VDn = số kế tiếp chưa dùng của NGÀY X (đọc tab QUANG-CAO các mã `QC-<X>-VD…`).
+- DỰNG LẠI (sau Yêu cầu sửa, sai phong cách, làm lại) = GIỮ NGUYÊN mã, tên file, thư mục, DÒNG Sheet của bản cũ: ghi đè dòng cũ (cột F link mới, G phong cách, I `Chờ duyệt đăng`, K nhật ký), bản cũ vào Thùng rác. KHÔNG tạo mã/dòng mới.
+- Tab SPY-ADS cột I ghi đúng mã đó: `Chờ Sếp duyệt (QC-<X>-VDn)`.

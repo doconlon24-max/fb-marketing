@@ -76,3 +76,9 @@ Trên Drive và trên máy chỉ để lại: **tư liệu gốc SPA** (spa tự
 - Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
 - Không bao giờ xoá: **tư liệu gốc SPA** (thư mục `TƯ LIỆU QUẢNG CÁO/SPA`, `TƯ LIỆU ĐĂNG BÀI` – dùng làm outro, đăng page…), bản cuối đang chờ duyệt hoặc đã đăng, file mới sửa trong 2 ngày, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).
 - **Tư liệu gốc SPY được xoá** (sếp chốt 15/11/2026): file trong `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/` chuyển vào Thùng rác khi video clone từ nó đã `Đã đăng page` (hoặc link đó `Bỏ hẳn`). Còn đang chờ duyệt / đang sửa thì giữ để dựng lại.
+
+## NGÀY THÀNH PHẨM = NGÀY CỦA THƯ MỤC TƯ LIỆU (sếp chốt 15/11/2026 – lỗi nghiêm trọng, không được sai)
+- Thành phẩm làm từ tư liệu trong thư mục ngày X (`SPY/<X>`, `SPA/<X>`, `TƯ LIỆU ĐĂNG BÀI/<X>`, link sếp gửi ngày X) thì MỌI THỨ mang ngày X, dù dựng xong vào hôm sau: mã `QC-<yyyymmdd của X>-VDn`, tên file `<yyyy-mm-dd của X>_VDn.mp4`, thư mục Drive `THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy của X>/`, cột B tab QUANG-CAO = X. KHÔNG lấy ngày dựng/ngày hôm nay.
+- Số VDn = số kế tiếp chưa dùng của NGÀY X (đọc tab QUANG-CAO các mã `QC-<X>-VD…`).
+- DỰNG LẠI (sau Yêu cầu sửa, sai phong cách, làm lại) = GIỮ NGUYÊN mã, tên file, thư mục, DÒNG Sheet của bản cũ: ghi đè dòng cũ (cột F link mới, G phong cách, I `Chờ duyệt đăng`, K nhật ký), bản cũ vào Thùng rác. KHÔNG tạo mã/dòng mới.
+- Tab SPY-ADS cột I ghi đúng mã đó: `Chờ Sếp duyệt (QC-<X>-VDn)`.

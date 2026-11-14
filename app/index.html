@@ -1654,7 +1654,7 @@ function qcProg(r){const st=String(r.st||""),log=String(r.log||""),noTin=log.rep
   const steps=[["Đã duyệt",true,""],["Đã đăng page",dang,tD],["Tin 24h",tin,tT],["Seeding",sd,tS],["Đã lên ads",ads,tA]],k=steps.reduce((a,x,i)=>x[1]?i:a,0);
   return `<div class="fixbar" style="margin-top:6px" aria-label="Tiến độ đăng">${steps.map(([n,on,t],i)=>`<span class="${on?"on":""}${i===k?" cur":""}"><i>${on?"✓":i+1}</i>${n}${t?` <small>${esc(t)}</small>`:""}</span>`).join("")}</div>`}
 async function loadQDang(){const tb=$("#qDangBody");if(!mcp){tb.innerHTML='<tr><td colspan="8" class="muted">App chưa được phép dùng Google Sheets.</td></tr>';return}
-  try{qcRows=await loadQcRows();const shown=qcRows.filter(r=>!/đã bỏ/i.test(r.st||""));
+  try{qcRows=await loadQcRows();const shown=qcRows.filter(r=>!/^s*(đã )?bỏ/i.test(r.st||""));
     tb.innerHTML=shown.length?shown.slice().reverse().map(r=>{const done=/đã đăng|đã duyệt/i.test(r.st);
       return `<tr data-d="${esc(isoD(r.date)||"")}"><td>${esc(r.date)}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.name||r.id)}</a>`:esc(r.name||r.id)}<div class="note">${esc(r.src)}</div></td><td>${esc(r.type)}</td><td title="${esc(r.style)}"><b>${esc((String(r.style||"").match(/PC ?\d+/i)||[r.style||"—"])[0].replace(" ",""))}</b></td>
       <td>${esc(r.page||"—")}</td>
@@ -1686,7 +1686,7 @@ function dayBar(k,items,rerender){const bar=$("#"+k+"Days");if(!bar)return items
 document.addEventListener("click",e=>{const b=e.target.closest("[data-day]");if(!b)return;const [k,v]=b.dataset.day.split("|");DAYSEL[k]=v;const bar=$("#"+k+"Days");bar&&bar._re&&bar._re()});
 document.addEventListener("change",e=>{const i=e.target.closest("[data-dayin]");if(!i||!i.value)return;const k=i.dataset.dayin;DAYSEL[k]=i.value;const bar=$("#"+k+"Days");bar&&bar._re&&bar._re()});
 function renderQPreview(){const box=$("#qPreview");if(!box)return;const all=qcRows.map(r=>({...r,_d:isoD(r.date)}));
-  const POSTED=/đã đăng|tin 24h|seeding|đã lên ads/i;const pend=all.filter(r=>!POSTED.test(r.st||"")&&!/đã bỏ/i.test(r.st||""));let list=dayBar("q",pend,renderQPreview).slice().reverse();const nDone=all.filter(r=>POSTED.test(r.st||"")&&(DAYSEL.q==="all"||r._d===DAYSEL.q)).length;
+  const POSTED=/đã đăng|tin 24h|seeding|đã lên ads/i;const pend=all.filter(r=>!POSTED.test(r.st||"")&&!/^s*(đã )?bỏ/i.test(r.st||""));let list=dayBar("q",pend,renderQPreview).slice().reverse();const nDone=all.filter(r=>POSTED.test(r.st||"")&&(DAYSEL.q==="all"||r._d===DAYSEL.q)).length;
   box.innerHTML=(nDone?`<p class="note" style="margin:0 0 10px">${nDone} thành phẩm đã đăng lên page – xem tiến độ ở mục <a href="#q-dang">Đăng bài lên page</a>.</p>`:"")+(list.length?list.map(fbCard).join(""):(DAYSEL.q==="all"?'<div class="empty">Chưa có thành phẩm nào chờ duyệt. Có thành phẩm mới, bản xem trước sẽ hiện ở đây.</div>':'<div class="empty">Ngày này không còn thành phẩm nào chờ duyệt.</div>'))}
 async function loadPreview(){const box=$("#qPreview");if(!box)return;if(!mcp){box.innerHTML='<div class="empty">App chưa được phép dùng Google Sheets.</div>';return}
   try{qcRows=await loadQcRows();renderQPreview()

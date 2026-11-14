@@ -151,7 +151,7 @@ Sếp KHÔNG sửa tay – chỉ bấm **Duyệt** hoặc **Yêu cầu sửa** t
 3. App tự hiện thanh tiến độ: Đã gửi yêu cầu → Đã tiếp nhận → Đang sửa → Sửa xong – chờ duyệt (dựa vào các chữ "tiếp nhận", "Đang sửa", "Sửa xong" trong lịch sử).
 **Tên file thành phẩm (khớp bài):**
 - Page: `YYYY-MM-DD_HHhMM_ANH1.jpg` / `YYYY-MM-DD_HHhMM_VIDEO1.mp4` (ngày + giờ đăng PH + ảnh/video số mấy trong ngày), thư mục Drive `THÀNH PHẨM/<mã bài YYYYMMDD-HHMM>/`.
-- Quảng cáo: `YYYY-MM-DD_VD1.mp4`, `YYYY-MM-DD_ANH1.jpg` (ngày thành phẩm + video/ảnh số mấy), thư mục `THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy>/`; cột D tab QUANG-CAO ghi đúng `VD1`/`ANH1`.
+- Quảng cáo: `YYYY-MM-DD_VD1.mp4`, `YYYY-MM-DD_ANH1.jpg` (ngày của THƯ MỤC TƯ LIỆU – không phải ngày dựng – + video/ảnh số mấy), thư mục `THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy>/`; cột D tab QUANG-CAO ghi đúng `VD1`/`ANH1`.
 
 ## Công cụ AI mặc định: HIGGSFIELD (sếp chốt 10/11/2026)
 Mọi ảnh AI, video AI, đồ hoạ minh hoạ, thiết kế cần AI → dùng **Higgsfield qua MCP** trước (ví gói Starter; script API có ví credit riêng, đã hết 12/11/2026): ToolSearch `higgsfield` → `balance` → `generate_image`/`generate_image_batch` (`use_unlim:false`; poster có chữ `gpt_image_2_6` quality high 2k, ảnh người/cảnh spa `nano_banana_pro` hoặc `soul_2`; tỉ lệ 9:16) → `jobs_wait` → `curl` tải `result_url` về; chi tiết ở `tai-nguyen/higgsfield-mcp.md`. Chỉ khi MCP không kết nối mới dùng script: `python3 tai-nguyen/scripts/higgsfield.py anh <prompt.txt> <out.png> --mau ideogram|soul --ty-le 9:16` (khoá `HIGGSFIELD_API_KEY`, không in ra). Cả hai lỗi/hết credit → báo sếp trong báo cáo rồi mới dùng cách cũ (PIL/ChatGPT). Quy tắc che mặt, không gán ảnh AI là khách thật, không chữ "non-invasive" vẫn giữ nguyên.
@@ -198,3 +198,9 @@ Trên Drive và trên máy chỉ để lại: **tư liệu gốc SPA** (spa tự
 - Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
 - Không bao giờ xoá: **tư liệu gốc SPA** (thư mục `TƯ LIỆU QUẢNG CÁO/SPA`, `TƯ LIỆU ĐĂNG BÀI` – dùng làm outro, đăng page…), bản cuối đang chờ duyệt hoặc đã đăng, file mới sửa trong 2 ngày, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).
 - **Tư liệu gốc SPY được xoá** (sếp chốt 15/11/2026): file trong `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/` chuyển vào Thùng rác khi video clone từ nó đã `Đã đăng page` (hoặc link đó `Bỏ hẳn`). Còn đang chờ duyệt / đang sửa thì giữ để dựng lại.
+
+## NGÀY THÀNH PHẨM = NGÀY CỦA THƯ MỤC TƯ LIỆU (sếp chốt 15/11/2026 – lỗi nghiêm trọng, không được sai)
+- Thành phẩm làm từ tư liệu trong thư mục ngày X (`SPY/<X>`, `SPA/<X>`, `TƯ LIỆU ĐĂNG BÀI/<X>`, link sếp gửi ngày X) thì MỌI THỨ mang ngày X, dù dựng xong vào hôm sau: mã `QC-<yyyymmdd của X>-VDn`, tên file `<yyyy-mm-dd của X>_VDn.mp4`, thư mục Drive `THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy của X>/`, cột B tab QUANG-CAO = X. KHÔNG lấy ngày dựng/ngày hôm nay.
+- Số VDn = số kế tiếp chưa dùng của NGÀY X (đọc tab QUANG-CAO các mã `QC-<X>-VD…`).
+- DỰNG LẠI (sau Yêu cầu sửa, sai phong cách, làm lại) = GIỮ NGUYÊN mã, tên file, thư mục, DÒNG Sheet của bản cũ: ghi đè dòng cũ (cột F link mới, G phong cách, I `Chờ duyệt đăng`, K nhật ký), bản cũ vào Thùng rác. KHÔNG tạo mã/dòng mới.
+- Tab SPY-ADS cột I ghi đúng mã đó: `Chờ Sếp duyệt (QC-<X>-VDn)`.
