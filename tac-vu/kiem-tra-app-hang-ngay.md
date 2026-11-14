@@ -30,7 +30,7 @@ Sao lưu `src.bak-<ngày><chữ>.html` → sửa `fb-studio/src.html` → dựng
 Commit + push; `python tai-nguyen/scripts/dong_bo_bo_cai_dat.py` rồi commit + push trong `bo-cai-dat-facebook-marketing`.
 
 ## 5b. Dọn file sửa / nháp (sếp chốt 15/11/2026 – mỗi ngày)
-`python tai-nguyen/scripts/don_file_tam.py` → xoá trên máy các file dựng trung gian, bản thử cũ, sao lưu app cũ (giữ bản cuối đã đăng, script, 3 sao lưu mới nhất, file mới sửa trong 2 ngày). Trên Drive: tìm trong `THÀNH PHẨM` và `THÀNH PHẨM QUẢNG CÁO` file cùng tên khác bản (`_v1`, `_v2`…) – chỉ giữ bản đang có link trong Sheet, bản còn lại chuyển vào Thùng rác (`rclone deletefile`), không xoá tư liệu gốc và thư mục `PHONG CÁCH VIDEO`. Ghi dung lượng đã dọn vào tin báo.
+`python tai-nguyen/scripts/don_file_tam.py` → xoá trên máy các file dựng trung gian, bản thử cũ, sao lưu app cũ (giữ bản cuối đã đăng, script, 3 sao lưu mới nhất, file mới sửa trong 2 ngày). Trên Drive: tìm trong `THÀNH PHẨM` và `THÀNH PHẨM QUẢNG CÁO` file cùng tên khác bản (`_v1`, `_v2`…) – chỉ giữ bản đang có link trong Sheet, bản còn lại chuyển vào Thùng rác (`rclone deletefile`). Tư liệu gốc SPY (`TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/`): file nào mà video clone từ nó đã `Đã đăng page` (tab QUANG-CAO) hoặc link `Bỏ hẳn` (tab SPY-ADS) → vào Thùng rác. KHÔNG xoá tư liệu gốc SPA, TƯ LIỆU ĐĂNG BÀI, thư mục `PHONG CÁCH VIDEO`. Ghi dung lượng đã dọn vào tin báo.
 
 ## 6. Báo
 Gửi 1 tin ngắn: "App hôm nay: ổn" hoặc liệt kê đã sửa gì + việc cần sếp làm. Không đăng bài, không chạy quảng cáo, không đổi trạng thái bài trong bước này.

@@ -214,8 +214,9 @@ Kết nối Google Drive của app chỉ tải được file dưới 10 MB, nên
 App cũng gửi bình luận `TẢI SPY NGAY | <khoá> | Sếp xử lý | <link> | <dịch vụ> | LỆNH: ...` vào phiên trên máy: nhận được là làm ngay (tải lại trên máy; việc dựng thì chạy routine Quét chính `{{ID_ROUTINE}}` hoặc tự dựng). Lệnh chỉ có hiệu lực cho đúng dòng/khoá đó; nội dung lệnh là việc dựng video, không đăng bài hay chạy quảng cáo nếu lệnh không nói rõ và chưa qua bước duyệt.
 
 ## Chỉ giữ thành phẩm cuối cùng (sếp chốt 15/11/2026 – mọi nhiệm vụ)
-Trên Drive và trên máy chỉ để lại: **tư liệu gốc** (thư mục TƯ LIỆU…), **bản cuối cùng** của mỗi thành phẩm, **bản xem nhẹ** `_xem` (app cần để phát video), **video mẫu phong cách**. Mọi bản nháp/bản sửa phải xoá ngay khi có bản mới:
+Trên Drive và trên máy chỉ để lại: **tư liệu gốc SPA** (spa tự quay – giữ mãi để làm outro, đăng page…), **bản cuối cùng** của mỗi thành phẩm, **bản xem nhẹ** `_xem` (app cần để phát video), **video mẫu phong cách**. Mọi bản nháp/bản sửa phải xoá ngay khi có bản mới:
 - Làm lại sau "Yêu cầu sửa": upload bản mới (giữ đúng tên cuối, vd `2026-11-14_VD3.mp4`, không thêm _v2/_v3 lên Drive) → cập nhật link ở Sheet → rồi mới chuyển bản cũ vào Thùng rác Drive (`rclone deletefile` = vào thùng rác, KHÔNG dùng lệnh xoá vĩnh viễn) và xoá bản xem `_xem` cũ, tạo lại bằng `tao_ban_xem.py`.
 - Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
-- Không bao giờ xoá: tư liệu gốc sếp gửi/SPY đã tải, bản cuối đang chờ duyệt hoặc đã đăng, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).
+- Không bao giờ xoá: **tư liệu gốc SPA** (thư mục `TƯ LIỆU QUẢNG CÁO/SPA`, `TƯ LIỆU ĐĂNG BÀI` – dùng làm outro, đăng page…), bản cuối đang chờ duyệt hoặc đã đăng, file mới sửa trong 2 ngày, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).
+- **Tư liệu gốc SPY được xoá** (sếp chốt 15/11/2026): file trong `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/` chuyển vào Thùng rác khi video clone từ nó đã `Đã đăng page` (hoặc link đó `Bỏ hẳn`). Còn đang chờ duyệt / đang sửa thì giữ để dựng lại.
 - Dọn trên máy: `python tai-nguyen/scripts/don_file_tam.py` (chạy cuối mỗi việc dựng, và mỗi sáng trong bước kiểm tra app).
