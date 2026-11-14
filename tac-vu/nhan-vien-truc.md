@@ -198,9 +198,17 @@ Cột TRẠNG THÁI (tab bài fanpage cột I, QUANG-CAO cột I) CHỈ được
 **Chống đăng trùng (14/11/2026 – bài 11h bị đăng 2 lần do 2 lượt cùng đọc Sheet):** `fb_api.py` tự BỎ QUA page đã có bài cùng caption trong 12h và Tin 24h trong 15 phút – KHÔNG dùng `--force` trừ khi Sếp yêu cầu đăng lại. Trước khi đăng: đọc lại Sheet ngay lúc đó, dòng đã `Đã đăng`/`Đã lên lịch` hoặc K có `Đang đăng` (<30 phút) thì bỏ qua; nếu đăng thì ghi K `Đang đăng <giờ>` TRƯỚC rồi mới gọi fb_api.
 
 ## SPY từ link sếp gửi trong app (14/11/2026)
-Dòng SPY-ADS có H chứa `LINK SẾP GỬI`: I = `Chờ máy tải` là việc của máy (đám mây không tải được video – bỏ qua). I = `Đã tải về SPY …` mà chưa có thành phẩm → Trưởng phòng QC giao EDIT ngay, KHÔNG hỏi sếp (page + dịch vụ đã có trong dòng), đổi I `Đang edit`, xong ghi QUANG-CAO `Chờ duyệt đăng` + đổi I `Chờ Sếp duyệt (<mã QC>)` (chỉ khi video đã edit xong VÀ caption/content đã viết vào QUANG-CAO cột M; giữ nguyên chữ `Drive: SPY/<ngày>` trong cột H). Xem `quang-cao/quy-trinh-tu-lieu-qc.md` mục "Video SPY sếp gửi link từ app".
+Dòng SPY-ADS có H chứa `LINK SẾP GỬI`: I = `Chờ máy tải` là việc của máy (đám mây không tải được video – bỏ qua). I = `Đã tải về SPY …` mà chưa có thành phẩm → Trưởng phòng QC giao EDIT ngay, KHÔNG hỏi sếp (page + dịch vụ đã có trong dòng), đổi I `Đang edit`, xong ghi QUANG-CAO `Chờ duyệt đăng` + đổi I `Chờ Sếp duyệt (<mã QC>)` (chỉ khi video đã edit xong VÀ caption/content đã viết vào QUANG-CAO cột M; giữ nguyên chữ `Drive: SPY/<ngày>` trong cột H). Xem `quang-cao/quy-trinh-tu-lieu-qc.md` mục "Video SPY sếp gửi link từ app". **15/11: ĐÁM MÂY KHÔNG DỰNG video SPY (không render được HyperFrames) – để nguyên I `Đã tải về SPY …`, KHÔNG đổi sang `Đang edit`; máy (laptop/PC trực) tự dựng theo `tac-vu/spy-tai-video-may.md` mục "DỰNG LUÔN TRÊN MÁY".**
 
 ## Bản xem nhẹ cho app (14/11/2026 – bắt buộc)
 Kết nối Google Drive của app chỉ tải được file dưới 10 MB, nên video 20–30 MB không phát được trong app. Mỗi khi đưa 1 VIDEO lên Drive để sếp xem (thành phẩm fanpage, thành phẩm quảng cáo, video mẫu phong cách): ngay sau khi upload, chạy
 `python tai-nguyen/scripts/tao_ban_xem.py <link hoặc id Drive của video>`
 → tạo `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO/_xem/<id>_xem.mp4` (≤9,3 MB, 540p). App tự tìm bản này để phát; không có thì app chỉ hiện nút mở Drive. Không xoá thư mục `_xem` khi dọn Drive.
+
+## Lệnh "Sếp xử lý" từ app (sếp chốt 15/11/2026)
+Ở mục SPY bằng link, dòng có vấn đề (Không tải được / Không dựng / Đề xuất bỏ) có nút **Xử lý**. Sếp chọn → app ghi tab SPY-ADS: cột H thêm `· Sếp xử lý <giờ>: <lựa chọn> – <lệnh>`, cột I đổi thành:
+- `Sếp cho dựng – chờ EDIT[: lệnh]` → Trưởng phòng QC giao EDIT dựng NGAY dòng đó dù trước đó đề xuất bỏ, làm đúng lệnh (vd bỏ cảnh phẫu thuật). Bắt đầu đổi I `Đang edit`, xong `Chờ Sếp duyệt (<mã QC>)`.
+- `Chờ máy tải[: lệnh]` → máy tải lại link (cách khác: yt-dlp ↔ Chrome), như dòng mới.
+- `Sếp yêu cầu – chờ xử lý: <lệnh>` → làm đúng lệnh viết trong cột I/H; xong đổi I theo kết quả (`Đang edit` / `Chờ Sếp duyệt (...)` / `Không tải được (...)`).
+- `Bỏ hẳn (Sếp chốt trong app)` → bỏ qua, không làm gì.
+App cũng gửi bình luận `TẢI SPY NGAY | <khoá> | Sếp xử lý | <link> | <dịch vụ> | LỆNH: ...` vào phiên trên máy: nhận được là làm ngay (tải lại trên máy; việc dựng thì chạy routine Quét chính `{{ID_ROUTINE}}` hoặc tự dựng). Lệnh chỉ có hiệu lực cho đúng dòng/khoá đó; nội dung lệnh là việc dựng video, không đăng bài hay chạy quảng cáo nếu lệnh không nói rõ và chưa qua bước duyệt.

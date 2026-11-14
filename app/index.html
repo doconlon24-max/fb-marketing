@@ -2224,16 +2224,30 @@ function linkKey(u){let m;
 function linkPlat(u){return /tiktok/.test(u)?"TikTok":/ads\/library/.test(u)?"Quảng cáo Facebook/Instagram (từng bài)":/instagram/.test(u)?"Instagram":/youtu/.test(u)?"YouTube":/facebook|fb\.watch/.test(u)?"Facebook":"Link khác"}
 let LK_ALL=false;
 function lkState(x){const st=String(x.st||""),h=String(x.note||"");const bad=/không tải được|lỗi/i.test(st);
-  const done=/chờ.*duyệt|đã duyệt|đã đăng/i.test(st),edit=/đang edit|đang dựng|đã giao/i.test(st),got=done||edit||/đã tải về/i.test(st);
+  const done=/chờ.*duyệt|đã duyệt|đã đăng/i.test(st),edit=/đang edit|đang dựng|đã giao|sếp cho dựng|sếp yêu cầu/i.test(st),skip=/không dựng|đề xuất bỏ|lỗi dựng/i.test(st),got=done||edit||skip||/đã tải về/i.test(st)||/Drive: SPY\//i.test(h);
   const m=(st+" "+h).match(/SPY[\/ ]+(\d{2}-\d{2}-\d{4})/i);
-  return {bad,got,drive:got?(m?m[1]:"có"):"",edit,done,qc:(st.match(/\((QC[^)]*)\)/)||[])[1]||""}}
+  return {bad:bad&&!skip,skip,got,drive:got?(m?m[1]:"có"):"",edit,done,qc:(st.match(/\((QC[^)]*)\)/)||[])[1]||""}}
 function renderSpyLinks(){const box=$("#lkList");if(!box)return;const sel=$("#lkPage");if(sel&&!sel.options.length)sel.innerHTML=PAGES.map(p=>`<option>${esc(p)}</option>`).join("");
   const all=(SPY.saved||[]).filter(x=>String(x.note).includes(LK_TAG)&&!/bỏ qua|bỏ hẳn/i.test(x.st)).reverse(),rows=all;
   const Y=t=>`<span style="color:var(--ok);font-weight:600">✓ ${t||"Rồi"}</span>`,N=t=>`<span class="note">${t||"Chưa"}</span>`;
   box.innerHTML=all.length?`<table class="q"><thead><tr><th>Ngày gửi</th><th>Link</th><th>Dịch vụ</th><th>Đã tải</th><th>Lên Drive</th><th>Đã xử lý (edit + content)</th></tr></thead><tbody>${rows.map(x=>{const k=lkState(x);
     return `<tr data-d="${esc(x.day)}"><td>${esc(x.day)}</td><td><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.plat||"Link")} ↗</a></td><td>${esc(x.svc)}</td>
-      ${k.bad?`<td colspan="3"><span class="chip" style="--st:var(--danger)">${esc(x.st)}</span></td>`:`<td>${k.got?Y():N("⏳ Đang tải")}</td><td>${k.drive?Y(k.drive==="có"?"":"SPY/"+k.drive):N()}</td><td>${k.done?Y(k.qc||"Chờ Sếp duyệt"):k.edit?N("⏳ Đang làm"):N()}</td>`}</tr>`}).join("")}</tbody></table>`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>';dayFilterDom("lk",box)}
+      ${k.bad?`<td colspan="3"><span class="chip" style="--st:var(--danger)">${esc(x.st)}</span> <button class="btn small primary" data-lkfix="${x.row}">Xử lý</button></td>`:`<td>${k.got?Y():N("⏳ Đang tải")}</td><td>${k.drive?Y(k.drive==="có"?"":"SPY/"+k.drive):N()}</td><td>${k.done?Y(k.qc||"Chờ Sếp duyệt"):k.skip?`<span class="chip" style="--st:var(--warn)" title="${esc(x.st)}">⚠ ${esc(x.st.split(/[(;–-]/)[0].trim())}</span> <button class="btn small primary" data-lkfix="${x.row}">Xử lý</button><div class="note" style="font-size:11px">${esc(x.st)}</div>`:k.edit?N("⏳ Đang làm"+(/sếp/i.test(x.st)?" theo lệnh Sếp":"")):N()}</td>`}</tr>`}).join("")}</tbody></table>`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>';dayFilterDom("lk",box)}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#lkMore")){LK_ALL=true;renderSpyLinks()}});
+/* nút Xử lý cho link có vấn đề (sếp chốt 15/11/2026): sếp ra lệnh ngay trên app -> ghi SPY-ADS + báo máy làm ngay */
+const LK_ACT=[["dung","Vẫn dựng video này","Sếp cho dựng – chờ EDIT"],["tai","Tải lại link này","Dùng làm ý tưởng"],["bo","Bỏ link này","Bỏ hẳn (Sếp chốt trong app)"],["lenh","Làm theo lệnh ghi bên dưới","Sếp yêu cầu – chờ xử lý"]];
+function lkFix(row){const x=(SPY.saved||[]).find(r=>r.row===row);if(!x)return;const d=$("#confirmDlg");$("#cfTitle").textContent="Xử lý link SPY";
+  $("#cfText").innerHTML=`<p style="margin:0 0 6px"><b>${esc(x.plat||"Link")}</b> · ${esc(x.svc)}<br><span class="note">${esc(x.st)}</span></p>
+    <div style="display:grid;gap:6px">${LK_ACT.map(([v,l],i)=>`<label class="chk"><input type="radio" name="lkAct" value="${v}"${i===0?" checked":""}> ${l}</label>`).join("")}</div>
+    <label class="f" for="lkCmd" style="margin-top:8px">Lệnh / ghi chú cho nhân viên (không bắt buộc)<textarea id="lkCmd" rows="3" placeholder="vd: bỏ cảnh phẫu thuật, chỉ giữ cảnh trước/sau; làm 15 giây"></textarea></label><p class="note" id="lkFixMsg" style="margin:4px 0 0"></p>`;
+  d.showModal();const done=()=>{d.close();$("#cfTitle").textContent="Xác nhận"};$("#cfNo").onclick=done;
+  $("#cfYes").onclick=async()=>{const v=(document.querySelector('[name=lkAct]:checked')||{}).value,cmd=$("#lkCmd").value.trim();const a=LK_ACT.find(z=>z[0]===v);
+    if(v==="lenh"&&!cmd){$("#lkFixMsg").textContent="Ghi lệnh cho nhân viên vào ô bên dưới.";return}
+    const st=a[2]+(cmd?": "+cmd.replace(/\s+/g," ").slice(0,160):"");const note=String(x.note||"")+` · Sếp xử lý ${nowVN()}: ${a[1]}${cmd?" – "+cmd.replace(/\s+/g," "):""}`;
+    done();try{await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`SPY-ADS!H${row}:I${row}`,values:[[note,st]]});x.note=note;x.st=st;renderSpyLinks();
+      const r=v==="bo"?"off":await spyPing(x.id,"Sếp xử lý",x.link,x.svc,`LỆNH: ${a[1]}${cmd?" – "+cmd:""}`);
+      toast(v==="bo"?"Đã bỏ link này":r==="sent"?"Đã gửi lệnh – máy đang làm ngay":"Đã ghi lệnh – nhân viên làm ở lượt kế tiếp")}catch(e){toast("Chưa ghi được lệnh: "+errTxt(e))}}}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-lkfix]");if(b)lkFix(+b.dataset.lkfix)});
 async function spyLinkSend(){const msg=t=>$("#lkMsg").textContent=t;if(!mcp){msg("App chưa được phép dùng Google Sheets.");return}
   const urls=[...new Set($("#lkUrls").value.split(/\s+/).map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x)))];if(!urls.length){msg("Dán ít nhất 1 link video (bắt đầu bằng https://).");return}
   const svc=$("#lkSvc").value.trim(),pg=$("#lkPage").value,note=$("#lkNote").value.trim();if(!svc){msg("Chọn hoặc gõ dịch vụ để EDIT clone đúng dịch vụ.");return}

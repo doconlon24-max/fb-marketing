@@ -61,3 +61,11 @@ App hiện thanh tiến độ này dưới từng thư mục ở mục File ngu�
 
 ## Video SPY sếp gửi link từ app (sếp chốt 14/11/2026)
 Dòng tab SPY-ADS có cột H chứa `LINK SẾP GỬI` = sếp đã chọn sẵn dịch vụ (cột B) và page (`Page: …` trong H), có thể kèm ghi chú cho EDIT. Tư liệu của dòng đó (file `SPY_<khoá>…` trong `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/`): **KHÔNG hỏi sếp phong cách/page, không chờ 1 tiếng** – giao EDIT video clone ngay theo luật SPY (giữ nội dung gốc, đổi logo/chữ/outro/khuyến mãi, giọng Mely, nhạc, kiểm tra mượt), làm đúng ghi chú của sếp. Xong ghi QUANG-CAO (H = page sếp chọn, I = `Chờ duyệt đăng`) và đổi SPY-ADS cột I thành `Chờ Sếp duyệt (<mã QC>)` (chỉ khi video đã edit xong VÀ caption/content đã viết vào QUANG-CAO cột M; giữ nguyên chữ `Drive: SPY/<ngày>` trong cột H); lúc bắt đầu dựng đổi I thành `Đang edit`. Không đăng khi sếp chưa duyệt.
+
+## Lệnh "Sếp xử lý" từ app (sếp chốt 15/11/2026)
+Ở mục SPY bằng link, dòng có vấn đề (Không tải được / Không dựng / Đề xuất bỏ) có nút **Xử lý**. Sếp chọn → app ghi tab SPY-ADS: cột H thêm `· Sếp xử lý <giờ>: <lựa chọn> – <lệnh>`, cột I đổi thành:
+- `Sếp cho dựng – chờ EDIT[: lệnh]` → Trưởng phòng QC giao EDIT dựng NGAY dòng đó dù trước đó đề xuất bỏ, làm đúng lệnh (vd bỏ cảnh phẫu thuật). Bắt đầu đổi I `Đang edit`, xong `Chờ Sếp duyệt (<mã QC>)`.
+- `Chờ máy tải[: lệnh]` → máy tải lại link (cách khác: yt-dlp ↔ Chrome), như dòng mới.
+- `Sếp yêu cầu – chờ xử lý: <lệnh>` → làm đúng lệnh viết trong cột I/H; xong đổi I theo kết quả (`Đang edit` / `Chờ Sếp duyệt (...)` / `Không tải được (...)`).
+- `Bỏ hẳn (Sếp chốt trong app)` → bỏ qua, không làm gì.
+App cũng gửi bình luận `TẢI SPY NGAY | <khoá> | Sếp xử lý | <link> | <dịch vụ> | LỆNH: ...` vào phiên trên máy: nhận được là làm ngay (tải lại trên máy; việc dựng thì chạy routine Quét chính `{{ID_ROUTINE}}` hoặc tự dựng). Lệnh chỉ có hiệu lực cho đúng dòng/khoá đó; nội dung lệnh là việc dựng video, không đăng bài hay chạy quảng cáo nếu lệnh không nói rõ và chưa qua bước duyệt.
