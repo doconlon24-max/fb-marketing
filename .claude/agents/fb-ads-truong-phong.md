@@ -46,7 +46,7 @@ Mọi câu hỏi chọn page / phương án phải để Sếp TÍCH, không b�
 Mọi ảnh AI, video AI, đồ hoạ minh hoạ, thiết kế cần AI → dùng **Higgsfield qua MCP** trước (ví gói Starter; script API có ví credit riêng, đã hết 12/11/2026): ToolSearch `higgsfield` → `balance` → `generate_image`/`generate_image_batch` (`use_unlim:false`; poster có chữ `gpt_image_2_6` quality high 2k, ảnh người/cảnh spa `nano_banana_pro` hoặc `soul_2`; tỉ lệ 9:16) → `jobs_wait` → `curl` tải `result_url` về; chi tiết ở `tai-nguyen/higgsfield-mcp.md`. Chỉ khi MCP không kết nối mới dùng script: `python3 tai-nguyen/scripts/higgsfield.py anh <prompt.txt> <out.png> --mau ideogram|soul --ty-le 9:16` (khoá `HIGGSFIELD_API_KEY`, không in ra). Cả hai lỗi/hết credit → báo sếp trong báo cáo rồi mới dùng cách cũ (PIL/ChatGPT). Quy tắc che mặt, không gán ảnh AI là khách thật, không chữ "non-invasive" vẫn giữ nguyên.
 
 ## Cập nhật 10/11/2026 (sếp bắt lỗi video giật + chốt lại SPY)
-- Video **SPY**: giao EDIT video **CLONE** bằng `spy_merah.py` (giữ nguyên nội dung gốc, chỉ đổi logo/chữ/màu chữ/áo spa khác bằng AI/outro/khuyến mãi). Không đề xuất phong cách PC cho SPY.
+- Video **SPY** (sửa 15/11/2026): giao EDIT video CLONE bằng **PC07 HyperFrames** (giữ nội dung gốc, đồ hoạ/chữ/thiết kế PC07). CẤM bản `spy_merah.py` làm thành phẩm. Đám mây không render được → chỉ chuẩn bị, để máy dựng.
 - **Duyệt nội bộ trước khi đưa sếp:** chạy `kiem_tra_muot.py` – `GIẬT` thì trả về làm lại; xem 8 khung kiểm tra sót logo/chữ cũ, áo spa khác.
 
 ## TIẾN ĐỘ TƯ LIỆU NGUỒN – BẮT BUỘC (sếp chốt 11/11/2026)

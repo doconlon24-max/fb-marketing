@@ -19,7 +19,7 @@ Không có gì → trả lời đúng 1 dòng "Trực: không có việc." rồi
 
 ## Bước 2 – Có việc thì làm luôn (đúng quy trình `tac-vu/quet-tu-lieu-dam-may.md`)
 - Chạy `bash tai-nguyen/scripts/chuan_bi_dam_may.sh` trước mọi việc video (rclone Drive + opencv). Thiếu RCLONE_DRIVE_TOKEN hoặc lỗi → email lỗi cho sếp, ghi rõ "cần dán lại mã Google cho rclone".
-- Câu trả lời QC (vd "Phương án: Đồng ý… | VD1: MERAH Beauty Makati | …") → Trưởng phòng QC giao việc: tải video gốc bằng `rclone copy`, CLONE SPY thành MERAH (`spy_merah.py`, giữ nguyên nội dung gốc), mọi video qua `kiem_tra_muot.py` = MƯỢT, viết lời mới, giọng Mely (`giong_doc.py`), dựng theo phong cách (vd `dung_qc_v2.py`), nhạc + SFX. Mỗi thành phẩm: up `rclone copy` lên `MERAH/THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy>/VDx.mp4`, thêm dòng tab `QUANG-CAO` (mỗi page sếp tích = 1 dòng, H = page, F = link Drive).
+- Câu trả lời QC (vd "Phương án: Đồng ý… | VD1: MERAH Beauty Makati | …") → Trưởng phòng QC giao việc: tải video gốc bằng `rclone copy`, CLONE SPY thành MERAH bằng **PC07 HyperFrames** (`tai-nguyen/phong-cach-video-qc/PC07-hyperframes/build_pc07.py`, giữ nội dung gốc, đồ hoạ PC07; CẤM `spy_merah.py` làm thành phẩm – sếp chê 15/11), mọi video qua `kiem_tra_muot.py` = MƯỢT, viết lời mới, giọng Mely (`giong_doc.py`), dựng theo PC07 HyperFrames, nhạc + SFX. Mỗi thành phẩm: up `rclone copy` lên `MERAH/THÀNH PHẨM QUẢNG CÁO/<dd-mm-yyyy>/VDx.mp4`, thêm dòng tab `QUANG-CAO` (mỗi page sếp tích = 1 dòng, H = page, F = link Drive).
   - **KHÔNG BAO GIỜ đăng khi Sếp chưa duyệt video (sếp chốt 10/11/2026).** Làm xong: Content QC viết caption vào **cột M** tab `QUANG-CAO` (app hiện bản xem trước bài Facebook = video cột F + caption cột M); link Drive cột F phải là link file video (`https://drive.google.com/file/d/<id>/view`, lấy bằng `rclone lsjson` hoặc Drive search), I = `Chờ duyệt đăng` (đã có page sếp tích ở H) hoặc `Chờ chọn page` (chưa có page). Email sếp link Drive để xem.
   - Sếp xem video trong app (Quản trị QC → Thành phẩm / Đăng bài lên page) và bấm **Duyệt đăng** → I = `Đã duyệt` → lượt trực/quét kế tiếp mới đăng.
 - Dòng `QUANG-CAO` I = `Đã duyệt` → tải video từ Drive (rclone), viết caption (Content QC), đăng công khai đúng page cột H bằng `fb_api.py reel "<page>" …`, ghi ID post cột L, I = `Đã đăng page`.
@@ -66,7 +66,7 @@ Ghi chú sửa (cột J tab QUANG-CAO, cột L lịch sử tab đầu, hoặc fi
 Từ 0h00 VN ngày 11/11/2026, 4 đối tượng sau PHẢI đang bật: camp {{ID_FACEBOOK}}, nhóm {{ID_FACEBOOK}}, camp {{ID_FACEBOOK}}, nhóm {{ID_FACEBOOK}} (đều tên bắt đầu "CLAUDE", đối tượng Nữ 30-64, tắt Advantage+ – KHÔNG sửa lại). Lịch chính: routine {{ID_ROUTINE}} lúc 0h00. Lượt trực đầu tiên sau 0h10 VN 11/11: đọc status 4 ID qua Meta Ads; cái nào còn PAUSED (mà tên bắt đầu CLAUDE) thì bật bằng ads_activate_entity, ghi nhat-ky-chay-qc.md, email {{EMAIL_BAO_CAO}} "[MERAH QC] Bật dự phòng camp CLAUDE". Đã ACTIVE hết thì bỏ qua. Không đụng camp khác, không đổi ngân sách. Hết hiệu lực sau 12h00 VN 11/11.
 
 ## Video QC – nhắc nhanh (10/11/2026)
-- Dùng `tai-nguyen/scripts/video/spy_merah.py` (bản mới nhất), mẫu `quang-cao/test-video/spy_ee79_mau.json`: BẮT BUỘC có `truoc_sau` (bản đồ BEFORE/AFTER, giữ BEFORE 3–5s khoanh vấn đề, rồi mới chuyển AFTER), `che` (che chữ cũ, không làm mờ), `loi` (voice Mely – mỗi câu ngắn, không đè câu sau).
+- **(15/11/2026: CẤM `spy_merah.py` làm thành phẩm – chỉ PC07 HyperFrames, xem mục "Video QC dựng bằng HyperFrames")** Yêu cầu nội dung vẫn giữ: BẮT BUỘC có `truoc_sau` (bản đồ BEFORE/AFTER, giữ BEFORE 3–5s khoanh vấn đề, rồi mới chuyển AFTER), `che` (che chữ cũ, không làm mờ), `loi` (voice Mely – mỗi câu ngắn, không đè câu sau).
 - Nhạc AI tạo ra (`tai-nguyen/am-nhac/tham-my/ai_*.mp3`) phải **commit vào kho** để lần sau dùng lại, không tạo lại tốn credit.
 - Google Sheet id chính xác: `{{ID_DRIVE}}` (chữ X hoa) – báo "not found" là gõ sai id.
 - Sửa xong mỗi video: up Drive, ghi Sheet (I = `Chờ duyệt đăng`, F link mới, N lịch sử "Sửa xong (vN)…"), báo điện thoại + email ngay, rồi làm video kế tiếp – làm hết trong một lượt.
@@ -132,7 +132,7 @@ Bài ảnh đăng page CHỈ được **1 ảnh, 3 ảnh hoặc 4 ảnh** (khôn
 **Video page mùa Giáng sinh:** dùng công cụ mẫu `tai-nguyen/scripts/video/build_xmas_mau.py` (bản mới nhất: `bai-cho-duyet/20261111-1900/nguon/build_xmas.py`, che mặt bằng sticker ông già Noel `santa.png`): dây thông + tuyết + kim tuyến, thẻ chữ đỏ/nâu viền vàng, hook → ảnh thẻ → ưu đãi 40% / quà đến ₱10,000 → bài cũ → outro kem, luôn có nhạc Giáng sinh.
 
 ## Video QC dựng bằng HyperFrames (thiết kế chuẩn PC07 – sếp chốt 11/11/2026)
-- Dựng theo `.claude/agents/fb-ads-video.md` mục "THIẾT KẾ CHUẨN". Cần Node (`node -v`) + `npx --yes hyperframes@0.9.30` (tự tải trình duyệt khi render). Không chạy được trên đám mây → dựng dự phòng bằng spy_merah.py, ghi rõ "chưa phải bản HyperFrames" vào cột K và báo Sếp.
+- Dựng theo `.claude/agents/fb-ads-video.md` mục "THIẾT KẾ CHUẨN". Cần Node (`node -v`) + `npx --yes hyperframes@0.9.30` (tự tải trình duyệt khi render). Không chạy được HyperFrames (đám mây) → **KHÔNG dựng bản dự phòng**, KHÔNG ghi dòng QUANG-CAO; để SPY-ADS I = `Đã tải về SPY <ngày>` cho máy (PC trực/laptop) dựng PC07 (sếp chê bản spy_merah "cực kỳ xấu" 13/11 và 15/11).
 - Up bản mới xong: chuyển bản cũ của cùng VD vào thùng rác Drive (`trash_file`).
 
 
@@ -218,3 +218,4 @@ Trên Drive và trên máy chỉ để lại: **tư liệu gốc** (thư mục T
 - Làm lại sau "Yêu cầu sửa": upload bản mới (giữ đúng tên cuối, vd `2026-11-14_VD3.mp4`, không thêm _v2/_v3 lên Drive) → cập nhật link ở Sheet → rồi mới chuyển bản cũ vào Thùng rác Drive (`rclone deletefile` = vào thùng rác, KHÔNG dùng lệnh xoá vĩnh viễn) và xoá bản xem `_xem` cũ, tạo lại bằng `tao_ban_xem.py`.
 - Render thử, khung soi, ảnh ghép kiểm tra, file tạm, thư mục build/`assets` dựng video: xoá trên máy ngay sau khi thành phẩm cuối đã lên Drive (chỉ xoá khi chắc file cuối đã lên Drive và mở được).
 - Không bao giờ xoá: tư liệu gốc sếp gửi/SPY đã tải, bản cuối đang chờ duyệt hoặc đã đăng, thư mục `TƯ LIỆU QUẢNG CÁO/PHONG CÁCH VIDEO` (kể cả `_xem`).
+- Dọn trên máy: `python tai-nguyen/scripts/don_file_tam.py` (chạy cuối mỗi việc dựng, và mỗi sáng trong bước kiểm tra app).

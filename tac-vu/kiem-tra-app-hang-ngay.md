@@ -29,5 +29,8 @@ Theo "Hợp đồng TRẠNG THÁI" trong `tai-nguyen/app-fb-studio.md`:
 Sao lưu `src.bak-<ngày><chữ>.html` → sửa `fb-studio/src.html` → dựng index (thay `"__LOGO_LIGHT__"/"__LOGO_DARK__"` bằng logo lấy từ index cũ) → chạy lại bước 2 → thử trên preview → `get_artifact` lấy version → `publish_files` QUẢN TRỊ MERAH. Bản chia sẻ: `python tai-nguyen/scripts/lam_app_chung.py fb-studio app-facebook-marketing <chk.js>`, thay `__APP_SLUG__` trong `app-facebook-marketing/index.html` bằng `{{ID_KET_NOI}}`, đăng SPA MARKETING (artifact công khai: truyền `shared_live:"public"`, `artifact_title:"SPA MARKETING"`). Nếu phiên khác vừa đăng bản mới hơn git → so trước, không ghi đè.
 Commit + push; `python tai-nguyen/scripts/dong_bo_bo_cai_dat.py` rồi commit + push trong `bo-cai-dat-facebook-marketing`.
 
+## 5b. Dọn file sửa / nháp (sếp chốt 15/11/2026 – mỗi ngày)
+`python tai-nguyen/scripts/don_file_tam.py` → xoá trên máy các file dựng trung gian, bản thử cũ, sao lưu app cũ (giữ bản cuối đã đăng, script, 3 sao lưu mới nhất, file mới sửa trong 2 ngày). Trên Drive: tìm trong `THÀNH PHẨM` và `THÀNH PHẨM QUẢNG CÁO` file cùng tên khác bản (`_v1`, `_v2`…) – chỉ giữ bản đang có link trong Sheet, bản còn lại chuyển vào Thùng rác (`rclone deletefile`), không xoá tư liệu gốc và thư mục `PHONG CÁCH VIDEO`. Ghi dung lượng đã dọn vào tin báo.
+
 ## 6. Báo
 Gửi 1 tin ngắn: "App hôm nay: ổn" hoặc liệt kê đã sửa gì + việc cần sếp làm. Không đăng bài, không chạy quảng cáo, không đổi trạng thái bài trong bước này.

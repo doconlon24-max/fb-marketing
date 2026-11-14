@@ -97,10 +97,12 @@ Sếp chấm `2026-11-10_VD3_v7_HyperFrames.mp4` đẹp nhất: đồ hoạ đ�
 - Bố cục / thứ tự cảnh: KHÔNG bắt buộc giống PC07 – mỗi video tự sáng tạo câu chuyện (hook khác, thứ tự khác, thêm/bớt cảnh) nhưng giữ đúng hệ màu, font, kiểu thành phần và độ "sang".
 - Luôn có: cảnh khách XẤU đủ lâu + khoanh vấn đề → chuyển cảnh khách ĐẸP (bắt buộc có ảnh/clip AFTER rõ mặt), voice Mely, nhạc thẩm mỹ, SFX, giá "STARTING FROM", ảnh khách thật + quà ₱10,000. KHÔNG ghi "Sample result · Results may vary" (sếp bỏ từ 11/11/2026). Chữ/logo/áo spa khác trên ảnh: cắt khung hoặc vá sạch (không làm mờ).
 - Lệnh: chép thư mục PC07 ra chỗ làm, thay `assets/`, sửa `index.html` → `npx --yes hyperframes@0.9.30 check --json` → `snapshot --at …` soi khung → `render --output out.mp4` → loudnorm -14 → `kiem_tra_muot.py`.
-- `spy_merah.py` / `dung_qc_*.py` chỉ dùng DỰ PHÒNG khi máy/đám mây không chạy được HyperFrames (ghi rõ trong báo cáo).
+- **CẤM `spy_merah.py` / `dung_qc_*.py` làm thành phẩm (sếp 15/11/2026: 7 video 14/11 dựng bằng spy_merah "cực kỳ xấu").** Không render được HyperFrames → không dựng, để I = `Đã tải về SPY <ngày>` cho máy dựng PC07.
 - Lên bản mới (v_n+1) xong → **chuyển bản cũ lỗi vào thùng rác Drive** (sếp 11/11: không để video cũ lỗi lẫn trong thư mục).
 
 ## Video SPY – CLONE thành MERAH, KHÔNG dựng lại nội dung (sếp chốt lại 10/11/2026, thay quy tắc cũ)
+> **15/11/2026 – THAY phần công cụ của mục này:** SPY clone dựng bằng **PC07 HyperFrames** (build_pc07.py / build_pc07b.py), đồ hoạ/chữ/thiết kế PC07 (sếp: "nội dung có thể thay đổi nhưng đồ hoạ và thiết kế phải là PC7"). Phần giữ/đổi nội dung bên dưới vẫn áp dụng; các khung che kiểu spy_merah.py (che, 
+han, uu_dai) KHÔNG dùng nữa.
 Tư liệu SPY ở Drive `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/`. **Giữ nguyên cảnh quay, thứ tự, nhịp và tốc độ gốc** – KHÔNG viết kịch bản mới, KHÔNG đưa vào phong cách PC01–PC06. Chỉ đổi:
 1. **KHÔNG làm mờ / vá chữ cũ** (vỡ nét, sếp không duyệt). Thay vào đó viết kịch bản chữ MERAH mới và đặt **khung chữ chuyên nghiệp phủ kín đúng vùng chữ cũ** (`che`: nền chuyển màu MERAH, viền vàng, thanh nhấn, bóng đổ, trượt vào + vệt sáng lướt). Logo/watermark cũ → **huy hiệu logo MERAH** phủ lên (`logo_che`).
 2. Chữ MERAH (tiếng Anh, 2–6 từ, đúng ý cảnh) – có thể thêm khung chữ mới ở chỗ trống (`nhan`) để kể chuyện, không đè mặt. Chữ cũ có "non-surgical / no botox / non-invasive / no needles" → bỏ, không viết lại.
@@ -109,11 +111,10 @@ Tư liệu SPY ở Drive `TƯ LIỆU QUẢNG CÁO/SPY/<ngày>/`. **Giữ nguyên
 5. Bỏ hết âm thanh gốc. **Luôn có VOICE giọng Mely** (`loi`: 3–6 câu tiếng Anh ngắn, đặt đúng giây theo cảnh; dùng `giong_doc.py nghe` để hiểu ý video gốc rồi viết lời MERAH mới) – không bắt chước giọng người trong video. Nhạc nền lấy từ **thư viện nhạc thẩm mỹ `tai-nguyen/am-nhac/tham-my/`** (không mặc định nhạc Giáng sinh), tự giảm khi có giọng + SFX.
 6. Before/after nơi khác: luôn có "Sample result · Results may vary" (tự thêm), không ghi "our client".
 
-Cách làm:
+Cách làm (15/11/2026 – CHỈ PC07 HyperFrames, KHÔNG chạy spy_merah.py):
 ```
-python tai-nguyen/scripts/video/spy_lam_lai.py khung <video> <thư mục>     # xem khung_luoi.jpg: toạ độ + giây của chữ/logo/áo
-# viết cau_hinh.json (mẫu đầy đủ ở đầu file spy_merah.py)
-python tai-nguyen/scripts/video/spy_merah.py <cau_hinh.json> <VDx_merah.mp4>   # tự chạy kiểm tra mượt ở cuối
+python tai-nguyen/scripts/video/spy_lam_lai.py khung <video> <thư mục>     # chỉ để xem khung_luoi.jpg: toạ độ + giây của chữ/logo/áo
+# dựng bằng build_pc07.py / build_pc07b.py theo mục "THIẾT KẾ CHUẨN" (PC07 HyperFrames), rồi kiem_tra_muot.py = MƯỢT
 ```
 Xuất xong: xem 8 khung (`ffmpeg … select … tile=8x1`) – không còn sót chữ/logo cũ, chữ MERAH không đè mặt. Cột G ghi `SPY-CLONE`.
 
