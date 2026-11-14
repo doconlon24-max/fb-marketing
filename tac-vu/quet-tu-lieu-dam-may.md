@@ -120,3 +120,5 @@ Ghi chú kiểu "KHÔNG LÀM LẠI / đã làm trên máy" ở cột K chỉ áp
 
 ## SPY ADS – yêu cầu quét sâu của Sếp (12/11/2026)
 Mỗi lượt chạy đều đọc tab `SPY-ADS` A1:K3000 của Sheet `{{ID_DRIVE}}`: dòng I = `Chờ quét` hoặc `Dùng làm ý tưởng` là CÓ VIỆC → làm ngay theo mục "SPY ADS ĐỐI THỦ" trong `tac-vu/nhan-vien-truc.md` (agent `fb-spy`). Nhận việc là đổi I thành `Đang quét` NGAY (app hiện tiến độ cho Sếp), xong đổi thành `Đã quét (n video)`. Nhiều dòng `Chờ quét` trùng dịch vụ + nền tảng thì làm 1 lần, các dòng còn lại ghi `Đã quét (gộp với dòng trên)`.
+
+**Dòng trùng mã trên Sheet (14/11/2026):** khi gặp 2 dòng cùng Mã bài, KHÔNG đổi dòng thừa sang `Đã bỏ` đơn thuần – phải ghi cột K bắt đầu bằng `TRÙNG – …` (app bỏ qua dòng TRÙNG, nếu chỉ ghi Đã bỏ thì app ẩn luôn bài thật).

@@ -192,3 +192,5 @@ Cột TRẠNG THÁI (tab bài fanpage cột I, QUANG-CAO cột I) CHỈ được
 - Đăng/hẹn giờ xong phải đổi ngay cột TRẠNG THÁI (`Đã lên lịch` / `Đã đăng`), không chỉ ghi vào Nhật ký. App tự chuyển bài `Đã lên lịch` sang `Đã đăng` khi đã qua giờ hẹn 2 tiếng.
 - Chữ lạ không có trong bảng: app BỎ QUA dòng đó (không hiện), nên nhân viên ghi sai chữ = sếp không thấy bài.
 - Ngày (cột B, yyyy-mm-dd) và giờ PH (cột C, HH:MM) là lịch đăng thật; sếp dời ngày trong app thì app sửa B–D, nhân viên đăng đúng theo đó.
+
+**Dòng trùng mã trên Sheet (14/11/2026):** khi gặp 2 dòng cùng Mã bài, KHÔNG đổi dòng thừa sang `Đã bỏ` đơn thuần – phải ghi cột K bắt đầu bằng `TRÙNG – …` (app bỏ qua dòng TRÙNG, nếu chỉ ghi Đã bỏ thì app ẩn luôn bài thật).

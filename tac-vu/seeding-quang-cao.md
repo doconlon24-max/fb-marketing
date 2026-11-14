@@ -12,7 +12,7 @@
 Drive `MERAH/ẢNH SEEDING QUẢNG CÁO/` (ID `{{ID_DRIVE}}`), mỗi dịch vụ 1 thư mục:
 `MAXFILL COLLAGEN (filler-botox)`, `STEMCELL`, `CRYO SCULPT (giảm mỡ)`, `GIẢM CÂN`, `ULTRA LIFT`, `BODY SCULPT`, `CHƯA RÕ DỊCH VỤ (để Claude tự phân loại)`.
 
-1. Xác định dịch vụ của bài QC: đọc tên thành phẩm, phong cách, caption (cột M), xem khung hình video. Không chắc → ghi HOI-SEP, không đoán.
+1. (Sếp chốt 13/11) Hiện TẤT CẢ video QC đều là **Maxfill** – kể cả video ghi "Ultra Lift" trong phong cách; chỉ khác khi Sếp nói rõ dịch vụ khác. Xác định dịch vụ của bài QC: đọc tên thành phẩm, phong cách, caption (cột M), xem khung hình video. Không chắc → ghi HOI-SEP, không đoán.
 2. Ảnh trong `CHƯA RÕ DỊCH VỤ`: xem từng ảnh (vùng điều trị: mặt/môi/má = Maxfill; cằm đôi, da = Stemcell theo tư liệu; bụng/eo/đùi giảm mỡ = Cryo Sculpt; cân nặng toàn thân = Giảm cân; nâng cơ mặt = Ultra Lift; tạo dáng cơ thể = Body Sculpt) rồi `rclone moveto` vào đúng thư mục. Ảnh không phân định được → để lại + hỏi HOI-SEP.
 3. Chỉ dùng ảnh **cùng dịch vụ** với bài. Thư mục dịch vụ đó trống → không seeding bài đó, ghi HOI-SEP xin ảnh.
 4. Ảnh trong thư mục seeding đều đã được khách cho phép (sếp xác nhận 12/11, kể cả ảnh chat) → dùng NGUYÊN, KHÔNG che mặt, KHÔNG che tên. Chỉ loại ảnh có kim tiêm hoặc số điện thoại.
