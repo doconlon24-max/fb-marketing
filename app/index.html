@@ -559,19 +559,16 @@ a.tq-t:hover{border-color:var(--accent)}
   <section class="view" id="v-quang-cao">
     <div class="head"><div>
       <h2>Content ý tưởng – Quảng cáo</h2>
-      <p>Ý tưởng, hook, nội dung quảng cáo do Trưởng phòng QC và Content QC lên từ tư liệu. Muốn sửa thì bấm Yêu cầu sửa. Duyệt đăng và chọn page ở mục "Đăng bài lên page".</p>
+      <p>Ý tưởng, hook, nội dung quảng cáo do Trưởng phòng QC và Content QC lên từ tư liệu. Muốn sửa thì bấm Yêu cầu sửa. Duyệt đăng và chọn page ở mục "Media &amp; thành phẩm".</p>
     </div></div>
     <div id="adsList" class="stack"></div>
   </section>
 
   <!-- ===== QUẢN TRỊ QC: SPY ĐỐI THỦ ===== -->
-  <section class="view" id="v-q-spy">
-    <div class="head"><div>
-      <h2>SPY đối thủ</h2>
-      <p>Quảng cáo và video của đối thủ theo từng dịch vụ. Bấm SPY ở bài muốn làm lại – bài được lưu vào danh sách SPY để làm lại thành quảng cáo của bạn.</p>
-    </div></div>
+  <section class="view" id="v-q-link">
+    <div class="head"><div><h2>SPY bằng link</h2><p>Dán link video → lưu vào danh sách SPY (tab SPY-ADS) → đội EDIT làm lại → chờ duyệt.</p></div></div>
     <article class="panel stack" id="linkBox" style="border-left:3px solid var(--accent)">
-      <div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="margin:0">Gửi link SPY</h3><span class="note">Dán link video → lưu vào danh sách SPY → đội EDIT làm lại → chờ duyệt</span></div>
+      <h3 style="margin:0">Gửi link</h3>
       <label class="f" for="lkUrls">Link video (mỗi dòng 1 link: TikTok, Facebook, Thư viện quảng cáo, Instagram Reels, YouTube Shorts)<textarea id="lkUrls" rows="3" placeholder="https://www.tiktok.com/@.../video/...&#10;https://www.facebook.com/ads/library/?id=..."></textarea></label>
       <div class="row" style="gap:10px;align-items:end;flex-wrap:wrap">
         <label class="f" for="lkSvc" style="flex:1;min-width:180px">Dịch vụ<input id="lkSvc" list="spySvcList" placeholder="vd: Maxfill, Botox, Ultra Lift"></label>
@@ -580,8 +577,14 @@ a.tq-t:hover{border-color:var(--accent)}
         <button class="btn primary" id="lkSend" type="button">Gửi</button>
       </div>
       <p class="note" id="lkMsg" style="margin:0"></p>
-      <div id="lkList"></div>
     </article>
+    <article class="panel stack"><h3 style="margin:0">Link đã gửi</h3><div id="lkList"></div></article>
+  </section>
+  <section class="view" id="v-q-spy">
+    <div class="head"><div>
+      <h2>SPY đối thủ</h2>
+      <p>Quảng cáo và video của đối thủ theo từng dịch vụ. Bấm SPY ở bài muốn làm lại – bài được lưu vào danh sách SPY để làm lại thành quảng cáo của bạn.</p>
+    </div></div>
     <article class="panel stack" id="spyBox">
       <div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="margin:0">SPY ADS đối thủ</h3><span class="row" style="gap:10px"><a class="btn small" data-fold="q-spy" href="#" target="_blank" rel="noopener">📁 Thư mục SPY trên Drive</a><span class="note" id="spyTime"></span></span></div>
       <p class="note" style="margin:0">Chọn dịch vụ, quốc gia, nền tảng rồi bấm <b>Quét</b>. Bài xếp theo hiệu quả, số 1 là mạnh nhất. Bấm <b>SPY</b> ở bài muốn làm lại.</p>
@@ -651,7 +654,7 @@ a.tq-t:hover{border-color:var(--accent)}
   <section class="view" id="v-q-dang">
     <div class="head"><div>
       <h2>Đăng bài quảng cáo lên page</h2>
-      <p>Mỗi thành phẩm chọn đúng 1 page (mỗi page chạy quảng cáo riêng), rồi bấm Duyệt đăng. Lượt quét kế tiếp đăng công khai lên page đó. Chưa chọn page thì không đăng.</p>
+      <p>Theo dõi thành phẩm đã duyệt: page đăng, tiến độ đăng, Tin 24h, seeding, lên ads. Duyệt đăng và chọn page làm ở mục <a href="#q-tp">Media &amp; thành phẩm</a> (chỉ 1 chỗ duyệt).</p>
     </div><div class="row"><button class="btn" data-reload="q-dang">Tải lại</button></div></div>
     <div class="panel" style="overflow-x:auto"><table class="q"><thead><tr><th>Ngày</th><th>Thành phẩm</th><th>Dạng</th><th>Phong cách</th><th>Page đăng</th><th>Trạng thái</th><th>ID post</th><th></th></tr></thead><tbody id="qDangBody"><tr><td colspan="8" class="muted">Đang tải…</td></tr></tbody></table></div>
   </section>
@@ -760,6 +763,7 @@ a.tq-t:hover{border-color:var(--accent)}
         <button type="button" class="btn" id="pDrop" style="color:var(--danger)">Bỏ bài</button>
         <button type="button" class="btn" id="pMove">Dời ngày</button>
         <button type="button" class="btn" id="pFix">Yêu cầu sửa</button>
+        <a class="btn primary" id="pGoTp" href="#p-tp">Duyệt ở Media &amp; thành phẩm</a>
         <button type="button" class="btn primary" id="pApprove">Duyệt bài này</button>
       </div>
     </div>
@@ -1006,7 +1010,7 @@ function openPost(id,d,t){
   opts($("#pPage"),PAGES,p.page);opts($("#pFormat"),FORMATS,p.format);opts($("#pGroup"),GROUPS,p.group);opts($("#pStatus"),STATUSES,p.status);
   $("#pAi").value=p.ai||"";$("#pTopic").value=p.topic||"";$("#pCaption").value=p.caption||"";$("#pBrief").value=p.brief||"";
   $("#pDelete").style.visibility=p.id?"visible":"hidden";$("#pDrop").hidden=!p.id||/Đã đăng|Đã bỏ/.test(p.status||"");$("#pMove").hidden=!p.id||/Đã đăng|Đã lên lịch/.test(p.status||"");$("#capStatus").textContent="";
-  const done=p.status==="Đã lên lịch"||p.status==="Đã đăng";$("#pApprove").style.display=done?"none":"";$("#pFix").style.display=done?"none":"";$("#pStatus").disabled=done;
+  const done=p.status==="Đã lên lịch"||p.status==="Đã đăng";$("#pApprove").style.display="none";$("#pFix").style.display="none";$("#pGoTp").style.display=done||!p.id||p.status==="Đã bỏ"?"none":"";$("#pStatus").disabled=done;
   $("#pDrive").style.display=p.driveLink?"":"none";$("#pDrive").textContent=/reel|video/i.test(p.format||"")?"Xem video trên Drive":"Xem ảnh";$("#pDrive").onclick=()=>{if(!p.driveLink)return;if(/reel|video/i.test(p.format||""))window.open(p.driveLink,"_blank","noopener");else gallery(driveIds(p.driveLink))};
   if(done)$("#capStatus").textContent="Bài đã lên lịch trên Facebook. Muốn sửa nội dung trên Facebook thì sửa trực tiếp trong Meta Business Suite.";
   ["pDate","pTime","pPage","pFormat","pGroup","pStatus","pAi","pTopic","pCaption","pBrief"].forEach(x=>{const el=$("#"+x);el.disabled=true;el.readOnly=true});
@@ -1199,12 +1203,12 @@ function openFix(a){const d=$("#confirmDlg");$("#cfTitle").textContent="Yêu c�
 /* ---------- routing ---------- */
 const SUB={t:[["t-tq","Tổng quan","Việc chờ Sếp, bài hôm nay, số quảng cáo"]],
   p:[["p-nguon","File nguồn tư liệu","Tư liệu theo ngày trên Drive"],["p-y","Content ý tưởng","Ý tưởng, câu hỏi cho Sếp"],["p-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["p-dang","Đăng bài lên fanpage","Lịch, duyệt, lên lịch"]],
-  q:[["q-nguon","File nguồn tư liệu","SPA · SPY · theo ngày"],["q-spy","SPY đối thủ","Quảng cáo, video đối thủ"],["q-y","Content ý tưởng","Hook, nội dung quảng cáo"],["q-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["q-dang","Đăng bài lên page","Chọn page, duyệt đăng"]],
+  q:[["q-nguon","File nguồn tư liệu","SPA · SPY · theo ngày"],["q-spy","SPY đối thủ","Quảng cáo, video đối thủ"],["q-link","SPY bằng link","Dán link → tự tải, tự edit"],["q-y","Content ý tưởng","Hook, nội dung quảng cáo"],["q-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["q-dang","Đăng bài lên page","Chọn page, duyệt đăng"]],
   a:[["a-camp","Chiến dịch test","Camp CLAUDE, đánh giá"],["a-tp","Thành phẩm đã test","Giá mess, CPO, Win"],["a-dl","Đo lường","Slide phân tích khách & video"]],
   f:[["f-all","Thư mục & liên kết","Drive, Sheet, công cụ"]]};
 const GRP={t:["Trang chủ","Tổng quan","Việc đang chờ Sếp, bài đăng hôm nay và số quảng cáo."],p:["Phòng 1","Fanpage","Từ tư liệu tới bài đăng trên fanpage, làm theo thứ tự từng bước."],q:["Phòng 2","Sản xuất quảng cáo","Từ tư liệu tới bài quảng cáo đăng công khai trên đúng page."],a:["Phòng 3","Hiệu quả quảng cáo","Theo dõi chiến dịch và kết quả từng thành phẩm. Chỉ xem, cập nhật khi bấm Đồng bộ."],f:["Kho","Thư mục","Mọi thư mục, file và liên kết của MERAH."]};
 const SHOW={"t-tq":["t-tq"],"p-nguon":["p-nguon"],"p-y":["y-tuong"],"p-media":["anh","video"],"p-tp":["p-tp"],"p-dang":["lich"],
-  "q-nguon":["q-nguon"],"q-y":["quang-cao"],"q-spy":["q-spy"],"q-media":["anh","video"],"q-tp":["q-tp"],"q-dang":["q-dang"],"a-camp":["a-camp"],"a-tp":["a-tp"],"a-dl":["a-dl"],"f-all":["f-all"]};
+  "q-nguon":["q-nguon"],"q-y":["quang-cao"],"q-spy":["q-spy"],"q-link":["q-link"],"q-media":["anh","video"],"q-tp":["q-tp"],"q-dang":["q-dang"],"a-camp":["a-camp"],"a-tp":["a-tp"],"a-dl":["a-dl"],"f-all":["f-all"]};
 const OLD={"p-media":"p-tp","q-media":"q-tp",lich:"p-dang","y-tuong":"p-y",anh:"p-tp",video:"p-tp",dang:"p-dang","quang-cao":"q-y"};
 let curView="t-tq";
 function route(){let h=location.hash.slice(1);h=OLD[h]||h;if(!SHOW[h])h="t-tq";const g=h[0];curView=h;
@@ -1237,6 +1241,7 @@ $("#pageFilter").addEventListener("change",e=>{S.page=e.target.value;render()});
 $("#pCaption").addEventListener("input",capCount);
 $("#capGo").onclick=writeCaption;
 $("#capCopy").onclick=()=>copyText($("#pCaption").value);
+$("#pGoTp").onclick=()=>$("#dlg").close();
 $("#pSave").onclick=async()=>{const p=await submitPost();if(p){$("#dlg").close();toast("Đã lưu bài "+p.id)}};
 $("#pApprove").onclick=async()=>{const noMedia=!(S.editMedia||[]).length&&!(S.editing&&S.editing.driveLink);
   if(noMedia&&!await confirmBox("Bài chưa có ảnh/video. Duyệt Ý TƯỞNG này để nhân viên làm hình (ảnh cũ hoặc ảnh AI)? Làm xong sẽ gửi lại để anh/chị duyệt đăng – chưa đăng ngay."))return;
@@ -1518,7 +1523,8 @@ function renderHoi(){
       ${r.opt?tickForm(r):qc?`<label class="f" for="ans-${r.row}">Trả lời<input type="text" id="ans-${r.row}"></label><div class="row"><button class="btn primary" data-hoi="${r.row}">Gửi trả lời</button></div>`
         :`<div class="row"><button class="btn primary" data-hoi="${r.row}" data-v="Có, cần đăng">Có, cần đăng</button><button class="btn" data-hoi="${r.row}" data-v="Không cần đăng">Không cần đăng</button></div>`}</article>`};
   const open=hoiRows.filter(r=>!r.a);
-  $("#hoiP").innerHTML=$("#hoiP2").innerHTML=open.filter(r=>!/qc|quảng/i.test(r.phong)).map(card).join("");
+  const pq=open.filter(r=>!/qc|quảng/i.test(r.phong));$("#hoiP2").innerHTML=pq.map(card).join("");
+  $("#hoiP").innerHTML=pq.length?`<p class="note" style="margin:0">${pq.length} câu hỏi đang chờ Sếp – trả lời ở mục <a href="#p-y">Content ý tưởng</a>.</p>`:"";
   $("#hoiQ").innerHTML=open.filter(r=>/qc|quảng/i.test(r.phong)).map(card).join("");
   const n=open.length;const g=document.querySelector('#grpNav a[data-g="p"]');if(g)g.dataset.badge=n?String(n):"";if(typeof renderTq==="function")renderTq();}
 function tickAnswer(row){const r=hoiRows.find(x=>x.row===row);if(!r)return "";const o=r.opt||{},parts=[];
@@ -1548,9 +1554,9 @@ async function loadQDang(){const tb=$("#qDangBody");if(!mcp){tb.innerHTML='<tr><
   try{qcRows=await loadQcRows();const shown=qcRows.filter(r=>!/đã bỏ/i.test(r.st||""));
     tb.innerHTML=shown.length?shown.slice().reverse().map(r=>{const done=/đã đăng|đã duyệt/i.test(r.st);
       return `<tr><td>${esc(r.date)}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.name||r.id)}</a>`:esc(r.name||r.id)}<div class="note">${esc(r.src)}</div></td><td>${esc(r.type)}</td><td>${esc(r.style)}</td>
-      <td>${done?esc(r.page):`<select id="pg-${r.row}" aria-label="Chọn page cho ${esc(r.name||r.id)}"><option value="">— chọn page —</option>${PAGES.map(p=>`<option${p===r.page?" selected":""}>${esc(p)}</option>`).join("")}</select>`}</td>
+      <td>${esc(r.page||"—")}</td>
       <td><span class="chip" style="--st:${/đã đăng/i.test(r.st)?"var(--accent)":/đã duyệt/i.test(r.st)?"var(--ok)":"var(--warn)"}">${esc(r.st||"Chờ chọn page")}</span>${qcProg(r)}</td><td>${postLink(r.post)}</td>
-      <td>${done?"":`<button class="btn small primary" data-qdang="${r.row}">Duyệt đăng</button>`}</td></tr>`}).join("")
+      <td>${done?"":`<a class="btn small" href="#q-tp">Duyệt ở Media &amp; thành phẩm</a>`}</td></tr>`}).join("")
       :'<tr><td colspan="8" class="muted">Chưa có thành phẩm quảng cáo chờ đăng.</td></tr>';
   }catch(e){tb.innerHTML=`<tr><td colspan="8" class="muted">${esc(errTxt(e))}</td></tr>`}}
 async function duyetQDang(row){const r=qcRows.find(x=>x.row===row);const pg=$("#pg-"+row)&&$("#pg-"+row).value;
@@ -2097,12 +2103,18 @@ function linkKey(u){let m;
   if(m=u.match(/(?:youtube\.com\/shorts\/|youtu\.be\/|[?&]v=)([\w-]{6,})/))return "YT-"+m[1];
   let h=0;for(const c of u)h=(h*31+c.charCodeAt(0))>>>0;return "LK-"+h.toString(36)}
 function linkPlat(u){return /tiktok/.test(u)?"TikTok":/ads\/library/.test(u)?"Quảng cáo Facebook/Instagram (từng bài)":/instagram/.test(u)?"Instagram":/youtu/.test(u)?"YouTube":/facebook|fb\.watch/.test(u)?"Facebook":"Link khác"}
-const LK_STEPS=["Chờ tải","Đã tải về SPY","Đang edit","Chờ Sếp duyệt"];
-function lkStep(st){st=String(st||"");if(/không tải được|lỗi/i.test(st))return -1;if(/chờ.*duyệt|đã duyệt|đã đăng/i.test(st))return 3;if(/đang edit|đang dựng|đã giao/i.test(st))return 2;if(/đã tải về/i.test(st))return 1;return 0}
+let LK_ALL=false;
+function lkState(x){const st=String(x.st||""),h=String(x.note||"");const bad=/không tải được|lỗi/i.test(st);
+  const done=/chờ.*duyệt|đã duyệt|đã đăng/i.test(st),edit=/đang edit|đang dựng|đã giao/i.test(st),got=done||edit||/đã tải về/i.test(st);
+  const m=(st+" "+h).match(/SPY[\/ ]+(\d{2}-\d{2}-\d{4})/i);
+  return {bad,got,drive:got?(m?m[1]:"có"):"",edit,done,qc:(st.match(/\((QC[^)]*)\)/)||[])[1]||""}}
 function renderSpyLinks(){const box=$("#lkList");if(!box)return;const sel=$("#lkPage");if(sel&&!sel.options.length)sel.innerHTML=PAGES.map(p=>`<option>${esc(p)}</option>`).join("");
-  const rows=(SPY.saved||[]).filter(x=>String(x.note).includes(LK_TAG)&&!/bỏ qua|bỏ hẳn/i.test(x.st)).slice(-12).reverse();
-  box.innerHTML=rows.length?`<table class="q"><thead><tr><th>Ngày</th><th>Link</th><th>Dịch vụ</th><th>Tiến độ</th></tr></thead><tbody>${rows.map(x=>{const k=lkStep(x.st);
-    return `<tr><td>${esc(x.day)}</td><td><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.plat||"Link")} ↗</a><div class="note">${esc(x.id)}</div></td><td>${esc(x.svc)}</td><td>${k<0?`<span class="chip" style="--st:var(--danger)">${esc(x.st)}</span>`:`<div class="fixbar">${LK_STEPS.map((n,i)=>`<span class="${i<=k?"on":""}${i===k?" cur":""}"><i>${i<=k?"✓":i+1}</i>${n}</span>`).join("")}</div>${k>0?`<div class="note">${esc(x.st)}</div>`:""}`}</td></tr>`}).join("")}</tbody></table>`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>'}
+  const all=(SPY.saved||[]).filter(x=>String(x.note).includes(LK_TAG)&&!/bỏ qua|bỏ hẳn/i.test(x.st)).reverse(),rows=LK_ALL?all:all.slice(0,15);
+  const Y=t=>`<span style="color:var(--ok);font-weight:600">✓ ${t||"Rồi"}</span>`,N=t=>`<span class="note">${t||"Chưa"}</span>`;
+  box.innerHTML=all.length?`<table class="q"><thead><tr><th>Ngày gửi</th><th>Link</th><th>Dịch vụ</th><th>Đã tải</th><th>Lên Drive</th><th>Đã xử lý (edit + content)</th></tr></thead><tbody>${rows.map(x=>{const k=lkState(x);
+    return `<tr><td>${esc(x.day)}</td><td><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.plat||"Link")} ↗</a></td><td>${esc(x.svc)}</td>
+      ${k.bad?`<td colspan="3"><span class="chip" style="--st:var(--danger)">${esc(x.st)}</span></td>`:`<td>${k.got?Y():N("⏳ Đang tải")}</td><td>${k.drive?Y(k.drive==="có"?"":"SPY/"+k.drive):N()}</td><td>${k.done?Y(k.qc||"Chờ Sếp duyệt"):k.edit?N("⏳ Đang làm"):N()}</td>`}</tr>`}).join("")}</tbody></table>${all.length>15&&!LK_ALL?`<button class="btn small" id="lkMore">Xem thêm ${all.length-15} link cũ</button>`:""}`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>'}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#lkMore")){LK_ALL=true;renderSpyLinks()}});
 async function spyLinkSend(){const msg=t=>$("#lkMsg").textContent=t;if(!mcp){msg("App chưa được phép dùng Google Sheets.");return}
   const urls=[...new Set($("#lkUrls").value.split(/\s+/).map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x)))];if(!urls.length){msg("Dán ít nhất 1 link video (bắt đầu bằng https://).");return}
   const svc=$("#lkSvc").value.trim(),pg=$("#lkPage").value,note=$("#lkNote").value.trim();if(!svc){msg("Chọn hoặc gõ dịch vụ để EDIT clone đúng dịch vụ.");return}
@@ -2166,7 +2178,7 @@ function renderTq(){const box=$("#tqTodo");if(!box)return;try{hoiRows;qcRows;TQ_
   const hoi=hoiRows.filter(r=>!r.a),hq=hoi.filter(r=>/qc|quảng/i.test(r.phong)).length,qcW=qcRows.filter(r=>/chờ.*duyệt|chờ sếp/i.test(r.st||"")).length;
   const T=(n,l,d,href,hot)=>`<a class="tq-t${hot&&n?" hot":""}" href="#${href}"><b>${n}</b><span>${l}</span><small>${d}</small></a>`;
   box.innerHTML=T(hoi.length-hq,"Câu hỏi fanpage","Nhân viên đang chờ Sếp trả lời","p-y",1)+T(hq,"Câu hỏi quảng cáo","Phong cách, page đăng","q-nguon",1)
-    +T(cnt("Chờ duyệt"),"Bài fanpage chờ duyệt","Xem, duyệt hoặc yêu cầu sửa","p-dang",1)+T(qcW,"Quảng cáo chờ duyệt","Chọn page, duyệt đăng","q-dang",1)
+    +T(cnt("Chờ duyệt"),"Bài fanpage chờ duyệt","Xem, duyệt hoặc yêu cầu sửa","p-tp",1)+T(qcW,"Quảng cáo chờ duyệt","Chọn page, duyệt đăng","q-tp",1)
     +T(cnt("Cần sửa")+cnt("Đang sửa"),"Bài đang sửa","Nhân viên đang làm lại","p-dang")+T(posts.filter(p=>p.status==="Đã lên lịch"&&(p.date||"")>=td).length,"Bài đã hẹn giờ","Từ hôm nay trở đi, sẽ tự đăng","p-dang");
   const late=posts.filter(isOverdue).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));$("#tqLateBox").hidden=!late.length;
   $("#tqLate").innerHTML=late.map(p=>`<div class="tq-r tq-late"><span class="tq-h">${fmtDate(p.date)}<br>${esc(p.time||"")}</span><span style="min-width:0"><b style="display:block">${esc(p.topic||"(chưa có chủ đề)")}</b><span class="chip" style="--st:${ST_COLOR[p.status]||"var(--muted)"}">${esc(p.status||"")}</span></span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn small primary" data-tqmove="${esc(p.id)}">Dời ngày</button><button class="btn small" style="color:var(--danger)" data-tqdrop="${esc(p.id)}">Bỏ bài</button></span></div>`).join("");
@@ -2179,7 +2191,7 @@ async function loadTq(){renderTq();loadHoi();
   try{qcRows=await loadQcRows()}catch(e){}renderTq();
   try{$("#tqAdLbl").textContent=adrLabel();const cs=(await adsAll("campaign",["id","name","effective_status",...MET_F],[TEST_F])).filter(c=>isTest(c.name)&&!gone(c));TQ_ADS=met(cs)}
   catch(e){TQ_ERR="Chưa lấy được số quảng cáo – mở mục Hiệu quả quảng cáo rồi bấm Đồng bộ."}renderTq()}
-const LOADERS={"t-tq":loadTq,"p-nguon":()=>{loadNguon("p-nguon");loadHoi()},"q-nguon":()=>{loadNguon("q-nguon");loadHoi()},"p-tp":()=>{renderPagePreview();loadTp("p-tp")},"q-tp":()=>{loadTp("q-tp");loadPreview()},"q-dang":loadQDang,"p-y":loadHoi,"a-dl":loadDL,"q-spy":loadSpySaved};
+const LOADERS={"t-tq":loadTq,"p-nguon":()=>{loadNguon("p-nguon");loadHoi()},"q-nguon":()=>{loadNguon("q-nguon");loadHoi()},"p-tp":()=>{renderPagePreview();loadTp("p-tp")},"q-tp":()=>{loadTp("q-tp");loadPreview()},"q-dang":loadQDang,"p-y":loadHoi,"a-dl":loadDL,"q-spy":loadSpySaved,"q-link":loadSpySaved};
 function lazyLoad(h){if(!LOADERS[h]||loaded[h]||!mcp)return;loaded[h]=true;LOADERS[h]()}
 document.addEventListener("click",e=>{
   const rl=e.target.closest("[data-reload]");if(rl){const h=rl.dataset.reload;loaded[h]=true;LOADERS[h]&&LOADERS[h]();return}

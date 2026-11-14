@@ -28,7 +28,8 @@ Sếp dán link video (Facebook, TikTok, Instagram, Thư viện quảng cáo…)
 App ghi dòng tab SPY-ADS: D `Sếp gửi link`, F link, B dịch vụ, H bắt đầu `SPY-CLONE · LINK SẾP GỬI · Page: <page> · Ghi chú: …`, I `Chờ máy tải`, J khoá (`TT-` / `FB-` / `FBV-` / `IG-` / `YT-` / `LK-`). Đồng thời gửi bình luận `TẢI SPY NGAY | <khoá> | Sếp gửi link | <link> | <dịch vụ> | Page: … | Ghi chú: …` vào phiên trên máy.
 1. Tải NGAY theo mục "Sếp gửi link video thẳng trong chat" ở trên (ngày thư mục = cột A; YouTube/Instagram/FB share: yt-dlp trước, TikTok/FB Thư viện quảng cáo: Chrome JS ở Bước 2). Không vượt đăng nhập/captcha.
 2. Cập nhật cột I của ĐÚNG dòng đó (tìm theo J = khoá) – app hiện tiến độ theo đúng các chữ này:
-   - `Đang tải` → `Đã tải về SPY <dd-mm-yyyy>` (H thêm ` · File: <tên file>`), hoặc `Không tải được (<lý do ngắn>)`.
+   - `Đang tải` → `Đã tải về SPY <dd-mm-yyyy>` (H thêm ` · File: <tên file> · Drive: SPY/<dd-mm-yyyy>` – BẮT BUỘC giữ chữ `Drive: SPY/<ngày>` trong H để app hiện cột "Lên Drive" kể cả khi cột I đổi sang Đang edit / Chờ Sếp duyệt), hoặc `Không tải được (<lý do ngắn>)`.
+   - App hiện 3 cột: **Đã tải** · **Lên Drive** (ngày) · **Đã xử lý (edit + content)** = cột I `Chờ Sếp duyệt (<mã QC>)` chỉ khi video ĐÃ edit xong VÀ caption/content đã viết vào QUANG-CAO cột M.
 3. Tải xong là GIAO EDIT NGAY (không hỏi sếp phong cách/page – sếp đã chọn trong app): chạy routine Quét chính `{{ID_ROUTINE}}` (RemoteTrigger `run`) hoặc tự dựng trên máy; đổi I thành `Đang edit`.
 4. Nhân viên EDIT dựng xong, ghi QUANG-CAO (H = page trong cột H của SPY-ADS, I = `Chờ duyệt đăng`) và đổi SPY-ADS I thành `Chờ Sếp duyệt (<mã QC>)`. Không đăng khi sếp chưa duyệt.
 
