@@ -1,11 +1,14 @@
 ﻿# Dựng ảnh Giáng sinh 9-11 (bài 0700 + carousel 1100 + 2 story). Ảnh thật: chỉ sáng ấm nhẹ, không làm mịn, không AI.
 import sys, math, random
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter, ImageChops
-sys.path.insert(0, r"C:\Users\Surface\Downloads\CLAUDE DỰNG VIDEO\ADS SPA 5.11")
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from duong_dan_may import tim, KHO  # noqa: E402
+sys.path.insert(0, tim("CLAUDE DỰNG VIDEO/ADS SPA 5.11"))
 import trang_tri as T
 
 SRC = r"C:\MERAH\TƯ LIỆU MERAH ĐĂNG BÀI\9-11-2026\photo_{{ID_FACEBOOK}}"
-BASE = r"C:\Users\Surface\Downloads\CLAUDE HỌC\SUB AGENT"
+BASE = KHO
 OUT = BASE + r"\bai-cho-duyet"
 LOGO = BASE + r"\tai-nguyen\mau-thiet-ke\logo_dark.png"
 F = "C:/Windows/Fonts/"

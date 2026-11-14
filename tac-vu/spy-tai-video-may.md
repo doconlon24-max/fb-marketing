@@ -7,6 +7,9 @@ description: CHẠY TRÊN MÁY SẾP (không phải đám mây): tải video SPY
 
 Đám mây KHÔNG tải được video (Facebook chặn công cụ tải, TikTok bị chặn mạng, Manifold không trả file) – đã thử 12/11/2026, xem `tai-nguyen/thu-tai-video-spy.md`. Việc tải do máy này làm, qua **Chrome của sếp (Claude in Chrome)**. Làm việc trong `C:\Users\Surface\Downloads\CLAUDE HỌC\SUB AGENT`. Trả lời tiếng Việt, ngắn.
 
+## Tự động 10 phút/lần (sếp chốt 14/11/2026: "có link tải luôn và xử lý luôn")
+Tác vụ máy `fb-spy-tai-ngay` (scheduled task trên máy chính, 10 phút/lần) quét dòng `Chờ máy tải` và làm toàn bộ quy trình dưới đây + giao Quét chính ngay. Bình luận từ app chỉ là kênh phụ (không đảm bảo tới phiên nào).
+
 ## Kích hoạt tức thì từ app (sếp chốt 12/11/2026)
 Khi sếp bấm SPY → Đồng ý, app gửi vào phiên Claude đang mở trên máy một bình luận: `TẢI SPY NGAY | <khoá> | <đối thủ> | <link bài> | <dịch vụ>`. Nhận được là tải NGAY đúng bài đó theo Bước 2 (không cần đọc Sheet trước; dòng của bài ở tab SPY-ADS tìm theo cột J = khoá để cập nhật trạng thái), rồi trả lời 1 dòng trong luồng bình luận ("Đã tải về SPY dd-mm-yyyy: <tên file>" hoặc lý do không tải được). Sau đó xử lý nốt các dòng `Chờ máy tải` còn tồn nếu có.
 
@@ -21,6 +24,7 @@ Sếp dán link video (Facebook, TikTok, Instagram, Thư viện quảng cáo…)
 - **IG bị giới hạn người xem** (yt-dlp báo "isn't available to everyone"): dùng Chrome đã đăng nhập. Bài ảnh: ảnh carousel là `main li img` rộng ≥1000, bấm Next/Go back gom đủ, lấy srcset lớn nhất, fetch → tải. Reel: video là DASH, lấy `performance.getEntriesByType('resource')` các `.mp4`, bỏ `bytestart/byteend`, 2 tệp đầu = hình + tiếng → `ffmpeg -i v -i a -c copy -map 0:v -map 1:a`. Tên kênh: thẻ `meta` og:title.
 - Ảnh (bài ảnh) đẩy bằng `rclone copyto` vào cùng thư mục ngày; sếp ghi chú (vd "chạy ảnh 3") thì đặt tiền tố tên file `CHAY-ANH-3_…` và ghi vào cột H.
 - Đẩy lên Drive xong là xoá trên máy (script tự xoá tệp trong Downloads + thư mục tạm). Kết quả `da_xoa_tren_may:false` thì xoá tay `SPY_<khoá>*.mp4` trong Downloads, chỉ khi đã chắc file nằm trên Drive.
+- **XOÁ HẲN – CẢ Ổ ĐĨA LẪN THÙNG RÁC (sếp nhắc 14/11, áp dụng MỌI máy: máy chính + máy PC trực):** sau khi đã chắc file nằm trên Drive, xoá vĩnh viễn mọi tệp tạm của lượt tải (`SPY_*`, các `<uuid>.tmp` Chrome tạo khi bật "Hỏi nơi lưu", tệp hình/tiếng tách rời) bằng `rm`/`Remove-Item` (không qua Thùng rác), rồi dọn các mục `SPY_*` / `*.tmp` còn trong Thùng rác (PowerShell `Shell.Application` Namespace(10), chỉ xoá đúng các mục SPY/tmp đó). Không để sót bản nào trên máy.
 - **TẢI XONG LÀ LÀM LUÔN (sếp nhắc 13/11):** đẩy hết link lên Drive thì ngay lập tức chạy routine Quét chính `{{ID_ROUTINE}}` (RemoteTrigger `run`) để Trưởng phòng QC dựng thành phẩm, hoặc tự dựng trên máy. Không để tư liệu chờ lượt quét kế tiếp.
 - Nhiều link một lúc thì tải lần lượt. Trả lời sếp 1 dòng mỗi link: đã vào `SPY/<ngày>` (tên file), hoặc lý do không tải được (ảnh, cần đăng nhập/captcha – không tự vượt).
 

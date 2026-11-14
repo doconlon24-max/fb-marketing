@@ -9,8 +9,10 @@ from mediapipe.tasks import python as mpt
 from mediapipe.tasks.python import vision
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-RAW = r"C:\Users\Surface\Downloads\CLAUDE DỰNG VIDEO\video thô đăng spa 5.11"
-MD = r"C:\Users\Surface\Downloads\FINE\ADS 2.10.1\model"
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from duong_dan_may import tim  # noqa: E402
+RAW = tim("CLAUDE DỰNG VIDEO/video thô đăng spa 5.11")
+MD = tim("model")
 W, H = 1080, 1920
 ten = sys.argv[1]
 XEM = [float(x) for x in sys.argv[sys.argv.index("--xem") + 1].split(",")] if "--xem" in sys.argv else None

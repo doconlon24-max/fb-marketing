@@ -438,6 +438,10 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .pc-body{padding:10px 12px;display:grid;gap:4px}.pc-body b{font-size:14.5px}.pc-flow{font-size:12.5px;color:var(--muted);line-height:1.45}
 .pc-steps{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 0;padding:0;list-style:none}
 .pc-steps li{background:var(--surface);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600}
+
+/* thanh tiến độ: mọi bước cùng 1 hàng (sếp chốt 15/11/2026) */
+.fixbar{grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);min-width:300px}
+.fixbar span{font-size:11px;line-height:1.25}
 </style>
 </head>
 <body>
@@ -1652,7 +1656,7 @@ function qcProg(r){const st=String(r.st||""),log=String(r.log||""),noTin=log.rep
 async function loadQDang(){const tb=$("#qDangBody");if(!mcp){tb.innerHTML='<tr><td colspan="8" class="muted">App chưa được phép dùng Google Sheets.</td></tr>';return}
   try{qcRows=await loadQcRows();const shown=qcRows.filter(r=>!/đã bỏ/i.test(r.st||""));
     tb.innerHTML=shown.length?shown.slice().reverse().map(r=>{const done=/đã đăng|đã duyệt/i.test(r.st);
-      return `<tr data-d="${esc(isoD(r.date)||"")}"><td>${esc(r.date)}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.name||r.id)}</a>`:esc(r.name||r.id)}<div class="note">${esc(r.src)}</div></td><td>${esc(r.type)}</td><td>${esc(r.style)}</td>
+      return `<tr data-d="${esc(isoD(r.date)||"")}"><td>${esc(r.date)}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.name||r.id)}</a>`:esc(r.name||r.id)}<div class="note">${esc(r.src)}</div></td><td>${esc(r.type)}</td><td title="${esc(r.style)}"><b>${esc((String(r.style||"").match(/PC ?\d+/i)||[r.style||"—"])[0].replace(" ",""))}</b></td>
       <td>${esc(r.page||"—")}</td>
       <td><span class="chip" style="--st:${/đã đăng/i.test(r.st)?"var(--accent)":/đã duyệt/i.test(r.st)?"var(--ok)":"var(--warn)"}">${esc(r.st||"Chờ chọn page")}</span>${qcProg(r)}</td><td>${postLink(r.post)}</td>
       <td>${done?"":`<a class="btn small" href="#q-tp">Duyệt ở Media &amp; thành phẩm</a>`}</td></tr>`}).join("")

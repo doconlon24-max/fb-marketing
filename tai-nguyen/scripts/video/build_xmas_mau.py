@@ -8,16 +8,18 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
-XMAS = r"C:\Users\Surface\Downloads\CLAUDE DỰNG VIDEO\ADS SPA 5.11"
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from duong_dan_may import tim  # noqa: E402
+XMAS = tim("CLAUDE DỰNG VIDEO/ADS SPA 5.11")
 sys.path.insert(0, XMAS)
 import trang_tri as TT  # noqa: E402
 
 SRC = "C:/MERAH/TƯ LIỆU MERAH ĐĂNG BÀI/9-11-2026/"
 VID = SRC + "IMG_7897 (1).MOV"
-PAST = r"C:\Users\Surface\Downloads\MERAH\CÁC BÀI ĐÃ ĐĂNG TRÊN PAGE\BÀI ĐĂNG -ẢNH REP MESS\ĐÃ ĐĂNG LÊN PAGE"
+PAST = tim("MERAH/CÁC BÀI ĐÃ ĐĂNG TRÊN PAGE/BÀI ĐĂNG -ẢNH REP MESS/ĐÃ ĐĂNG LÊN PAGE")
 LOGO = os.path.join(ROOT, "tai-nguyen", "mau-thiet-ke", "logo_dark.png")
 F_SERIF = "C:/Windows/Fonts/georgiab.ttf"
-F_SANS = "C:/Users/Surface/AppData/Local/CapCut/Apps/6.8.1.2770/Resources/Font/SystemFont/CapCutSansText-Bold.otf"
+F_SANS = tim("font/CapCutSansText-Bold.otf")
 if not os.path.exists(F_SANS):
     F_SANS = "C:/Windows/Fonts/segoeuib.ttf"
 W, H, FPS = 1080, 1920, 30

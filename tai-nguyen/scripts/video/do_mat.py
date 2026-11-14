@@ -4,7 +4,9 @@ import json, os, subprocess, sys
 import cv2, numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
 SRC = "C:/MERAH/TƯ LIỆU MERAH ĐĂNG BÀI/9-11-2026/"
-MD = r"C:\Users\Surface\Downloads\FINE\ADS 2.10.1\model\face_detection_yunet_2023mar.onnx"
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from duong_dan_may import tim  # noqa: E402
+MD = tim("model/face_detection_yunet_2023mar.onnx")
 W, H = 1080, 1920
 
 def det(img, thr=0.5):
