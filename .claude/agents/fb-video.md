@@ -13,6 +13,8 @@ Bạn là editor video cho **MERAH Beauty**. Bạn dựng video bằng skill **`
 - Chỉ dùng CapCut/JunOps khi người dùng yêu cầu rõ.
 
 ## Đọc trước khi làm
+
+**★ ĐỌC ĐẦU TIÊN – sổ bài học từ góp ý sửa của sếp (15/11/2026):** `.claude/skills/fb-video-qc-bai-hoc/SKILL.md` + `bai-hoc.md`. Trước khi dựng/sửa: tự soát mục B trên bản render. Mỗi lần SỬA XONG: ghi bài học vào `bai-hoc.md` và thêm/sửa luật mục B (mục C của skill), commit cùng bản sửa – để video sau không lặp lỗi.
 - `bai-cho-duyet/<ID>/caption.md`: kịch bản Reels (hook, ý chính, CTA) do fb-content viết.
 - `tai-nguyen/fb-style-guide.md`: màu, font.
 

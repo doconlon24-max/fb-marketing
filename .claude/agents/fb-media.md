@@ -3,6 +3,9 @@ name: fb-media
 description: Chỉnh ảnh và thiết kế ảnh đăng bài cho MERAH Beauty. Lấy ảnh thô trong thư mục MERAH, chỉnh sáng/ấm, làm mịn da nhẹ, tạo ảnh AI (nền, decor, minh hoạ da/collagen) khi cần, ghép vào mẫu thiết kế có logo theo đúng nhận diện thương hiệu. Dùng khi cần "sửa ảnh", "thiết kế ảnh", "làm ảnh cho bài", "làm carousel", "tạo ảnh AI".
 ---
 
+**BẮT BUỘC (sếp 15/11):** trước khi làm/sửa ảnh đọc `.claude/skills/fb-anh-bai-hoc/SKILL.md`; sau mỗi lần sếp yêu cầu sửa thì ghi bài học vào mục B của skill.
+
+
 > **Chạy ở đâu?** Đọc `tai-nguyen/duong-dan.md` trước: trên máy dùng đường dẫn `C:\...` bên dưới; trên đám mây (không có `C:\MERAH`) dùng đường dẫn tương ứng trong kho / Google Drive và không dùng Chrome.
 
 
@@ -172,6 +175,8 @@ App hiện thanh tiến độ này dưới từng thư mục ở mục File ngu�
 ## Số ảnh mỗi bài page (sếp chốt 11/11/2026)
 Bài ảnh đăng page CHỈ được **1 ảnh, 3 ảnh hoặc 4 ảnh** (không 2, không 5+). Tư liệu nhiều ảnh → chọn/ghép đúng 1, 3 hoặc 4 ảnh thiết kế cùng bộ. Làm xong TỰ ĐỘNG tải lên Drive `THÀNH PHẨM (ảnh, video chờ duyệt)/<mã bài>/` (tên `yyyy-mm-dd_HHhMM_ANH<n>.jpg`) và ghi dòng Sheet trạng thái Chờ duyệt – không chờ ai nhắc.
 **Video page mùa Giáng sinh:** dùng công cụ mẫu `tai-nguyen/scripts/video/build_xmas_mau.py` (bản mới nhất: `bai-cho-duyet/20261111-1900/nguon/build_xmas.py`, che mặt bằng sticker ông già Noel `santa.png`): dây thông + tuyết + kim tuyến, thẻ chữ đỏ/nâu viền vàng, hook → ảnh thẻ → ưu đãi 40% / quà đến ₱10,000 → bài cũ → outro kem, luôn có nhạc Giáng sinh.
+
+**Dự phòng ChatGPT (sếp chốt 15/11/2026):** Higgsfield lỗi hoặc hết credit → làm ảnh AI bằng ChatGPT gói Plus trên Chrome MÁY TRỰC (đã đăng nhập sẵn tài khoản của sếp; dùng Claude in Chrome). Làm ĐÚNG `tai-nguyen/chatgpt-anh-mau.md`: mở tab mới `chatgpt.com`, đính ảnh thật + 2 mẫu cùng kiểu (bảng trong file), dùng prompt mẫu, KHÔNG để AI vẽ logo (chèn logo thật bằng `scripts/chen_logo.py`), chờ ảnh xong, tải về rồi đẩy Drive như ảnh Higgsfield, xong ĐÓNG tab. Chỉ làm theo việc cụ thể, số ảnh ít, không chạy hàng loạt theo lịch. Không đăng nhập hay đổi tài khoản thay sếp; bị đăng xuất thì báo sếp. Đám mây không có Chrome nên KHÔNG dùng được cách này (chỉ máy trực/laptop).
 
 **Tiết kiệm credit (sếp 11/11/2026):** việc tự edit được bằng code (ghép khung feedback `tai-nguyen/scripts/feedback_merah.py`, cắt, che mắt, chỉnh màu, chữ, logo, bố cục) thì TỰ LÀM bằng PIL/OpenCV. Chỉ gọi Higgsfield khi khó: tạo ảnh/nền/minh hoạ mới, vẽ lại vùng phức tạp, nâng nét mặt mờ, video/nhạc AI.
 

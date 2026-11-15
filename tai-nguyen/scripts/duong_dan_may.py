@@ -37,3 +37,19 @@ def tim(rel):
         if os.path.exists(p):
             return p
     return thu[-1]  # không thấy: trả về đường dẫn laptop để báo lỗi rõ ràng
+
+
+def dat_rclone():
+    """Cho rclone chạy được khi gọi từ lịch Windows (ngoài app Claude):
+    - rclone.conf tạo trong app Claude (gói MSIX) nằm ở thư mục ảo -> đặt RCLONE_CONFIG trỏ tới đó;
+    - thư mục rclone.exe của winget có thể không có trong PATH -> thêm vào."""
+    import glob, shutil
+    la = os.environ.get("LOCALAPPDATA", "")
+    if not os.environ.get("RCLONE_CONFIG") and not os.path.exists(os.path.join(os.environ.get("APPDATA", ""), "rclone", "rclone.conf")):
+        g = glob.glob(os.path.join(la, "Packages", "Claude_*", "LocalCache", "Roaming", "rclone", "rclone.conf"))
+        if g:
+            os.environ["RCLONE_CONFIG"] = g[0]
+    if not shutil.which("rclone"):
+        g = glob.glob(os.path.join(la, "Microsoft", "WinGet", "Packages", "Rclone.Rclone*", "*", "rclone.exe"))
+        if g:
+            os.environ["PATH"] = os.path.dirname(g[0]) + os.pathsep + os.environ.get("PATH", "")

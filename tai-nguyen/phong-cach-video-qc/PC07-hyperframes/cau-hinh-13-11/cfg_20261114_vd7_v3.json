@@ -1,0 +1,10 @@
+{"vo": "D:/MERAH/lam-viec/QC-20261114-VD7/vo.mp3", "doan": "D:/MERAH/lam-viec/QC-20261114-VD7/vo_doan.json",
+ "kick": "MAXFILL · FACE CONTOUR",
+ "hook": "No makeup.<br><em>No filter.</em>",
+ "aft_len": 1.3, "talk_len": 1.55,
+ "before_h": "This was her<br><em>before MERAH</em>",
+ "quote": "&ldquo;I wanted a <em>slimmer, defined</em> face.&rdquo;",
+ "defs": [["a", 395, 1130, "DEEP SMILE LINES"], ["b", 190, 1160, "WIDE FACE"], ["c", 820, 1250, "HEAVY LOWER CHEEKS"], ["d", 760, 1395, "SOFT JAWLINE"]],
+ "mech_sub": "MAXFILL · HA CONTOURING", "mech_lbl": "SMILE LINES", "checks": ["SLIMMER", "SMOOTHER", "DEFINED"],
+ "glow": ["SLIMMER FACE", "SOFTER SMILE LINES", "DEFINED JAWLINE", "NATURAL GLOW"],
+ "svc": "MAXFILL", "from": "STARTING FROM", "price": "₱2,999", "off": "40% OFF · until Nov 30"}

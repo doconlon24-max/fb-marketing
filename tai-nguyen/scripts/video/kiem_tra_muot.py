@@ -34,6 +34,17 @@ def main(path, max_lap=3):
     giat = [(s, n) for s, n in runs if max_lap < n <= 15]
     tinh = [(s, n) for s, n in runs if n > 15]
     dup = int(same.sum())
+    # NHẢY CẢNH (sếp 15/11, VD7): cảnh quay liền bị chắp nhiều đoạn ngắn/ảnh tĩnh -> tư thế nhảy giữa chừng.
+    # = các điểm đổi khung đột ngột cỡ vừa (8..45; >45 là chuyển cảnh có chủ đích) gom theo cụm <0.3s; >=3 cụm trong 4s = nhảy.
+    cu = [i for i in range(len(d)) if 8 < d[i] < 45]
+    nhom = []
+    for i in cu:
+        if not nhom or i - nhom[-1] > fps * 0.3:
+            nhom.append(i)
+    nhay = []
+    for k, i in enumerate(nhom):
+        if sum(1 for j in nhom if i <= j < i + fps * 4) >= 3 and (not nhay or i / fps - nhay[-1] > 4):
+            nhay.append(i / fps)
     print(f"{path}: {len(fr)} khung, {fps:.0f} fps, {len(fr) / fps:.1f} s; khung lặp {dup} ({dup / len(fr):.0%})")
     # đoạn giật = >=3 chuỗi lặp ngắn trong 1 giây
     bad = []
@@ -43,6 +54,9 @@ def main(path, max_lap=3):
             bad.append(s / fps)
     for s, n in tinh:
         print(f"  khung đứng yên {s / fps:.1f}s → {(s + n) / fps:.1f}s ({n / fps:.1f}s) – chỉ OK nếu là thẻ tĩnh có chủ đích")
+    if nhay:
+        print("  NHẢY CẢNH (nhiều đoạn ngắn/ảnh tĩnh chắp vào nhau trong cảnh liền) quanh các giây:", ", ".join(f"{t:.1f}" for t in nhay))
+        print("KẾT LUẬN: NHẢY – phải dùng 1 đoạn video liền mạch cho cảnh đó (không xen ảnh tĩnh, không cắt ngắn <3s)"); return 1
     if bad:
         print("  GIẬT (cảnh bị phát chậm, khung lặp liên tục) quanh các giây:", ", ".join(f"{t:.1f}" for t in bad))
         print("KẾT LUẬN: GIẬT – phải dựng lại, cảnh quay thật chạy đúng tốc độ gốc"); return 1

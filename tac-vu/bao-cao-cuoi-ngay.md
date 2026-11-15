@@ -3,6 +3,8 @@ name: fb-bao-cao-cuoi-ngay
 description: 21:30 mỗi ngày: tổng hợp công việc các phòng ban MERAH và gửi email bảng báo cáo cho {{EMAIL_BAO_CAO}}
 ---
 
+> **BƯỚC 0 – TIẾT KIỆM TOKEN (sếp chốt 15/11/2026):** chạy `python tai-nguyen/scripts/so_lieu_bao_cao.py thu-ky` TRƯỚC. Bảng số liệu nó in ra là nguồn chính cho phần đếm (fanpage, quảng cáo, SPY, HOI-SEP). KHÔNG tự đọc lại cả Sheet/app để đếm. Chỉ viết nhận xét, nêu việc tồn/lỗi, và bổ sung phần code không có (ví dụ báo cáo QC trong `quang-cao/bao-cao/`). Script lỗi thì mới lấy số liệu theo cách cũ bên dưới.
+
 > **Chạy trên đám mây:** thư mục làm việc là kho `fb-he-thong` (không có ổ C:). Tư liệu xem trên Google Drive `MERAH/TƯ LIỆU ĐĂNG BÀI/` và `MERAH/TƯ LIỆU QUẢNG CÁO/`; trạng thái xử lý ở `trang-thai/`. Lịch sử chạy: xem file trong `trang-thai/` và lịch sử commit thay cho list_task_runs. Email chỉ tới {{EMAIL_BAO_CAO}}.
 
 

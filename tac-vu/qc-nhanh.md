@@ -70,3 +70,13 @@ Mỗi lượt chạy đều đọc tab `SPY-ADS` A1:K3000 của Sheet `{{ID_DRIV
 **Bỏ thành phẩm (13/11/2026):** Sếp bảo bỏ thành phẩm QC nào → đổi cột I tab QUANG-CAO thành `Đã bỏ` (không để `Đã duyệt`), ghi lý do ở K. App tự ẩn dòng `Đã bỏ`.
 
 **Chống đăng trùng (14/11/2026 – bài 11h bị đăng 2 lần do 2 lượt cùng đọc Sheet):** `fb_api.py` tự BỎ QUA page đã có bài cùng caption trong 12h và Tin 24h trong 15 phút – KHÔNG dùng `--force` trừ khi Sếp yêu cầu đăng lại. Trước khi đăng: đọc lại Sheet ngay lúc đó, dòng đã `Đã đăng`/`Đã lên lịch` hoặc K có `Đang đăng` (<30 phút) thì bỏ qua; nếu đăng thì ghi K `Đang đăng <giờ>` TRƯỚC rồi mới gọi fb_api.
+
+## PHÂN VIỆC MÁY ↔ ĐÁM MÂY (sếp chốt 15/11/2026 – chống trùng, chống kẹt)
+Máy PC trực (laptop phụ) chạy 2 lịch Windows 1 phút/lần: `MERAH canh SPY` (canh_spy.py) và `MERAH dang bai` (dang_tu_dong.py). Đám mây là DỰ PHÒNG.
+- **Video QC `Cần sửa` / video SPY cần dựng:** VIỆC CỦA MÁY (đám mây không render được HyperFrames). Đám mây KHÔNG đổi I sang `Đang sửa`/`Đang edit`, KHÔNG ghi "đã tiếp nhận" – để nguyên cho máy giành (máy ghi `Đang sửa (máy PC TRỰC dd/MM HH:mm)`). Chỉ khi dòng `Cần sửa` đã quá 30 phút mà chưa máy nào nhận mới ghi K "máy chưa nhận – kiểm tra máy trực" và báo sếp.
+- **Bài đã duyệt (page + QC) + Tin 24h:** máy đăng ngay bằng code (không tốn token). Đám mây chỉ đăng bù khi dòng `Đã duyệt` đã quá 10 phút mà K chưa có `Đang đăng`/`Đã đăng`; luôn qua `fb_api.py` (khoá Drive `KHÓA ĐĂNG BÀI` chống trùng mọi máy + đám mây).
+- **Bài page `Cần sửa`, HOI-SEP chưa xử lý:** máy nhận ngay (làn APP) – giành bằng I = `Đang sửa` / F = `Đang xử lý (máy …)`. Đám mây thấy các chữ đó thì bỏ qua; chỉ làm dòng `Cần sửa`/F trống đã quá 10 phút.
+- Ghi Sheet từ máy không tốn token qua Apps Script (`tai-nguyen/scripts/sheet_api.py`, mật khẩu ở `C:\MERAH\.bao-mat\sheet_api.json`, bản đồng bộ `merah:"KHO TỪ MÁY TÍNH/.bao-mat-dong-bo/"`).
+
+## Sổ bài học video QC (sếp chốt 15/11/2026)
+Mọi lần tiếp nhận/sửa video quảng cáo: đọc `.claude/skills/fb-video-qc-bai-hoc/SKILL.md` + `bai-hoc.md` trước; sửa xong (dù đám mây chỉ ghi nhận rồi để máy dựng) ghi góp ý của sếp + luật rút ra vào `bai-hoc.md` và mục B của skill, để mọi video sau không lặp lỗi.

@@ -16,6 +16,9 @@ Bạn là **nhân viên Chạy QC** của MERAH Beauty (spa thẩm mỹ, Makati,
 3. `tai-nguyen/fb-thiet-ke-quang-cao.md` — nhận diện MERAH, cách đối thủ làm.
 4. `quang-cao/nhat-ky-chay-qc.md` — nhật ký các thay đổi và quyết định trước đó (tạo nếu chưa có).
 
+## ƯU TIÊN SỐ 0: SKILL `fb-ads-toi-uu` (sếp chốt 15/11/2026)
+Trước MỌI việc quảng cáo đọc `.claude/skills/fb-ads-toi-uu/SKILL.md` (set ads, đọc chỉ số, vòng đời video, lịch lương PH, quy trình đánh giá). Chỉ tập trung set ads + chỉ số + kế hoạch, không đề xuất kịch bản nhắn tin. Sau mỗi lần đánh giá có phát hiện mới → ghi thêm vào mục 7 "Nhật ký bài học" của skill + cập nhật `quang-cao/kho-video-thang.md`. Báo cáo luôn kèm đề xuất đánh số.
+
 ## ƯU TIÊN SỐ 1: QUY CHUẨN 1-1-3+ (sếp chốt 11/11/2026)
 Đọc và làm theo `quang-cao/quy-chuan-1-1-3.md` (chia lô, giờ 06:00 PH, ngân sách ngày cấp nhóm, tắt/giảm/tăng, báo cáo 0h). Chỗ nào khung cũ bên dưới mâu thuẫn thì theo file đó.
 

@@ -3,6 +3,9 @@ name: fb-ads-media
 description: EDIT ảnh quảng cáo (phòng Quảng cáo) cho MERAH Beauty. Làm bộ ảnh quảng cáo Facebook/Instagram cho spa thẩm mỹ đủ tỉ lệ 9:16, 4:5, 1:1, ít chữ, đúng vùng an toàn, nổi bật khi lướt, tuân thủ chính sách Meta (không before/after, không kim tiêm). Dùng khi có concept từ fb-ads-content hoặc người dùng nói "làm ảnh quảng cáo", "ảnh ads".
 ---
 
+**BẮT BUỘC (sếp 15/11):** trước khi làm/sửa ảnh đọc `.claude/skills/fb-anh-bai-hoc/SKILL.md`; sau mỗi lần sếp yêu cầu sửa thì ghi bài học vào mục B của skill.
+
+
 > **Chạy ở đâu?** Đọc `tai-nguyen/duong-dan.md` trước: trên máy dùng đường dẫn `C:\...` bên dưới; trên đám mây (không có `C:\MERAH`) dùng đường dẫn tương ứng trong kho / Google Drive và không dùng Chrome.
 
 > **Quy trình tư liệu QC (10/11/2026):** nhận việc từ Trưởng phòng QC (`fb-ads-truong-phong`), theo `quang-cao/quy-trinh-tu-lieu-qc.md`. Video dựng theo phong cách trong `tai-nguyen/phong-cach-video-qc/`.

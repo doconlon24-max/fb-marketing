@@ -1,0 +1,117 @@
+{
+ "vo": "C:/MERAH/lam-viec/QC-20261114-VD8/vo.mp3",
+ "doan": "C:/MERAH/lam-viec/QC-20261114-VD8/vo_doan.json",
+ "kick": "MAXFILL · GLOW-UP",
+ "hook": "Tired &amp;<br><em>older-looking?</em>",
+ "L1": 2.6,
+ "L2": 4.966,
+ "cuts": [
+  0,
+  1.933,
+  3.333
+ ],
+ "defs": [
+  [
+   "a",
+   "DEEP SMILE LINES",
+   72,
+   [
+    [
+     0,
+     695,
+     1035
+    ],
+    [
+     0.6,
+     706,
+     986
+    ],
+    [
+     1.0,
+     662,
+     942
+    ],
+    [
+     1.4,
+     544,
+     898
+    ],
+    [
+     1.8,
+     486,
+     883
+    ],
+    [
+     1.93,
+     480,
+     880
+    ]
+   ]
+  ],
+  [
+   "b",
+   "LOSS OF ELASTICITY",
+   95,
+   [
+    [
+     0,
+     405,
+     1045
+    ],
+    [
+     1.4,
+     410,
+     1040
+    ]
+   ]
+  ],
+  [
+   "c",
+   "PUFFY EYE BAGS",
+   70,
+   [
+    [
+     0,
+     680,
+     760
+    ],
+    [
+     0.37,
+     675,
+     760
+    ],
+    [
+     0.67,
+     710,
+     710
+    ],
+    [
+     1.0,
+     825,
+     665
+    ],
+    [
+     1.63,
+     825,
+     665
+    ]
+   ]
+  ]
+ ],
+ "glow": [
+  "SOFTER SMILE LINES",
+  "FIRMER, BOUNCY SKIN",
+  "BRIGHTER EYES"
+ ],
+ "mech_sub": "MAXFILL · HA COLLAGEN",
+ "mech_lbl": "LOST COLLAGEN",
+ "checks": [
+  "SMOOTHER LINES",
+  "FIRMER SKIN",
+  "BRIGHTER EYES"
+ ],
+ "svc": "MAXFILL",
+ "from": "STARTING FROM",
+ "price": "₱2,999",
+ "off": "40% OFF · until Nov 30"
+}

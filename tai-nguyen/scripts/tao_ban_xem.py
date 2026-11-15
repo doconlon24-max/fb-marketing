@@ -11,6 +11,12 @@ Video đã có bản xem thì bỏ qua (thêm --lam-lai để làm lại). In JS
 import json, os, re, subprocess, sys, tempfile
 
 GIOI_HAN = 9.3e6  # byte
+try:  # lịch Windows / phiên app: tự đặt RCLONE_CONFIG + PATH rclone (15/11 – trước đây lỗi "không tìm thấy rclone")
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from duong_dan_may import dat_rclone
+    dat_rclone()
+except Exception:
+    pass
 
 
 def run(cmd, t=900):

@@ -5,7 +5,7 @@ Hệ thống có 2 phần, cài riêng:
 | Phần | Là gì | Cài thế nào |
 |---|---|---|
 | **App** – SPA MARKETING | Trang web để xem trước, duyệt, yêu cầu sửa, xem số liệu quảng cáo | Mở link app → điền **⚙ Cài đặt** lần đầu |
-| **Bộ nhân viên + skill** – thư mục này | 12 nhân viên AI, **42 skill** (edit video, chạy quảng cáo, mạng xã hội), script dựng video, quy trình tự động | Cài như **plugin** (mục 3) hoặc đưa lên GitHub để chạy tự động trên đám mây (mục 5) |
+| **Bộ nhân viên + skill** – thư mục này | 12 nhân viên AI, **45 skill** (edit video, chạy quảng cáo, mạng xã hội), script dựng video, quy trình tự động | Cài như **plugin** (mục 3) hoặc đưa lên GitHub để chạy tự động trên đám mây (mục 5) |
 
 App chỉ là bảng điều khiển. Các việc như dựng video, viết caption, chạy quảng cáo, báo cáo là do **bộ nhân viên + skill** làm.
 

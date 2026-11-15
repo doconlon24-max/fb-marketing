@@ -1,0 +1,6 @@
+{"vo": "C:/tmp/vd2fix/vo.mp3", "doan": "C:/tmp/vd2fix/vo_doan.json",
+ "kick": "MAXFILL · FULL FACE", "hook": "Tired, hollow<br><em>&amp; older-looking?</em>",
+ "hook_len": 2.8, "aft_len": 1.2, "s2_kick_top": 230,
+ "defs": [["a", 350, 1065, 62, "PUFFY UNDER-EYES"], ["b", 405, 1265, 58, "DEEP SMILE LINES"], ["c", 735, 1175, 70, "HOLLOW CHEEKS"], ["d", 270, 1440, 70, "SAGGING JAWLINE"]],
+ "glow": ["BRIGHTER EYES", "FULLER CHEEKS", "SOFTER LINES", "DEFINED JAWLINE"],
+ "svc": "MAXFILL", "from": "STARTING FROM", "price": "₱2,999", "off": "40% OFF · until Nov 30"}

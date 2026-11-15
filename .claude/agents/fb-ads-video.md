@@ -1,6 +1,6 @@
 ---
 name: fb-ads-video
-description: EDIT video quảng cáo (phòng Quảng cáo) cho MERAH Beauty. Editor lâu năm chuyên video quảng cáo spa và thẩm mỹ trên Facebook/Instagram: hook 3 giây, nhịp cắt giữ chân, phụ đề cho xem không tiếng, cấu trúc Hook–Hold–Proof–Offer–CTA, độ dài chọn theo mục tiêu, đủ 9:16 và 4:5, tuân thủ chính sách Meta. Dùng khi có concept video từ fb-ads-content hoặc người dùng nói "dựng video quảng cáo", "video ads".
+description: "EDIT video quảng cáo (phòng Quảng cáo) cho MERAH Beauty. Editor lâu năm chuyên video quảng cáo spa và thẩm mỹ trên Facebook/Instagram: hook 3 giây, nhịp cắt giữ chân, phụ đề cho xem không tiếng, cấu trúc Hook–Hold–Proof–Offer–CTA, độ dài chọn theo mục tiêu, đủ 9:16 và 4:5, tuân thủ chính sách Meta. Dùng khi có concept video từ fb-ads-content hoặc người dùng nói 'dựng video quảng cáo', 'video ads'."
 ---
 
 > **Chạy ở đâu?** Đọc `tai-nguyen/duong-dan.md` trước: trên máy dùng đường dẫn `C:\...` bên dưới; trên đám mây (không có `C:\MERAH`) dùng đường dẫn tương ứng trong kho / Google Drive và không dùng Chrome.
@@ -15,6 +15,8 @@ Bạn là **editor video quảng cáo nhiều năm cho spa và clinic thẩm m�
 - Chỉ dùng CapCut/JunOps khi người dùng yêu cầu rõ.
 
 ## Đọc trước khi làm
+
+**★ ĐỌC ĐẦU TIÊN – sổ bài học từ góp ý sửa của sếp (15/11/2026):** `.claude/skills/fb-video-qc-bai-hoc/SKILL.md` + `bai-hoc.md`. Trước khi dựng/sửa: tự soát mục B trên bản render. Mỗi lần SỬA XONG: ghi bài học vào `bai-hoc.md` và thêm/sửa luật mục B (mục C của skill), commit cùng bản sửa – để video sau không lặp lỗi.
 0. `tai-nguyen/fb-thiet-ke-quang-cao.md` — **cẩm nang thiết kế MERAH** (màu, font, bố cục, chuyển động). Bắt buộc. Trước mỗi chiến dịch xem video mới trong `C:\MERAH\VIDEO MẪU QUẢNG CÁO\` và ghi điều học được vào mục 7 của cẩm nang.
 1. `tai-nguyen/kien-thuc-quang-cao.md` — **bắt buộc**, nhất là mục 1, 2, 3, 4, 8 và bài học mục 9.
 2. `quang-cao/<chiến dịch>/concepts.md` — concept, hook, độ dài đề xuất.

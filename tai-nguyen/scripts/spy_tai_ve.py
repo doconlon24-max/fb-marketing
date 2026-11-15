@@ -35,8 +35,15 @@ def main():
     ap.add_argument("--cho", type=int, default=40)
     ap.add_argument("--date", default="")
     ap.add_argument("--khong-day", action="store_true")
+    ap.add_argument("--ytdlp", action="store_true", help="link bài mạng xã hội bất kỳ → thử yt-dlp (canh_spy tải bằng code)")
     a = ap.parse_args()
 
+    try:  # lịch Windows: rclone.conf trong thư mục ảo app Claude + PATH rclone winget
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from duong_dan_may import dat_rclone
+        dat_rclone()
+    except Exception:
+        pass
     if os.path.isdir(os.path.expanduser("~/bin")):
         os.environ["PATH"] = os.path.expanduser("~/bin") + os.pathsep + os.environ.get("PATH", "")
     ngay = a.date or datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7))).strftime("%d-%m-%Y")
@@ -65,8 +72,10 @@ def main():
                 return print(json.dumps({"ok": False, "loi": "không thấy tệp SPY_%s*.mp4 trong Downloads (Chrome chưa tải xong hoặc đang hỏi nơi lưu)" % a.key}, ensure_ascii=False))
             shutil.copyfile(nguon, dich)
             xoa_sau = nguon  # sếp chốt 12/11/2026: đẩy lên Drive xong là xoá bản trên máy
-        elif "tiktok.com" in host and "/video/" in a.url:
-            r = run([sys.executable, "-m", "yt_dlp", "--no-playlist", "-o", dich, a.url], 300)
+        elif ("tiktok.com" in host and "/video/" in a.url) or (a.ytdlp and not re.search(r"\.(mp4|mov|webm)(\?|$)|fbcdn\.net|cdninstagram", a.url)):
+            # 15/11: link bài TikTok / Instagram / Facebook / YouTube → yt-dlp (không cookie, không vượt đăng nhập)
+            r = run([sys.executable, "-m", "yt_dlp", "--no-playlist", "-f", "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
+                     "--merge-output-format", "mp4", "-o", dich, a.url], 600)
             if r.returncode != 0:
                 return print(json.dumps({"ok": False, "loi": (r.stderr or r.stdout).strip().splitlines()[-1][:300]}, ensure_ascii=False))
         else:

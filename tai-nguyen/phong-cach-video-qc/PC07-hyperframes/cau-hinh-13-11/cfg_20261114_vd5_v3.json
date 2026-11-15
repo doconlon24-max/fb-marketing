@@ -1,0 +1,24 @@
+{
+ "vo": "C:/MERAH/lam-viec/QC-20261114-VD5/vo.mp3",
+ "doan": "C:/MERAH/lam-viec/QC-20261114-VD5/vo_doan.json",
+ "kick": "MAXFILL · 1 HOUR",
+ "hook": "Already<br><em>pretty?</em>",
+ "hook2": "But no… she can be<br><em>even more beautiful!</em>",
+ "hook_doi": 2.25,
+ "cuts": [1.9, 3.4, 4.6, 6.15],
+ "defs": [
+  ["a", "HOLLOW UNDER-EYES", 70, [[0, 380, 915]]],
+  ["b", "FLAT CHEEKS", 85, [[0, 300, 1010]]],
+  ["c", "SMILE LINES", 66, [[0, 405, 1095]]],
+  ["d", "SHORT CHIN", 72, [[0, 490, 1225]]]
+ ],
+ "glow_h": "One hour <em>later…</em>",
+ "glow": ["BRIGHTER EYES", "FULLER CHEEKS", "SMOOTHER SKIN", "DEFINED CHIN"],
+ "mech_sub": "MAXFILL · HA COLLAGEN",
+ "mech_lbl": "LOST VOLUME",
+ "checks": ["SMOOTHER", "FULLER", "GLOWING"],
+ "svc": "MAXFILL",
+ "from": "STARTING FROM",
+ "price": "₱2,999",
+ "off": "40% OFF · until Nov 30"
+}

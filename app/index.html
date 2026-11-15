@@ -240,7 +240,7 @@ label[for=pageFilter]{display:none}
 .fb-a span{padding:7px 0;border-radius:6px}
 .fb-tag{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;padding:3px 9px;border-radius:999px}
 .hist summary{cursor:pointer;font-size:12.5px;color:var(--muted)}.hist ol{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink)}.hist li{margin:2px 0}
-.fixbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font-size:11.5px;color:var(--muted)}.fixbar span{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;position:relative}.fixbar i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:600;background:var(--line);color:var(--muted)}.fixbar .on i{background:var(--ok);color:#fff}.fixbar .cur{color:var(--ink);font-weight:600}
+.fixbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font-size:11.5px;color:var(--muted)}.fixbar span{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;position:relative}.fixbar i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:600;background:var(--line);color:var(--muted)}.fixbar .on i{background:var(--ok);color:#fff}.fixbar .cur{color:var(--ink);font-weight:600}.fixbar .warn i{background:#e8a33d;color:#fff}.fixbar .warn{color:#a8661a;font-weight:600}.adsnote{margin-top:5px;font-size:11.5px;color:#a8661a;background:rgba(232,163,61,.12);border-radius:6px;padding:3px 8px;display:inline-block}
 .fb-ok{padding:12px 14px;background:var(--surface);border-top:1px solid var(--line);display:grid;gap:8px;color:var(--ink);font-family:var(--body)}
 fieldset.tick{border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:grid;gap:4px}
 fieldset.tick legend{font-size:12px;font-weight:600;color:var(--muted)}
@@ -1652,7 +1652,9 @@ function qcProg(r){const st=String(r.st||""),log=String(r.log||""),noTin=log.rep
   const sd=/seeding: đã bình luận/i.test(log),tS=(log.match(/seeding: đã bình luận (\d{1,2}\/\d{1,2}\s*\d{1,2}:\d{2})/i)||[])[1]||"";
   const ads=/lên ads:/i.test(log),tA=(log.match(/lên ads: (\d{1,2}\/\d{1,2}\s*\d{1,2}:\d{2})/i)||[])[1]||"";
   const steps=[["Đã duyệt",true,""],["Đã đăng page",dang,tD],["Tin 24h",tin,tT],["Seeding",sd,tS],["Đã lên ads",ads,tA]],k=steps.reduce((a,x,i)=>x[1]?i:a,0);
-  return `<div class="fixbar" style="margin-top:6px" aria-label="Tiến độ đăng">${steps.map(([n,on,t],i)=>`<span class="${on?"on":""}${i===k?" cur":""}"><i>${on?"✓":i+1}</i>${n}${t?` <small>${esc(t)}</small>`:""}</span>`).join("")}</div>`}
+  // 15/11 sếp: đã đăng page mà chưa lên ads → dấu ! + lý do (cột K đoạn "Ads: <lý do>"; không ghi thì mặc định chờ gom lô)
+  const chuaAds=dang&&!ads,lyDo=chuaAds?(((log.match(/(?:^|[|\n])\s*Ads:\s*([^|\n]+)/i)||[])[1]||"Chờ gom đủ lô (3–5 video đã đăng page)").trim()):"";
+  return `<div class="fixbar" style="margin-top:6px" aria-label="Tiến độ đăng">${steps.map(([n,on,t],i)=>{const w=i===4&&chuaAds;return `<span class="${on?"on":""}${w?" warn":""}${i===k?" cur":""}"${w?` title="${esc("Chưa lên ads: "+lyDo)}"`:""}><i>${on?"✓":w?"!":i+1}</i>${n}${t?` <small>${esc(t)}</small>`:""}</span>`}).join("")}</div>${chuaAds?`<div class="adsnote">❗ Chưa lên ads: ${esc(lyDo)}</div>`:""}`}
 async function loadQDang(){const tb=$("#qDangBody");if(!mcp){tb.innerHTML='<tr><td colspan="8" class="muted">App chưa được phép dùng Google Sheets.</td></tr>';return}
   try{qcRows=await loadQcRows();const shown=qcRows.filter(r=>!/^s*(đã )?bỏ/i.test(r.st||""));
     tb.innerHTML=shown.length?shown.slice().reverse().map(r=>{const done=/đã đăng|đã duyệt/i.test(r.st);
@@ -1832,7 +1834,7 @@ async function loadDanhGia(){try{const v=valuesOf(await sheetTool("get_values",{
 function campLabel(c){const spend=num(c.amount_spent);const res=num(c.results);const pur=num(c.omni_purchase);
   if(isSales(c.objective)){const cpo=pur?spend/pur:0;if(!pur)return spend>LM_STOP?["Tệ","chưa có lượt mua"]:["Chưa đủ dữ liệu",""];return cpo<=KPI_CPO?["Tốt",""]:cpo<=KPI_CPO*1.5?["Khá",""]:["Tệ",""]}
   const cpr=res?spend/res:0;if(!res)return spend>KPI_MESS*5?["Tệ","chưa có tin nhắn"]:["Chưa đủ dữ liệu",""];return cpr<=KPI_MESS?["Tốt",""]:cpr<=KPI_MESS*1.5?["Khá",""]:["Tệ",""]}
-const LB_COL={"Tốt":"var(--ok)","Khá":"var(--warn)","Tệ":"var(--danger)","Win":"var(--ok)","Không win":"var(--danger)"};
+const LB_COL={"Tốt":"var(--ok)","Khá":"var(--warn)","Tệ":"var(--danger)","Win":"var(--ok)","Không win":"var(--danger)","Đã tắt":"var(--muted)"};
 async function syncCamp(){if(!mcp){toast("App chưa được phép dùng kết nối");return}
   const btn=$("#campSync");btn.disabled=true;$("#campTime").textContent="Đang đồng bộ…";
   try{await loadDanhGia();
@@ -1869,7 +1871,7 @@ function parseAdName(n){const m=(n||"").match(CODE_RE);const d=(n||"").match(/\b
 async function syncCre(){if(!mcp){toast("App chưa được phép dùng kết nối");return}
   const btn=$("#creSync");btn.disabled=true;$("#creTime").textContent="Đang đồng bộ…";
   try{await loadDanhGia();
-    const label=adrLabel();const ads=(await adsAll("ad",["id","name","campaign_name","objective","effective_status",...MET_F,"created_time"],[TEST_F],adrArgs())).filter(a=>(isTest(a.name)||isTest(a.campaign_name))&&!gone(a));
+    const label=adrLabel();const ads=(await adsAll("ad",["id","name","campaign_name","objective","status","effective_status",...MET_F,"created_time"],[TEST_F],adrArgs())).filter(a=>(isTest(a.name)||isTest(a.campaign_name))&&!gone(a));
     let tp=[];try{const top=await kids(FOLD["q-tp"]);for(const fo of top.filter(f=>kindOf(f)==="Thư mục")){const fs=await kids(fo.id);tp.push(...fs.filter(f=>["Ảnh","Video"].includes(kindOf(f))).map(f=>({...f,_day:folderDate(fo)})))}
       tp.push(...top.filter(f=>["Ảnh","Video"].includes(kindOf(f))).map(f=>({...f,_day:(f.createdTime||"").slice(0,10)})))}catch(e){}
     let qc=[];try{qc=(await loadQcRows()).map(r=>({day:isoDay(r.date),name:r.name,type:r.type,link:r.link,post:r.post,page:r.page,st:r.st}))}catch(e){}
@@ -1879,17 +1881,17 @@ function driveOpen(u){u=String(u||"");const m=u.match(/\/file\/d\/([\w-]+)/)||u.
 const isOkQc=st=>/đã duyệt|đã đăng/i.test(String(st||""));
 function renderCre(){const s=S.creSnap;if(!s)return;const rows=new Map();
   if((s.qc||[]).length&&(s.qc||[]).every(q=>q.st===undefined)&&mcp&&!renderCre._auto){renderCre._auto=1;setTimeout(syncCre,300)}
-  const get=(key,init)=>{if(!rows.has(key))rows.set(key,{...init,mSpend:0,mRes:0,lSpend:0,lPur:0,allPur:0,ads:0,im:0,lc:0,link:""});return rows.get(key)};
+  const get=(key,init)=>{if(!rows.has(key))rows.set(key,{...init,mSpend:0,mRes:0,lSpend:0,lPur:0,allPur:0,ads:0,on:0,im:0,lc:0,link:""});return rows.get(key)};
   const tpLink=new Map();for(const f of s.tp||[]){const {code}=parseAdName(f.title.replace(/\.[^.]+$/,""));if(code&&!tpLink.has(f._day+"|"+code))tpLink.set(f._day+"|"+code,f.viewUrl)}
   for(const q of s.qc||[]){if(q.st!==undefined&&!isOkQc(q.st))continue;const {code}=parseAdName(q.name);if(!q.day&&!code)continue;const r=get(q.day+"|"+(code||q.name),{day:q.day,name:code||q.name,type:q.type||(code&&code.startsWith("VD")?"Video":"Ảnh")});
     if(q.post)r.post=q.post;if(q.link)r.link=driveOpen(q.link);else if(!r.link)r.link=tpLink.get(q.day+"|"+(code||q.name))||"";if(q.page)r.page=q.page;r.ok=true}
   const byPost=new Map([...rows.values()].filter(r=>r.post).map(r=>[r.post.split("_").pop(),r]));
   for(const a of s.ads||[]){if(!isTest(a.name)&&!isTest(a.campaign_name))continue;const {code,date}=parseAdName(a.name);const day=date||(a.created_time||"").slice(0,10);let key=code?day+"|"+code:"camp|"+a.campaign_name;if(code&&!rows.has(key)){const m=[...rows.values()].filter(x=>x.name===code&&x.day<=day).sort((x,y)=>y.day.localeCompare(x.day))[0];if(m)key=m.day+"|"+code}if(!code||!rows.has(key))continue;
     const r=get(key,{day:code?day:(a.created_time||"").slice(0,10),name:code||a.campaign_name,type:code?(code.startsWith("VD")?"Video":"Ảnh"):"—",old:!code});
-    r.ads++;const sp=num(a.amount_spent),pur=num(a.omni_purchase);r.allPur+=pur;r.im+=num(a.impressions);r.lc+=num(a.link_click);
+    r.ads++;if(String(a.status||"").toUpperCase()!=="PAUSED"&&!/PAUSED/i.test(a.effective_status||""))r.on++;const sp=num(a.amount_spent),pur=num(a.omni_purchase);r.allPur+=pur;r.im+=num(a.impressions);r.lc+=num(a.link_click);
     if(isSales(a.objective)){r.lSpend+=sp;r.lPur+=pur}else{r.mSpend+=sp;r.mRes+=msgOf(a)}}
   const days=new Map();for(const r of rows.values()){if(!days.has(r.day))days.set(r.day,[]);days.get(r.day).push(r)}
-  const v1=r=>!r.mSpend?"—":r.mRes&&r.mSpend/r.mRes<=KPI_MESS?"Win":r.mSpend>KPI_MESS*5?"Không win":"Đang test";
+  const v1=r=>{if(!r.mSpend)return "—";const c=r.mRes?r.mSpend/r.mRes:Infinity;if(r.ads&&!r.on)return c<=KPI_MESS?"Đã tắt":"Không win";if(r.mRes<5&&r.mSpend<50000)return "Đang test";return c<=KPI_MESS?"Win":r.mSpend>KPI_MESS*5?"Không win":"Đang test"};
   const v2=r=>!r.lSpend?"—":r.lPur&&r.lSpend/r.lPur<=KPI_CPO?"Win":r.lSpend>LM_STOP?"Không win":"Đang test";
   const chip=t=>t==="—"?"—":`<span class="chip" style="--st:${LB_COL[t]||"var(--warn)"}">${esc(t)}</span>`;
   $("#creTime").textContent="Cập nhật lúc "+new Date(s.at).toLocaleString("vi-VN")+" · số liệu: "+(s.label||"30 ngày qua");
@@ -1897,7 +1899,7 @@ function renderCre(){const s=S.creSnap;if(!s)return;const rows=new Map();
     <table class="q"><thead><tr><th>Tên tư liệu</th><th>ID post</th><th>Thể loại</th><th>Tình trạng</th><th class="n">Đã chi</th><th>Giá mess</th><th>CPO (camp lượt mua)</th><th>CPO tổng</th><th>Đánh giá</th></tr></thead><tbody>
     ${days.get(d).map(r=>{const dg=danhGia.get(r.name)||{};const tot=r.mSpend+r.lSpend;
       return `<tr><td>${r.link?`<a href="${esc(driveOpen(r.link))}" target="_blank" rel="noopener" title="Mở video trên Google Drive">▶ ${esc(r.name)}</a>`:esc(r.name)}${r.old?'<div class="note">quảng cáo cũ (theo tên chiến dịch)</div>':""}${r.page?`<div class="note">${esc(r.page)}</div>`:""}</td><td>${r.post?postLink(r.post):"—"}</td><td>${esc(r.type)}</td>
-      <td>${r.ads?'<span class="chip" style="--st:var(--ok)">Đã lên camp</span>':'<span class="chip" style="--st:var(--muted)">Chưa lên camp</span>'}</td>
+      <td>${!r.ads?'<span class="chip" style="--st:var(--muted)">Chưa lên camp</span>':r.on&&!r.im&&!(r.mSpend+r.lSpend)?'<span class="chip" style="--st:var(--warn)" title="Quảng cáo đã bật nhưng chưa có lượt hiển thị: nhóm đang hẹn giờ bắt đầu hoặc Meta đang duyệt">⏰ Hẹn giờ / chờ chạy</span>':r.on?'<span class="chip" style="--st:var(--ok)">Đang chạy</span>':'<span class="chip" style="--st:var(--danger)">Đã tắt</span>'}</td>
       <td class="n">${vnd(tot)}</td><td>${r.mRes?vnd(r.mSpend/r.mRes):r.mSpend?"chưa có tin":"—"}</td><td>${r.lPur?vnd(r.lSpend/r.lPur):r.lSpend?"chưa có lượt mua":"—"}</td><td>${r.allPur?vnd(tot/r.allPur):"—"}</td>
       <td>${dg.label?chip(dg.label):`Mess: ${chip(v1(r))}<br>Lượt mua: ${chip(v2(r))}`}${dg.note?`<div class="note">${esc(dg.note)}</div>`:""}</td></tr>`}).join("")}</tbody></table></article>`).join("")
     :'<div class="empty">Chưa có thành phẩm nào được duyệt. Sếp duyệt ở Sản xuất quảng cáo → Media &amp; thành phẩm, rồi bấm Đồng bộ quảng cáo.</div>';dayFilterDom("at",$("#creList"));}

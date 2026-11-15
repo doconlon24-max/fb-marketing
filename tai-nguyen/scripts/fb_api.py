@@ -11,6 +11,12 @@ python fb_api.py story-video <page> <video>
 """
 import json, os, sys, time, datetime, hashlib, shutil, socket, subprocess
 import requests
+try:  # rclone chạy được cả khi gọi từ lịch Windows (cấu hình trong thư mục ảo app Claude)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from duong_dan_may import dat_rclone
+    dat_rclone()
+except Exception:
+    pass
 
 V = "v22.0"
 G = f"https://graph.facebook.com/{V}"
@@ -143,7 +149,19 @@ def reel(pid, p, vid, cap, at):
     d = {"upload_phase": "finish", "video_id": vid_id, "description": cap, "access_token": tok}
     s = ts(at)
     d.update({"video_state": "SCHEDULED", "scheduled_publish_time": str(s)} if s else {"video_state": "PUBLISHED"})
-    return requests.post(f"{G}/{pid}/video_reels", data=d, timeout=120)
+    r = requests.post(f"{G}/{pid}/video_reels", data=d, timeout=120)
+    r.video_id = vid_id
+    return r
+
+
+def post_id(pid, r):
+    """Lấy ID bài dạng <pageid>_<postid> (reel: <pageid>_<videoid>)."""
+    try:
+        j = r.json()
+    except Exception:
+        j = {}
+    v = j.get("post_id") or j.get("id") or getattr(r, "video_id", "") or ""
+    return v if (not v or "_" in str(v)) else f"{pid}_{v}"
 
 
 def story_photo(pid, p, img):
@@ -331,44 +349,60 @@ def main():
     cmd = a[0]
     if cmd == "check":
         return check()
-    pages = load_pages(a[1])
-    ok = 0
     capf = {"photo": 3, "carousel": 2, "reel": 3}.get(cmd)
     cap = open(a[capf], encoding="utf-8").read() if capf is not None else ""
-    media = a[2] if cmd in ("photo", "reel", "story-photo", "story-video") else (a[3] if len(a) > 3 else "")
+    if cmd == "carousel":
+        media = a[3:]
+    else:
+        media = a[2]
+    kq = chay(cmd, a[1], media, cap, at, force)
+    for k in kq:
+        print(("OK  " if k["tt"] == "ok" else "BỎ QUA " if k["tt"] == "bo_qua" else "LỖI ") + f"{k['page']}: {k['ghi_chu']}")
+    print(f"Xong {sum(1 for k in kq if k['tt'] != 'loi')}/{len(kq)} page.")
+
+
+def chay(cmd, sel, media, cap="", at=None, force=False):
+    """Đăng 1 bài lên 1 hoặc nhiều page, có khoá chống trùng. Trả list dict:
+    {page, pid, tt: ok|bo_qua|loi, post_id, ghi_chu}. media: đường dẫn tệp (carousel: list tệp)."""
+    if cmd not in ("photo", "carousel", "reel", "story-photo", "story-video"):
+        die("Lệnh không hợp lệ: " + cmd)
+    pages = load_pages(sel)
+    m1 = media[0] if isinstance(media, list) else media
     if not force:
         don_khoa_cu()
+    out = []
     for pid, p in pages:
         ten_khoa = None
         if not force:
-            duoc, ten_khoa = giu_khoa(khoa_key(pid, cmd, cap, media))
+            duoc, ten_khoa = giu_khoa(khoa_key(pid, cmd, cap, m1))
             if not duoc:
-                ok += 1; print(f"BỎ QUA {p['name']}: {ten_khoa} (chống đăng trùng)."); continue
-            if capf is not None and (da_co_bai(pid, p, cap) or (cmd == "reel" and da_co_video(pid, p, cap))):
+                out.append(dict(page=p["name"], pid=pid, tt="bo_qua", post_id="", ghi_chu=f"{ten_khoa} (chống đăng trùng)")); continue
+            if cmd in ("photo", "carousel", "reel") and (da_co_bai(pid, p, cap) or (cmd == "reel" and da_co_video(pid, p, cap))):
                 tha_khoa(ten_khoa, True)  # trên page đã có → ghi XONG để lượt sau khỏi kiểm tra lại
-                ok += 1; print(f"BỎ QUA {p['name']}: đã có bài cùng caption trong 12h (chống đăng trùng). Dùng --force nếu thật sự muốn đăng lại."); continue
+                out.append(dict(page=p["name"], pid=pid, tt="bo_qua", post_id="", ghi_chu="đã có bài cùng caption trong 12h (chống đăng trùng)")); continue
             if cmd.startswith("story") and da_co_tin(pid, p):
                 tha_khoa(ten_khoa, False)
-                ok += 1; print(f"BỎ QUA {p['name']}: page vừa có Tin 24h trong 15 phút (chống đăng trùng). Dùng --force nếu cần."); continue
-        if cmd == "photo":
-            r = photo(pid, p, a[2], open(a[3], encoding="utf-8").read(), at)
-        elif cmd == "carousel":
-            r = carousel(pid, p, open(a[2], encoding="utf-8").read(), a[3:], at)
-        elif cmd == "reel":
-            r = reel(pid, p, a[2], open(a[3], encoding="utf-8").read(), at)
-        elif cmd == "story-photo":
-            r = story_photo(pid, p, a[2])
-        elif cmd == "story-video":
-            r = story_video(pid, p, a[2])
-        else:
+                out.append(dict(page=p["name"], pid=pid, tt="bo_qua", post_id="", ghi_chu="page vừa có Tin 24h trong 15 phút (chống đăng trùng)")); continue
+        try:
+            if cmd == "photo":
+                r = photo(pid, p, m1, cap, at)
+            elif cmd == "carousel":
+                r = carousel(pid, p, cap, media, at)
+            elif cmd == "reel":
+                r = reel(pid, p, m1, cap, at)
+            elif cmd == "story-photo":
+                r = story_photo(pid, p, m1)
+            else:
+                r = story_video(pid, p, m1)
+        except Exception as e:
             tha_khoa(ten_khoa, False)
-            die("Lệnh không hợp lệ: " + cmd)
+            out.append(dict(page=p["name"], pid=pid, tt="loi", post_id="", ghi_chu=str(e)[:200])); continue
         tha_khoa(ten_khoa, r.ok)
         if r.ok:
-            ok += 1; print(f"OK  {p['name']}: {r.json()}")
+            out.append(dict(page=p["name"], pid=pid, tt="ok", post_id=post_id(pid, r), ghi_chu=str(r.json())[:200]))
         else:
-            print(f"LỖI {p['name']}: {err_text(r)}")
-    print(f"Xong {ok}/{len(pages)} page.")
+            out.append(dict(page=p["name"], pid=pid, tt="loi", post_id="", ghi_chu=err_text(r)))
+    return out
 
 
 if __name__ == "__main__":

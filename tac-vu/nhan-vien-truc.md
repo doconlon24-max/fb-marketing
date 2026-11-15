@@ -227,3 +227,13 @@ Trên Drive và trên máy chỉ để lại: **tư liệu gốc SPA** (spa tự
 - DỰNG LẠI (sau Yêu cầu sửa, sai phong cách, làm lại) = GIỮ NGUYÊN mã, tên file, thư mục, DÒNG Sheet của bản cũ: ghi đè dòng cũ (cột F link mới, G phong cách, I `Chờ duyệt đăng`, K nhật ký), bản cũ vào Thùng rác. KHÔNG tạo mã/dòng mới.
 - **Trước khi đặt mã cho video dựng từ tư liệu SPY/SPA: TÌM trong tab QUANG-CAO dòng cũ cùng nguồn** (khoá `IG-…`/`TT-…`/`FB-…` hoặc tên file `SPY_<khoá>` xuất hiện ở cột G hoặc K). Có dòng cũ (kể cả trạng thái "Bỏ – sai phong cách… đang dựng lại") → đây là DỰNG LẠI: dùng đúng mã + dòng đó. Chỉ khi không có dòng cũ mới lấy số VDn kế tiếp của ngày tư liệu.
 - Tab SPY-ADS cột I ghi đúng mã đó: `Chờ Sếp duyệt (QC-<X>-VDn)`.
+
+## PHÂN VIỆC MÁY ↔ ĐÁM MÂY (sếp chốt 15/11/2026 – chống trùng, chống kẹt)
+Máy PC trực (laptop phụ) chạy 2 lịch Windows 1 phút/lần: `MERAH canh SPY` (canh_spy.py) và `MERAH dang bai` (dang_tu_dong.py). Đám mây là DỰ PHÒNG.
+- **Video QC `Cần sửa` / video SPY cần dựng:** VIỆC CỦA MÁY (đám mây không render được HyperFrames). Đám mây KHÔNG đổi I sang `Đang sửa`/`Đang edit`, KHÔNG ghi "đã tiếp nhận" – để nguyên cho máy giành (máy ghi `Đang sửa (máy PC TRỰC dd/MM HH:mm)`). Chỉ khi dòng `Cần sửa` đã quá 30 phút mà chưa máy nào nhận mới ghi K "máy chưa nhận – kiểm tra máy trực" và báo sếp.
+- **Bài đã duyệt (page + QC) + Tin 24h:** máy đăng ngay bằng code (không tốn token). Đám mây chỉ đăng bù khi dòng `Đã duyệt` đã quá 10 phút mà K chưa có `Đang đăng`/`Đã đăng`; luôn qua `fb_api.py` (khoá Drive `KHÓA ĐĂNG BÀI` chống trùng mọi máy + đám mây).
+- **Bài page `Cần sửa`, HOI-SEP chưa xử lý:** máy nhận ngay (làn APP) – giành bằng I = `Đang sửa` / F = `Đang xử lý (máy …)`. Đám mây thấy các chữ đó thì bỏ qua; chỉ làm dòng `Cần sửa`/F trống đã quá 10 phút.
+- Ghi Sheet từ máy không tốn token qua Apps Script (`tai-nguyen/scripts/sheet_api.py`, mật khẩu ở `C:\MERAH\.bao-mat\sheet_api.json`, bản đồng bộ `merah:"KHO TỪ MÁY TÍNH/.bao-mat-dong-bo/"`).
+
+## Sổ bài học video QC (sếp chốt 15/11/2026)
+Mọi lần tiếp nhận/sửa video quảng cáo: đọc `.claude/skills/fb-video-qc-bai-hoc/SKILL.md` + `bai-hoc.md` trước; sửa xong (dù đám mây chỉ ghi nhận rồi để máy dựng) ghi góp ý của sếp + luật rút ra vào `bai-hoc.md` và mục B của skill, để mọi video sau không lặp lỗi.

@@ -10,13 +10,13 @@ for i, x in enumerate(g):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{off:.3f}", "-t", f"{x:.3f}", "-i", C["vo"], "-c:a", "libmp3lame", "-b:a", "160k", f"{W}/assets/vo{i+1}.mp3"], check=True); off += x
 r2 = lambda x: f"{x:.2f}"
 AL = C.get("aft_len", 1.3)
-s1 = 0.0; L1 = max(g[0] + 0.4, 3.2)
+s1 = 0.0; L1 = max(g[0] + 0.4, C.get("l1_min", 3.2))
 sB = s1 + L1; LB = g[1] + 0.5
 sA = sB + LB; LA = g[2] + 1.0
-sT2 = sA + LA; LT = max(g[3] + 0.4, 2.6)
+sT2 = sA + LA; LT = max(g[3] + 0.4, C.get("lt_min", 2.6))
 s3 = sT2 + LT; L3 = max(g[4] + 0.5, 3.4)
-s4 = s3 + L3; L4 = max(g[5] + 0.4, 5.5)
-s5 = s4 + L4; L5 = max(g[6] + 0.6, 4.5)
+s4 = s3 + L3; L4 = max(g[5] + 0.4, C.get("l4_min", 5.5))
+s5 = s4 + L4; L5 = max(g[6] + 0.6, C.get("l5_min", 4.5))
 s6 = s5 + L5; L6 = 2.6
 s7 = s6 + L6; L7 = g[7] + 0.4
 s8 = s7 + L7; L8 = g[8] + 0.8
@@ -33,10 +33,15 @@ def arrow(i, k, x, y, lab):
             f'<path id="ar-{k}" d="M{sx} {sy} Q {cx:.0f} {cy:.0f} {x} {y}" fill="none" stroke="#e8cfa0" stroke-width="6" stroke-linecap="round" marker-end="url(#ah{k})" style="filter:drop-shadow(0 2px 4px rgba(30,15,5,0.6))"/></svg>'
             f'<div id="p-{k}" class="pill" style="left:{px}px; top:{py}px; width:460px; justify-content:center; font-size:30px"><span class="dot"></span>{lab}</div></div>')
 TL = C.get("talk_len", 2.6)
-media = [("v_aft1.mp4", 0, AL, "v"), ("s_bef.png", sB, sT2 - sB, "i"),
-         ("v_aft1.mp4", s4, AL, "v"), ("v_aft2.mp4", s4 + AL, AL, "v"), ("s_aft.png", s4 + 2 * AL, L4 - 2 * AL, "i"),
-         ("v_aft2.mp4", AL, AL, "v"), ("s_aft.png", 2 * AL, L1 - 2 * AL, "i"),
-         ("v_talk.mp4", sT2, min(TL, LT), "v"), ("v_talk_r.mp4", sT2 + TL, max(LT - TL, 0.01), "v")]
+if C.get("lien_mach"):
+    # 15/11/2026: mỗi cảnh quay là MỘT đoạn liền (assets/v_hook.mp4, v_talk.mp4, v_glow.mp4 do bước chuẩn bị cắt đúng độ dài) – CẤM xen ảnh tĩnh/đoạn ngắn/đảo ngược
+    media = [("v_hook.mp4", 0, L1, "v"), ("s_bef.png", sB, sT2 - sB, "i"), ("v_talk.mp4", sT2, LT, "v"), ("v_glow.mp4", s4, L4, "v")]
+else:
+    media = [("v_aft1.mp4", 0, AL, "v"), ("s_bef.png", sB, sT2 - sB, "i"),
+             ("v_aft1.mp4", s4, AL, "v"), ("v_aft2.mp4", s4 + AL, AL, "v"), ("s_aft.png", s4 + 2 * AL, L4 - 2 * AL, "i"),
+             ("v_aft2.mp4", AL, AL, "v"), ("s_aft.png", 2 * AL, L1 - 2 * AL, "i"),
+             ("v_talk.mp4", sT2, min(TL, LT), "v"), ("v_talk_r.mp4", sT2 + TL, max(LT - TL, 0.01), "v")]
+
 mhtml = ""
 for i, (f, st, du_, kind) in enumerate(media):
     tag = (f'<video class="clip full" src="assets/{f}" muted playsinline data-start="{r2(st)}" data-duration="{r2(du_)}" data-track-index="1"></video>' if kind == "v"
@@ -145,7 +150,7 @@ html = f'''<!doctype html>
 {"".join(f'<audio class="clip" src="assets/sfx/pop.mp3" data-start="{r2(s3 + 1.6 + i * 0.55)}" data-duration="0.5" data-volume="0.55" data-track-index="{13 + i % 2}"></audio>' for i in range(3))}
 <audio class="clip" src="assets/sfx/whoosh.mp3" data-start="{r2(s4 - 0.1)}" data-duration="0.57" data-volume="0.5" data-track-index="12"></audio>
 <audio class="clip" src="assets/sfx/sparkle.mp3" data-start="{r2(s4 + 0.15)}" data-duration="1.2" data-volume="0.6" data-track-index="15"></audio>
-{"".join(f'<audio class="clip" src="assets/sfx/pop.mp3" data-start="{r2(s4 + 1.4 + i * 0.8)}" data-duration="0.5" data-volume="0.5" data-track-index="{13 + i % 2}"></audio>' for i in range(4))}
+{"".join(f'<audio class="clip" src="assets/sfx/pop.mp3" data-start="{r2(s4 + 1.4 + i * 0.8)}" data-duration="0.5" data-volume="0.5" data-track-index="{13 + i % 2}"></audio>' for i in range(len(C["glow"])))}
 <audio class="clip" src="assets/sfx/whoosh-short.mp3" data-start="{r2(s5 + 0.2)}" data-duration="0.57" data-volume="0.55" data-track-index="12"></audio>
 <audio class="clip" src="assets/sfx/whoosh.mp3" data-start="{r2(s6 - 0.1)}" data-duration="0.57" data-volume="0.45" data-track-index="12"></audio>
 {"".join(f'<audio class="clip" src="assets/sfx/pop.mp3" data-start="{r2(s6 + 0.3 + i * 0.6)}" data-duration="0.5" data-volume="0.5" data-track-index="{13 + i % 2}"></audio>' for i in range(3))}
@@ -185,7 +190,7 @@ tl.fromTo("#w-m2", {{ filter:"blur(14px)", scale:1.1 }}, {{ filter:"blur(0px)", 
 tl.fromTo("#g-h", {{ opacity:0, y:30 }}, {{ opacity:1, y:0, duration:0.45, ease:X }}, {r2(s4 + 0.1)});
 tl.fromTo("#sweep", {{ x:0 }}, {{ x:2100, duration:1.1, ease:"power2.inOut" }}, {r2(s4 + 0.2)});
 tl.fromTo(".spark", {{ opacity:0, scale:0, rotation:-60, transformOrigin:"50% 50%" }}, {{ opacity:1, scale:1.2, rotation:0, duration:0.4, ease:"back.out(3)", stagger:0.15 }}, {r2(s4 + 0.3)});
-{"".join(f'tl.fromTo("#b{i+1}", {{ opacity:0, y:24 }}, {{ opacity:1, y:0, duration:0.4, ease:X }}, {r2(s4 + 1.4 + i * 0.8)});' for i in range(4))}
+{"".join(f'tl.fromTo("#b{i+1}", {{ opacity:0, y:24 }}, {{ opacity:1, y:0, duration:0.4, ease:X }}, {r2(s4 + 1.4 + i * 0.8)});' for i in range(len(C["glow"])))}
 tl.fromTo("#w-m4", {{ scale:1.0 }}, {{ scale:1.06, duration:{r2(L4 - 2 * AL)}, ease:"none" }}, {r2(s4 + 2 * AL)});
 // trượt trước/sau, giữ lâu
 tl.fromTo("#w-aft", {{ clipPath:"inset(0px 0px 0px 1080px)" }}, {{ clipPath:"inset(0px 0px 0px 0px)", duration:1.2, ease:"power2.inOut" }}, {r2(s5 + 0.3)});
@@ -213,5 +218,8 @@ tl.fromTo("#cta-addr", {{ opacity:0 }}, {{ opacity:1, duration:0.4 }}, {r2(s8 + 
 window.__timelines = window.__timelines || {{}}; window.__timelines["main"] = tl;
 </script></body></html>
 '''
+if C.get("lien_mach"):  # ánh xạ id timeline cũ -> wrapper của chế độ liền mạch (m0 hook, m1 before, m2 nói, m3 glow)
+    html = html.replace('"#w-m2", { filter:"blur(14px)", scale:1.1 }', '"#w-m3", { filter:"blur(14px)", scale:1.1 }').replace('"#w-m6"', '"#w-m0"').replace('"#w-m7, #w-m8"', '"#w-m2"')
+    html = re.sub(r'tl\.fromTo\("#w-m4".*?\n', '', html)
 io.open(W + "/index.html", "w", encoding="utf-8", newline="\n").write(html)
 print("T=%.2f" % T, [r2(x) for x in (s1, sB, sA, sT2, s3, s4, s5, s6, s7, s8)])
