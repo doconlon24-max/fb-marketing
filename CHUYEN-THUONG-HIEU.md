@@ -15,5 +15,6 @@ Bộ nhân viên này được viết từ một spa mẫu (tên cũ "MERAH", Ma
    - Xoá ưu đãi, quà và tên khách cụ thể của spa mẫu.
    - Giữ nguyên các luật an toàn: không đăng khi chưa duyệt; chỉ camp `CLAUDE -`, tạo ở trạng thái tạm dừng; không tự tăng chi; khoá chỉ để trong biến bí mật; không nhái giọng người khác; ảnh AI không ghi là khách thật.
 3. Công cụ ảnh AI: các agent media dùng `tai-nguyen/scripts/anh_ai.py --nguon <công cụ của chủ>` thay cho Higgsfield cố định.
+3b. **Script chạy máy** (`tai-nguyen/scripts/`, `tai-nguyen/apps-script/`): thay mọi `{{ID_…}}` bằng ID của chủ – `SHEET_ID` (canh_spy.py, so_lieu_bao_cao.py, merah_sheet_api.gs), danh sách page được đăng `MERAH10` (fb_api.py), thư mục ảnh seeding `SEED_ROOT_ID` + tên thư mục dịch vụ (dang_tu_dong.py), tài khoản quảng cáo `TK_QC` (so_lieu_bao_cao.py). Tab bài page: hệ thống gốc tên `Untitled`, app mới tên `BAI-DANG` → đổi `TAB_PAGE`/`"Untitled"` trong dang_tu_dong.py, canh_spy.py, so_lieu_bao_cao.py. Giữ remote rclone tên `merah` (trỏ vào thư mục gốc của chủ). Chạy `python -m py_compile` từng file sau khi sửa.
 4. Không còn sót tên spa mẫu: chạy `grep -ri "merah\|makati" .claude/agents tac-vu tai-nguyen` và sửa hết chỗ còn lại.
 5. Commit, push, rồi hướng dẫn chủ tạo môi trường đám mây và routine theo `HUONG-DAN-CAI-DAT.md` mục 5.
