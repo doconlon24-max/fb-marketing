@@ -48,6 +48,7 @@ else:
     if m and m.group(1) != "[]":
         canh.append("Bản chia sẻ còn sót ID riêng của MERAH: " + m.group(1))
     a = io.open(os.path.join(GOC, "app-facebook-marketing/src.html"), encoding="utf-8").read()
-    if a != io.open(os.path.join(out, "src.html"), encoding="utf-8").read():
+    moi = io.open(os.path.join(out, "src.html"), encoding="utf-8").read().replace("__APP_SLUG__", "{{ID_KET_NOI}}")
+    if a.replace("__APP_SLUG__", "{{ID_KET_NOI}}") != moi:
         canh.append("app-facebook-marketing chưa cập nhật theo bản MERAH mới nhất – dựng lại rồi đăng SPA MARKETING")
 print(json.dumps({"ok": not loi, "loi": loi, "canh_bao": canh}, ensure_ascii=False, indent=1))

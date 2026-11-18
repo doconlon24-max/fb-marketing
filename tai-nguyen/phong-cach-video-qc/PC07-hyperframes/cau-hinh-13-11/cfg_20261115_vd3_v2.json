@@ -1,0 +1,9 @@
+{"vo": "C:/MERAH/lam-viec/QC-20261115-VD3/vo.mp3", "doan": "C:/MERAH/lam-viec/QC-20261115-VD3/vo_doan.json",
+ "kick": "FOR MEN · MAXFILL", "hook": "Looking <em>older</em><br>than you feel?",
+ "defs": [{"lab": "EYE BAGS", "t": 0.1, "o": [[460, 1030, 85], [790, 1030, 85]]},
+          {"lab": "DEEP SMILE LINES", "t": 1.4, "o": [[500, 1210, 80], [840, 1185, 80]]},
+          {"lab": "SAGGING JAWLINE", "t": 2.7, "o": [[450, 1420, 85], [870, 1395, 85]]}],
+ "aft_k": "ONE MAXFILL SESSION · AFTER", "aft_h": "Sharper. <em>Younger.</em>",
+ "glow": ["FRESHER EYES", "SOFTER LINES", "FIRMER JAWLINE"],
+ "mech_sub": "MAXFILL · HA COLLAGEN", "mech_lbl": "LOST VOLUME", "checks": ["FIRMER", "SMOOTHER", "YOUNGER-LOOKING"],
+ "svc": "MAXFILL", "from": "STARTING FROM", "price": "₱2,999", "off": "40% OFF · until Dec 24", "bef_dx": -80}

@@ -191,6 +191,8 @@ rep('Chờ máy tải', 'Dùng làm ý tưởng', cnt=99)
 rep('(ok?(sent===ok?" · máy đang tải ngay":" · máy sẽ tải khi phiên Claude trên máy sẵn sàng"):"")', '(ok?" · đã lưu vào tab SPY-ADS để đội EDIT làm lại":"")')
 rep('Dán link video → máy tự tải về Drive SPY/ngày gửi → EDIT clone + viết content → chờ Sếp duyệt.', 'Dán link video → lưu vào danh sách SPY (tab SPY-ADS) → đội EDIT làm lại → chờ duyệt.')
 rep('video được tải về thư mục SPY để EDIT video làm quảng cáo', 'bài được lưu vào danh sách SPY để làm lại thành quảng cáo của bạn', cnt=9)
+# kiểm duyệt bình luận (16/11) cần máy trực MERAH xoá hộ -> bản chia sẻ ẩn mục này
+rep(',["p-bl","Kiểm duyệt bình luận","AI xoá bình luận xấu, chờ Sếp quyết"]', '')
 io.open(OUT + "/src.html", "w", encoding="utf-8", newline="\n").write(s)
 io.open(OUT + "/index.html", "w", encoding="utf-8", newline="\n").write(s)
 io.open(CHK, "w", encoding="utf-8").write("\n".join(re.findall(r"<script>(.*?)</script>", s, re.S)))

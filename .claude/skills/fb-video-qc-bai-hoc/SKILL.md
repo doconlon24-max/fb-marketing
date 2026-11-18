@@ -17,7 +17,7 @@ Mục tiêu: lỗi sếp đã bắt **một lần thì không bao giờ lặp l�
 3. Logo MERAH luôn có; khung nền chữ vừa đủ chữ, không to; chữ không đè mặt.
 
 **Tư liệu & cảnh quay**
-4. Cảnh có **video thì dùng video**, không thay bằng ảnh cắt/ảnh động/zoom ảnh tĩnh (15/11 VD4, VD8).
+4. Cảnh có **video thì dùng video**, không thay bằng ảnh cắt/ảnh động/zoom ảnh tĩnh (15/11 VD4, VD8). **Đoạn khách xấu lúc đầu phải là VIDEO chạy 1x**; ảnh tĩnh (dừng hình) CHỈ ở lúc nói vấn đề khách gặp + cảnh so sánh. Thứ tự mặc định: video xấu chạy → dừng hình khoanh vấn đề → 3D collagen/lật 3D sang đẹp → so sánh → **video sau khi đẹp chạy** – builder `build_pc07_xau_chay.py` (16/11 QC-20261115-VD3). Đoạn "video chạy" phải có chuyển động thật – kiem_tra báo "khung đứng yên" thì nhìn như ảnh → chọn đoạn khác.
 5. **Dùng HẾT chuyển động của tư liệu gốc**, mỗi đoạn dùng 1 lần; không lặp đi lặp lại 1 ảnh cắt hay 1 đoạn cho nhiều cảnh (15/11 VD7). Ảnh tĩnh chỉ ngắn, khi bắt buộc.
 6. Mỗi cảnh quay là **1 đoạn liền mạch**, không chắp đoạn 1–2s → không "nhảy ảnh/giật" (VD7 v4). Chạy `kiem_tra_muot.py` phải MƯỢT, không NHẢY CẢNH.
 7. Tốc độ gốc 1x, không quay chậm (thay bằng dừng hình nét + khoanh vùng).
@@ -43,7 +43,7 @@ Mục tiêu: lỗi sếp đã bắt **một lần thì không bao giờ lặp l�
 23. **Mùa Giáng sinh (15/11–24/12, sếp duyệt 15/11):** ưu đãi đã GIA HẠN – ghi "until Dec 24", KHÔNG còn "until Nov 30". Spa có voucher quà tặng. Mỗi video chọn 1 góc: đẹp kịp tiệc ("Christmas-ready in 30 minutes") · voucher tặng mẹ/người yêu · lương tháng 13 ("treat yourself") · đếm ngược suất. Chi tiết `quang-cao/ke-hoach-giang-sinh-2026.md`.
 
 **Quy trình**
-19. Sửa xong: ghi đè cùng link Drive, bản cũ vào Thùng rác, làm lại bản xem nhẹ, giữ mã QC + ngày theo thư mục tư liệu.
+19. Sửa xong: ghi đè cùng link Drive, bản cũ vào Thùng rác, làm lại bản xem nhẹ, giữ mã QC + ngày theo thư mục tư liệu. **Dựng/sửa xong LUÔN chạy `luu_thu_muc_lam_viec.sh <thư mục> <mã QC>`** – VD3 15/11 quên lưu nên lần sửa phải dựng lại từ đầu (16/11).
 20. Hai máy không cùng sửa 1 video: giành dòng trên Sheet trước; thấy máy khác đã nộp bản đạt thì không ghi đè.
 
 ## C. Sau mỗi lần SỬA XONG – BẮT BUỘC ghi bài học

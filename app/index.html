@@ -98,7 +98,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .panel{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);padding:16px}
 .panel h3{font-size:20px;margin-bottom:10px}
 .grid2{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:16px;align-items:start}
-.stack{display:grid;gap:10px}
+.stack{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
 .muted{color:var(--muted)}
 .note{font-size:12px;color:var(--muted)}
 .empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
@@ -428,6 +428,14 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
 :root[data-theme="dark"] .brand-logo.lt{display:none}:root[data-theme="dark"] .brand-logo.dk{display:block}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand-logo.lt{display:none}:root:not([data-theme="light"]) .brand-logo.dk{display:block}}
 @media (max-width:900px){.brand-logo{height:28px}}
+.th-i{width:16px;height:16px;font-size:10px;margin-left:4px}.tip-pop{position:absolute;z-index:9999;max-width:260px;background:var(--ink);color:var(--card,#fff);padding:8px 10px;border-radius:8px;font-size:12.5px;line-height:1.45;font-weight:400;box-shadow:0 6px 20px rgba(0,0,0,.25);white-space:pre-line}
+.btn.bl-del{background:#c0392b;color:#fff;border-color:#c0392b}
+[data-split]{cursor:help;text-decoration:underline dotted;text-underline-offset:3px;text-decoration-thickness:1px}
+.tblx{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}.daybar input[type=date]{max-width:100%}
+/* điện thoại: ô số liệu 2 cột, số không bị cắt; bảng cuộn ngang, cột số không xuống dòng */
+@media (max-width:640px){.pipeline{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+  .stage{padding:12px}.stage b{font-size:22px;overflow-wrap:anywhere;line-height:1.2}.stage span{display:block;line-height:1.35}.pipeline>.stage:last-child:nth-child(odd){grid-column:1/-1}
+  table.q th.n,table.q td.n{white-space:nowrap}table.q td:first-child{min-width:170px}}
 /* album phong cách */
 .pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .pc-card{background:var(--card);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
@@ -711,6 +719,23 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
     <details style="margin-top:20px"><summary class="note">Xem tất cả file trên Drive theo ngày</summary><div id="ptDays" class="daybar" role="group" aria-label="Chọn ngày"></div><div id="pTp" class="stack" style="margin-top:10px"><div class="empty">Đang tải…</div></div></details>
   </section>
 
+  <!-- ===== QUẢN TRỊ FANPAGE: KIỂM DUYỆT BÌNH LUẬN (16/11) ===== -->
+  <section class="view" id="v-p-bl">
+    <div class="head"><div>
+      <h2>Kiểm duyệt bình luận</h2>
+      <p>Nhân viên Đăng bài phụ trách. Máy quét bình luận trên mọi bài của các page MERAH (cả bài chạy quảng cáo, không tính tin nhắn) khoảng 10 phút/lần. AI đọc hiểu nghĩa (kể cả viết tắt, tiếng lóng, Taglish): dịch ra nghĩa xấu (chửi, chê, giễu cợt, spam, quảng cáo đối thủ) thì tự xoá – Sếp chỉ quyết có Chặn người viết không; câu không dịch được hoặc hiểu 2 kiểu thì nằm ở "Bình luận xấu → Chưa chắc chắn" cho Sếp quyết; khiếu nại thật không xoá mà để trả lời khách.</p>
+    </div><div class="row"><button class="btn" data-reload="p-bl">Tải lại</button></div></div>
+    <article class="panel stack">
+      <div class="row" style="gap:10px;align-items:end;flex-wrap:wrap">
+        <label class="f" for="blDay" style="min-width:150px">Ngày<select id="blDay"><option value="all">Tất cả ngày</option><option value="0" selected>Hôm nay</option><option value="1">Hôm qua</option><option value="7">7 ngày qua</option><option value="pick">Chọn ngày…</option></select></label>
+        <label class="f" for="blDate" id="blDateL" style="min-width:150px" hidden>Chọn ngày<input type="date" id="blDate"></label>
+        <label class="f" for="blPage" style="flex:1;min-width:180px">Page<select id="blPage"><option value="all">Tất cả page</option></select></label>
+      </div>
+      <div id="blTabs" class="daybar" role="group" aria-label="Lọc trạng thái"></div>
+      <div id="blList"><div class="empty">Đang tải…</div></div>
+    </article>
+  </section>
+
   <!-- ===== QUẢN TRỊ QC: FILE NGUỒN ===== -->
   <section class="view" id="v-q-nguon">
     <div class="head"><div>
@@ -756,6 +781,17 @@ a.tq-t:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
     <div class="pipeline" id="campSum" style="grid-template-columns:repeat(4,minmax(0,1fr))"></div>
     <div class="pipeline" id="campMet" style="grid-template-columns:repeat(5,minmax(0,1fr))"></div>
     <div id="campList" class="stack"><div class="empty">Bấm "Đồng bộ quảng cáo" để tải danh sách chiến dịch.</div></div>
+  </section>
+
+  <!-- ===== QUẢNG CÁO: CHẠY QC TỰ ĐỘNG (tab QC-TU-DONG, script canh_qc.py) ===== -->
+  <section class="view" id="v-a-auto">
+    <div class="head"><div>
+      <h2>Chạy QC tự động</h2>
+      <p>Máy tự tắt video chạm luật (10 phút/lần) và lúc <b>0h30</b> tự bật lại, giảm, tăng theo quy chuẩn – chỉ camp <b>CLAUDE</b>. Đề xuất tăng còn thiếu điều kiện hiện ở <b>Chờ Sếp duyệt</b>: bấm Duyệt thì 0h30 đêm đó máy tăng 20%.</p>
+    </div><div class="row"><button class="btn" data-reload="a-auto">Tải lại</button></div></div>
+    <div class="pipeline" id="qctSum" style="grid-template-columns:repeat(5,minmax(0,1fr))"></div>
+    <div id="qctWait" class="stack" style="margin-bottom:14px"></div>
+    <div id="qctList" class="stack"><div class="empty">Đang tải…</div></div>
   </section>
 
   <!-- ===== QUẢNG CÁO: THÀNH PHẨM ĐÃ TEST ===== -->
@@ -1253,7 +1289,7 @@ function renderQueue(){
 function selectedQ(){return [...document.querySelectorAll("#qBody input:checked")].map(x=>x.value)}
 function updateCmd(){
   const ids=selectedQ();
-  $("#cmd").textContent=ids.length?`Mình duyệt bài ${ids.join(", ")} trong artifact "${ARTIFACT_NAME}" (slug __APP_SLUG__).
+  $("#cmd").textContent=ids.length?`Mình duyệt bài ${ids.join(", ")} trong artifact "${ARTIFACT_NAME}" (slug 7da15101-3089-48f4-a826-a20c40c5e700).
 1. Đọc các bài này từ kho dữ liệu của artifact (collection posts), tải ảnh/video về bai-cho-duyet/<ID>/, ghi caption.md và cập nhật lich-dang/lich-dang.md với trạng thái "Đã duyệt".
 2. Dùng merah-publisher lên lịch các bài trên Facebook đúng page và giờ Philippines.
 Mình xác nhận đã duyệt các bài: ${ids.join(", ")}.`:"Chọn ít nhất một bài đã duyệt.";
@@ -1290,7 +1326,7 @@ function openFix(a){const d=$("#confirmDlg");$("#cfTitle").textContent="Yêu c�
   $("#cfNo").onclick=()=>{d.close();$("#cfTitle").textContent="Xác nhận"}}
 
 /* ---------- routing ---------- */
-const NAV_IC={"t-tq":"🏠","p-nguon":"📁","p-y":"💡","p-tp":"🖼️","p-dang":"📅","q-nguon":"📂","q-spy":"🔍","q-link":"🔗","q-y":"✍️","q-tp":"🎬","q-dang":"📣","a-camp":"📊","a-tp":"🏆","a-dl":"📈","f-all":"🗂️"};
+const NAV_IC={"t-tq":"🏠","p-nguon":"📁","p-y":"💡","p-tp":"🖼️","p-dang":"📅","p-bl":"💬","q-nguon":"📂","q-spy":"🔍","q-link":"🔗","q-y":"✍️","q-tp":"🎬","q-dang":"📣","a-camp":"📊","a-auto":"🤖","a-tp":"🏆","a-dl":"📈","f-all":"🗂️"};
 /* chữ hướng dẫn dài -> nút (!) cạnh tiêu đề, bấm mới hiện (sếp chốt 14/11/2026) */
 function infoize(){document.querySelectorAll(".view .head p:not([data-inf]), .view .panel > p.note:not([id]):not([data-inf]), .view .panel > .stack > p.note:not([id]):not([data-inf])").forEach(p=>{
   p.dataset.inf="1";if((p.textContent||"").trim().length<70)return;
@@ -1304,11 +1340,11 @@ const BRAND_LOGO_LT="",BRAND_LOGO_DK="";
 const SUB={t:[["t-tq","Tổng quan","Việc chờ Sếp, bài hôm nay, số quảng cáo"]],
   p:[["p-nguon","File nguồn tư liệu","Tư liệu theo ngày trên Drive"],["p-y","Content ý tưởng","Ý tưởng, câu hỏi cho Sếp"],["p-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["p-dang","Đăng bài lên fanpage","Lịch, duyệt, lên lịch"]],
   q:[["q-nguon","File nguồn tư liệu","SPA · SPY · theo ngày"],["q-spy","SPY đối thủ","Quảng cáo, video đối thủ"],["q-link","SPY bằng link","Dán link → tự tải, tự edit"],["q-y","Content ý tưởng","Hook, nội dung quảng cáo"],["q-tp","Media & thành phẩm","Xem trước, yêu cầu sửa"],["q-dang","Đăng bài lên page","Chọn page, duyệt đăng"]],
-  a:[["a-camp","Chiến dịch test","Camp CLAUDE, đánh giá"],["a-tp","Thành phẩm đã test","Giá mess, CPO, Win"],["a-dl","Đo lường","Slide phân tích khách & video"]],
+  a:[["a-camp","Chiến dịch test","Camp CLAUDE, đánh giá"],["a-auto","Chạy QC tự động","Tắt/bật/tăng/giảm, chờ duyệt"],["a-tp","Thành phẩm đã test","Giá mess, CPO, Win"],["a-dl","Đo lường","Slide phân tích khách & video"]],
   f:[["f-all","Thư mục & liên kết","Drive, Sheet, công cụ"]]};
 const GRP={t:["Trang chủ","Tổng quan","Việc đang chờ Sếp, bài đăng hôm nay và số quảng cáo."],p:["Phòng 1","Fanpage","Từ tư liệu tới bài đăng trên fanpage, làm theo thứ tự từng bước."],q:["Phòng 2","Sản xuất quảng cáo","Từ tư liệu tới bài quảng cáo đăng công khai trên đúng page."],a:["Phòng 3","Hiệu quả quảng cáo","Theo dõi chiến dịch và kết quả từng thành phẩm. Chỉ xem, cập nhật khi bấm Đồng bộ."],f:["Kho","Thư mục","Mọi thư mục, file và liên kết của MERAH."]};
-const SHOW={"t-tq":["t-tq"],"p-nguon":["p-nguon"],"p-y":["y-tuong"],"p-media":["anh","video"],"p-tp":["p-tp"],"p-dang":["lich"],
-  "q-nguon":["q-nguon"],"q-y":["quang-cao"],"q-spy":["q-spy"],"q-link":["q-link"],"q-media":["anh","video"],"q-tp":["q-tp"],"q-dang":["q-dang"],"a-camp":["a-camp"],"a-tp":["a-tp"],"a-dl":["a-dl"],"f-all":["f-all"]};
+const SHOW={"t-tq":["t-tq"],"p-nguon":["p-nguon"],"p-y":["y-tuong"],"p-media":["anh","video"],"p-tp":["p-tp"],"p-dang":["lich"],"p-bl":["p-bl"],
+  "q-nguon":["q-nguon"],"q-y":["quang-cao"],"q-spy":["q-spy"],"q-link":["q-link"],"q-media":["anh","video"],"q-tp":["q-tp"],"q-dang":["q-dang"],"a-camp":["a-camp"],"a-auto":["a-auto"],"a-tp":["a-tp"],"a-dl":["a-dl"],"f-all":["f-all"]};
 const OLD={"p-media":"p-tp","q-media":"q-tp",lich:"p-dang","y-tuong":"p-y",anh:"p-tp",video:"p-tp",dang:"p-dang","quang-cao":"q-y"};
 let curView="t-tq";
 function route(){let h=location.hash.slice(1);h=OLD[h]||h;if(!SHOW[h])h="t-tq";const g=h[0];curView=h;
@@ -1638,6 +1674,27 @@ async function answerHoi(row,val){if(!val){toast("Ghi câu trả lời trước"
   try{await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`HOI-SEP!E${row}`,values:[[val]]});
     const r=hoiRows.find(x=>x.row===row);if(r)r.a=val;renderHoi();toast("Đã gửi. Lượt quét kế tiếp làm theo câu trả lời này.")}catch(e){toast(errTxt(e))}}
 
+/* ---- Chạy QC tự động (tab QC-TU-DONG: A giờ · B loại · C cấp · D ID · E tên · F thay đổi · G lý do · H trạng thái · I mã) ---- */
+let qctRows=[];
+const QCT_C={"Đã tự tắt":"#c62828","Đã tự bật lại":"#2e7d32","Đã tự tăng":"#1565c0","Đã tăng theo duyệt":"#1565c0","Đã tự giảm":"#ef6c00","Đề xuất tăng":"#7b1fa2","Cảnh báo":"#b8860b"};
+async function loadQct(){const box=$("#qctList");if(!mcp){box.innerHTML='<div class="empty">App chưa được phép dùng Google Sheets.</div>';return}
+  try{const v=valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"QC-TU-DONG!A1:I3000"}));
+    qctRows=v.slice(1).map((r,i)=>({row:i+2,t:r[0]||"",loai:r[1]||"",cap:r[2]||"",id:r[3]||"",ten:r[4]||"",doi:r[5]||"",ly:r[6]||"",st:(r[7]||"").trim(),ma:r[8]||""})).filter(r=>r.loai);renderQct()}
+  catch(e){box.innerHTML=`<div class="empty">Chưa đọc được tab QC-TU-DONG: ${esc(errTxt(e))}</div>`}}
+function renderQct(){const rows=qctRows.slice().reverse();
+  const cnt=k=>rows.filter(r=>r.loai.startsWith(k)).length;
+  $("#qctSum").innerHTML=[["Đã tự tắt","⛔ Đã tắt"],["Đã tự bật","✅ Đã bật lại"],["Đã t","💰 Đã tăng"],["Đã tự giảm","📉 Đã giảm"],["Đề xuất","🗳️ Đề xuất"]].map(([k,l])=>`<div class="panel"><div class="note">${l}</div><b style="font-size:22px">${k==="Đã t"?rows.filter(r=>/tăng/.test(r.loai)&&r.loai.startsWith("Đã")).length:cnt(k)}</b></div>`).join("");
+  const wait=rows.filter(r=>r.loai==="Đề xuất tăng"&&r.st==="Chờ sếp duyệt");
+  $("#qctWait").innerHTML=wait.length?`<h3 style="margin:0">Chờ Sếp duyệt (${wait.length})</h3>`+wait.map(r=>`<article class="panel stack" style="border-color:#7b1fa2"><div class="row" style="justify-content:space-between"><b>🗳️ ${esc(r.ten)}</b><span class="note">${esc(r.t)}</span></div>
+    <p style="margin:0"><b>${esc(r.doi)}</b></p><p class="note" style="margin:0;white-space:pre-line">${esc(r.ly)}</p>
+    <div class="row"><button class="btn primary" data-qct="${r.row}" data-v="Đã duyệt">Duyệt tăng</button><button class="btn" data-qct="${r.row}" data-v="Bỏ">Bỏ</button></div></article>`).join(""):"";
+  const g=document.querySelector('#grpNav a[data-g="a"]');if(g)g.dataset.badge=wait.length?String(wait.length):"";
+  $("#qctList").innerHTML=rows.length?`<div class="tick-wrap"><table class="q"><thead><tr><th>Giờ</th><th>Việc</th><th>Đối tượng</th><th>Thay đổi</th><th>Lý do</th><th>Trạng thái</th></tr></thead><tbody>${rows.slice(0,300).map(r=>{const c=QCT_C[r.loai]||"#555";
+    return `<tr><td>${esc(r.t)}</td><td><span class="chip" style="--st:${c};background:${c};color:#fff">${esc(r.loai)}</span></td><td><b>${esc(r.ten)}</b><div class="note">${esc(r.cap)} · ${esc(r.id)}</div></td><td>${esc(r.doi)}</td><td class="note">${esc(r.ly)}</td><td>${esc(r.st)}</td></tr>`}).join("")}</tbody></table></div>`
+    :'<div class="empty">Chưa có việc nào. Máy ghi vào đây mỗi khi tự tắt/bật/tăng/giảm.</div>'}
+async function answerQct(row,val){try{await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`QC-TU-DONG!H${row}`,values:[[val]]});
+  const r=qctRows.find(x=>x.row===row);if(r)r.st=val;renderQct();toast(val==="Bỏ"?"Đã bỏ đề xuất.":"Đã duyệt. 0h30 đêm nay máy tăng 20%.")}catch(e){toast(errTxt(e))}}
+
 /* ---- Đăng bài QC (tab QUANG-CAO) ---- */
 const isoDay=t=>{t=String(t||"").trim();let m=t.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[0];m=t.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);return m?`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`:""};
 const postLink=id=>{id=String(id||"").trim();if(!id)return "—";const [pg,po]=id.includes("_")?id.split("_"):["",id];
@@ -1797,7 +1854,8 @@ async function pageOk(id){const p=S.posts.get(id);if(!p)return;const noMedia=!(p
 /* ---- QUẢNG CÁO: Meta Ads (chỉ đọc, chỉ khi bấm Đồng bộ) ---- */
 const num=x=>{const v=x&&typeof x==="object"?("value" in x?x.value:Array.isArray(x.values)&&x.values[0]?x.values[0].value:""):x;const n=parseFloat(String(v??"").replace(/,/g,""));return isFinite(n)?n:0};
 const vnd=n=>n?Math.round(n).toLocaleString("vi-VN")+"đ":"—";
-const isSales=o=>/SALES|CONVERSIONS/i.test(o||"");
+/* camp lượt mua: mục tiêu SALES, HOẶC tên "CLAUDE - LM - …" (camp LM qua tin nhắn có mục tiêu Tương tác – sếp hỏi 15/11) */
+const isSales=(o,n)=>/SALES|CONVERSIONS/i.test(o||"")||/^\s*CLAUDE\s*-\s*LM\b|\(LM\)|l[ưu][ợo]t mua/i.test(n||"");
 /* Mục Quảng cáo chỉ hiện quảng cáo test của nhân viên (tên bắt đầu CLAUDE hoặc có [CQC]); camp cũ của Sếp không hiện */
 const isTest=n=>/^\s*CLAUDE\b|\[CQC\]/i.test(n||"");
 const TEST_F={field:"name",operator:"CONTAINS_ANY",value:["CLAUDE","[CQC]"]};
@@ -1822,7 +1880,23 @@ const msgOf=x=>{const m=x[MSG_F];if(m!=null&&m!=="")return num(m);const ind=Stri
 function met(list){const t={sp:0,im:0,re:0,lc:0,rs:0,pu:0};for(const x of list){t.sp+=num(x.amount_spent);t.im+=num(x.impressions);t.re+=num(x.reach);t.lc+=num(x.link_click);const ind=String((x.results&&x.results.indicator)||"");const rv=num(x.results);t.rs+=msgOf(x);t.pu+=num(x.omni_purchase)||(/purchase/i.test(ind)?rv:0)}return t}
 const intf=n=>n?Math.round(n).toLocaleString("vi-VN"):"—";
 const pct=(a,b)=>b?(a/b*100).toLocaleString("vi-VN",{maximumFractionDigits:2})+"%":"—";
-const MET_TH=`<th class="n">Đã chi</th><th class="n">Số mess</th><th class="n">Giá mess</th><th class="n">Lượt mua</th><th class="n">Giá lượt mua</th>`;
+/* dấu "!" giải thích cột cho người mới (sếp yêu cầu 15/11) – bấm hiện chú thích */
+const TIP={
+ chi:"Tổng tiền đã tiêu. Ở bảng thành phẩm = cộng cả camp tin nhắn + camp lượt mua của video đó.",
+ smess:"Số người bắt đầu nhắn tin cho page từ quảng cáo.",
+ gmess:"Giá 1 tin nhắn = tiền camp TIN NHẮN ÷ số tin. Không tính tiền camp lượt mua. KPI ≤ 10.000đ.",
+ lmua:"Số đơn Meta ghi nhận (inbox đánh dấu 'đã mua'). Cộng cả đơn từ camp tin nhắn và camp lượt mua.",
+ gmua:"Giá 1 đơn = tiền đã chi ÷ số đơn. KPI ≤ 500.000đ.",
+ cpolm:"Giá 1 đơn CHỈ tính camp lượt mua (tên CLAUDE - LM - …) = tiền camp LM ÷ đơn camp LM. KPI ≤ 500.000đ.",
+ cpotong:"Giá 1 đơn tính cả 2 camp = tổng tiền tin nhắn + lượt mua ÷ tổng đơn. Dùng để so video nào ra đơn rẻ nhất.",
+ dg:"Mess: Win khi giá tin ≤ 10.000đ (đủ 3 ngày, >10k thì tắt). Lượt mua: Win khi giá đơn ≤ 500.000đ → video thắng, được lên camp lượt mua.",
+ tt:"Đang chạy · Hẹn giờ 06:00 PH (nhóm chưa tới giờ bắt đầu, chưa chi) · Meta đang duyệt · Đã tắt · Chưa lên camp. Đang chạy mà ghi 'chưa chi trong khoảng ngày đang xem' = đổi khoảng ngày rộng hơn để xem số."};
+const spl=s=>` data-split="${esc(s)}" title="${esc(s)}"`;
+const tipI=k=>`<button type="button" class="info-btn th-i" data-tip="${esc(TIP[k]||"")}" aria-label="Giải thích cột">!</button>`;
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".th-i,[data-split]");document.querySelectorAll(".tip-pop").forEach(x=>x.remove());if(!b)return;e.preventDefault();e.stopPropagation();
+  const d=document.createElement("div");d.className="tip-pop";d.setAttribute("role","tooltip");d.textContent=b.dataset.tip||b.dataset.split;document.body.appendChild(d);const r=b.getBoundingClientRect();
+  d.style.top=(scrollY+r.bottom+6)+"px";d.style.left=Math.max(8,Math.min(scrollX+r.left-120,scrollX+document.documentElement.clientWidth-d.offsetWidth-8))+"px"},true);
+const MET_TH=`<th class="n">Đã chi${tipI("chi")}</th><th class="n">Số mess${tipI("smess")}</th><th class="n">Giá mess${tipI("gmess")}</th><th class="n">Lượt mua${tipI("lmua")}</th><th class="n">Giá lượt mua${tipI("gmua")}</th>`;
 function metTd(m,ms=m.sp){return `<td class="n">${vnd(m.sp)}</td><td class="n">${intf(m.rs)}</td><td class="n">${m.rs?vnd(ms/m.rs):"—"}</td><td class="n">${intf(m.pu)}</td><td class="n">${m.pu?vnd(m.sp/m.pu):"—"}</td>`}
 async function adsAll(level,fields,filtering,rng){let out=[],cursor,guard=0;const ra=typeof rng==="string"?{date_preset:rng}:(rng||adrArgs());
   do{const r=await callT(ADS_SRV,"ads_get_ad_entities",{ad_account_id:AD_ACC,level,fields,filtering,...ra,include_additional_context:false,reporting_purpose:["metric_lookup"],advertiser_job:"report_measure_or_look_up",client_conversation_id:CONV_ID,...(cursor?{cursor}:{})});
@@ -1832,17 +1906,17 @@ let danhGia=new Map();
 async function loadDanhGia(){try{const v=valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"QC-DANH-GIA!A1:F1000"}));
   danhGia=new Map(v.slice(1).filter(r=>r[0]||r[1]).map(r=>[String(r[0]||r[1]).trim(),{label:r[3]||"",note:r[4]||"",at:r[5]||""}]))}catch(e){danhGia=new Map()}}
 function campLabel(c){const spend=num(c.amount_spent);const res=num(c.results);const pur=num(c.omni_purchase);
-  if(isSales(c.objective)){const cpo=pur?spend/pur:0;if(!pur)return spend>LM_STOP?["Tệ","chưa có lượt mua"]:["Chưa đủ dữ liệu",""];return cpo<=KPI_CPO?["Tốt",""]:cpo<=KPI_CPO*1.5?["Khá",""]:["Tệ",""]}
+  if(isSales(c.objective,c.name)){const cpo=pur?spend/pur:0;if(!pur)return spend>LM_STOP?["Tệ","chưa có lượt mua"]:["Chưa đủ dữ liệu",""];return cpo<=KPI_CPO?["Tốt",""]:cpo<=KPI_CPO*1.5?["Khá",""]:["Tệ",""]}
   const cpr=res?spend/res:0;if(!res)return spend>KPI_MESS*5?["Tệ","chưa có tin nhắn"]:["Chưa đủ dữ liệu",""];return cpr<=KPI_MESS?["Tốt",""]:cpr<=KPI_MESS*1.5?["Khá",""]:["Tệ",""]}
 const LB_COL={"Tốt":"var(--ok)","Khá":"var(--warn)","Tệ":"var(--danger)","Win":"var(--ok)","Không win":"var(--danger)","Đã tắt":"var(--muted)"};
 async function syncCamp(){if(!mcp){toast("App chưa được phép dùng kết nối");return}
   const btn=$("#campSync");btn.disabled=true;$("#campTime").textContent="Đang đồng bộ…";
   try{await loadDanhGia();
-    const rng=adrArgs(),label=adrLabel();
+    const rng=adrArgs(),label=adrLabel(),run=S.campRun=(S.campRun||0)+1;
     const camps=(await adsAll("campaign",["id","name","effective_status","objective","daily_budget","lifetime_budget",...MET_F],[TEST_F],rng)).filter(c=>isTest(c.name)&&!gone(c));
     const sets=(await adsAll("adset",["id","name","campaign_id","effective_status","daily_budget","lifetime_budget",...MET_F],[TEST_F],rng)).filter(a=>isTest(a.name)&&!gone(a));
     let ads=[];if(camps.length)try{ads=(await adsAll("ad",["id","name","adset_id","campaign_id","effective_status",...MET_F],[{field:"campaign.id",operator:"IN",value:camps.map(c=>String(c.id))}],rng)).filter(a=>!gone(a))}catch(e){}
-    const snap={at:new Date().toISOString(),camps,sets,ads,label};S.campSnap=snap;renderCamp();if(db)try{await db.doc("qc/campaigns").set(snap)}catch(e){}
+    if(run!==S.campRun)return;const snap={at:new Date().toISOString(),camps,sets,ads,label};S.campSnap=snap;renderCamp();if(db)try{await db.doc("qc/campaigns").set(snap)}catch(e){}
   }catch(e){$("#campTime").textContent=errTxt(e)}finally{btn.disabled=false}}
 function renderCamp(){const s0=S.campSnap;if(!s0)return;const s={...s0,camps:(s0.camps||[]).filter(c=>isTest(c.name)),sets:(s0.sets||[]).filter(a=>isTest(a.name))};const adsBy=new Map();for(const d of s0.ads||[]){(adsBy.get(d.adset_id)||adsBy.set(d.adset_id,[]).get(d.adset_id)).push(d)}const setsBy=new Map();for(const a of s.sets||[]){(setsBy.get(a.campaign_id)||setsBy.set(a.campaign_id,[]).get(a.campaign_id)).push(a)}
   const budget=c=>{const own=num(c.daily_budget)||0;if(own)return own;return (setsBy.get(c.id)||[]).reduce((t,a)=>t+num(a.daily_budget),0)};
@@ -1850,14 +1924,14 @@ function renderCamp(){const s0=S.campSnap;if(!s0)return;const s={...s0,camps:(s0
   const total=(s.camps||[]).reduce((t,c)=>t+budget(c),0);
   const L=s.label||"7 ngày qua",cs=s.camps||[],on=c=>/^ACTIVE$/i.test(c.effective_status||"");
   $("#campSum").innerHTML=[["Chiến dịch test",cs.length],["Đang chạy",cs.filter(on).length],["Đang tắt",cs.filter(c=>!on(c)).length],["Ngân sách/ngày (đang chạy)",vnd(cs.filter(on).reduce((t,c)=>t+budget(c),0))]].map(([l,v])=>`<div class="stage" style="cursor:default"><b>${esc(String(v))}</b><span>${esc(l)}</span></div>`).join("");
-  const T=met(cs),mess=met(cs.filter(c=>!isSales(c.objective))),sale=met(cs.filter(c=>isSales(c.objective)));
-  $("#campMet").innerHTML=[["Đã chi · "+L,vnd(T.sp)],["Số mess",intf(T.rs)],["Giá mess",T.rs?vnd(mess.sp/T.rs):"—"],["Lượt mua",intf(T.pu)],["Giá lượt mua",T.pu?vnd(T.sp/T.pu):"—"]].map(([l,v])=>`<div class="stage" style="cursor:default"><b>${esc(String(v))}</b><span>${esc(l)}</span></div>`).join("");
+  const T=met(cs),mess=met(cs.filter(c=>!isSales(c.objective,c.name))),sale=met(cs.filter(c=>isSales(c.objective,c.name)));
+  $("#campMet").innerHTML=[["Đã chi · "+L,vnd(T.sp),"chi"],["Số mess",intf(T.rs),"smess"],["Giá mess",mess.rs?vnd(mess.sp/mess.rs):"—","gmess"],["Lượt mua",intf(T.pu),"lmua"],["Giá lượt mua",T.pu?vnd(T.sp/T.pu):"—","gmua"]].map(([l,v,k])=>`<div class="stage" style="cursor:default"><b${k==="chi"?spl(`Camp tin nhắn: ${vnd(mess.sp)}\nCamp lượt mua: ${vnd(sale.sp)}`):k==="smess"?spl(`${intf(mess.rs)} mess từ camp tin nhắn\n${intf(sale.rs)} mess từ camp lượt mua`):k==="lmua"?spl(`${intf(mess.pu)} đơn từ camp tin nhắn\n${intf(sale.pu)} đơn từ camp lượt mua`):""}>${esc(String(v))}</b><span>${esc(l)}${tipI(k)}</span></div>`).join("");
   $("#campTime").textContent="Số liệu: "+L+" · cập nhật "+new Date(s.at).toLocaleString("vi-VN");
   const stc=c=>on(c)?'<span class="chip" style="--st:var(--ok)">Đang chạy</span>':'<span class="chip" style="--st:var(--muted)">Đang tắt</span>';
   const bud=x=>num(x.daily_budget)?vnd(num(x.daily_budget))+"/ngày":num(x.lifetime_budget)?vnd(num(x.lifetime_budget))+" trọn đời":"theo chiến dịch";
   $("#campList").innerHTML=cs.length?`<div class="panel" style="overflow-x:auto"><table class="q am"><thead><tr><th>Chiến dịch</th>${MET_TH}<th>Đánh giá</th><th>Trạng thái</th></tr></thead><tbody>${cs.map(c=>{const dg=danhGia.get(c.id)||danhGia.get(c.name)||{};const [auto,why]=campLabel(c);const lb=dg.label||auto;const ss=setsBy.get(c.id)||[];
     const arrow=(id,n,cls)=>n?`<button class="camp-x" data-campx="${esc(id)}">▸ ${esc(cls)}</button>`:`<b>${esc(cls)}</b>`;
-    return `<tr class="lv-c"><td style="white-space:normal;min-width:240px">${arrow(c.id,ss.length,c.name)}<div class="note">${isSales(c.objective)?"Lượt mua":"Tin nhắn"} · ${ss.length} nhóm</div>${dg.note||why?`<div class="note"><b>Nhà quảng cáo:</b> ${esc(dg.note||why)}</div>`:""}</td>${metTd(met([c]))}<td><span class="chip" style="--st:${LB_COL[lb]||"var(--muted)"}">${esc(lb)}</span></td><td>${stc(c)}</td></tr>`+
+    return `<tr class="lv-c"><td style="white-space:normal;min-width:240px">${arrow(c.id,ss.length,c.name)}<div class="note">${isSales(c.objective,c.name)?"Lượt mua":"Tin nhắn"} · ${ss.length} nhóm</div>${dg.note||why?`<div class="note"><b>Nhà quảng cáo:</b> ${esc(dg.note||why)}</div>`:""}</td>${metTd(met([c]))}<td><span class="chip" style="--st:${LB_COL[lb]||"var(--muted)"}">${esc(lb)}</span></td><td>${stc(c)}</td></tr>`+
       ss.map(a=>{const aa=adsBy.get(a.id)||[];return `<tr class="sub lv-s" data-of="${esc(c.id)}" data-path="${esc(c.id)}" hidden><td style="white-space:normal">${arrow(a.id,aa.length,a.name)}<div class="note">${aa.length} quảng cáo</div></td>${metTd(met([a]))}<td></td><td>${stc(a)}</td></tr>`+
         aa.map(d=>`<tr class="sub ad lv-a" data-of="${esc(a.id)}" data-path="${esc(c.id)} ${esc(a.id)}" hidden><td style="white-space:normal">${esc(d.name)}</td>${metTd(met([d]))}<td></td><td>${stc(d)}</td></tr>`).join("")}).join("")}).join("")}</tbody>
     <tfoot><tr><td>Tổng ${cs.length} chiến dịch</td>${metTd(T,mess.sp)}<td></td><td></td></tr></tfoot></table></div>
@@ -1871,36 +1945,40 @@ function parseAdName(n){const m=(n||"").match(CODE_RE);const d=(n||"").match(/\b
 async function syncCre(){if(!mcp){toast("App chưa được phép dùng kết nối");return}
   const btn=$("#creSync");btn.disabled=true;$("#creTime").textContent="Đang đồng bộ…";
   try{await loadDanhGia();
-    const label=adrLabel();const ads=(await adsAll("ad",["id","name","campaign_name","objective","status","effective_status",...MET_F,"created_time"],[TEST_F],adrArgs())).filter(a=>(isTest(a.name)||isTest(a.campaign_name))&&!gone(a));
+    const label=adrLabel(),run=S.creRun=(S.creRun||0)+1;const ads=(await adsAll("ad",["id","name","campaign_name","adset_id","objective","status","effective_status",...MET_F,"created_time"],[TEST_F],adrArgs())).filter(a=>(isTest(a.name)||isTest(a.campaign_name))&&!gone(a));
+    /* giờ bắt đầu nhóm: chỉ nhóm có start_time ở TƯƠNG LAI mới là "Hẹn giờ" (lỗi 16/11: video chạy mấy ngày vẫn hiện Hẹn giờ khi khoảng ngày chưa có số) */
+    let sets=[];try{sets=(await adsAll("adset",["id","name","start_time","effective_status"],[TEST_F],adrArgs())).map(x=>({id:x.id,start:x.start_time||""}))}catch(e){}
     let tp=[];try{const top=await kids(FOLD["q-tp"]);for(const fo of top.filter(f=>kindOf(f)==="Thư mục")){const fs=await kids(fo.id);tp.push(...fs.filter(f=>["Ảnh","Video"].includes(kindOf(f))).map(f=>({...f,_day:folderDate(fo)})))}
       tp.push(...top.filter(f=>["Ảnh","Video"].includes(kindOf(f))).map(f=>({...f,_day:(f.createdTime||"").slice(0,10)})))}catch(e){}
     let qc=[];try{qc=(await loadQcRows()).map(r=>({day:isoDay(r.date),name:r.name,type:r.type,link:r.link,post:r.post,page:r.page,st:r.st}))}catch(e){}
-    const snap={at:new Date().toISOString(),label,ads,qc,tp:tp.map(f=>({title:f.title,mimeType:f.mimeType,viewUrl:f.viewUrl,_day:f._day,createdTime:f.createdTime}))};S.creSnap=snap;renderCre();if(db)try{await db.doc("qc/creatives").set(snap)}catch(e){}
+    if(run!==S.creRun)return;const snap={at:new Date().toISOString(),label,ads,sets,qc,tp:tp.map(f=>({title:f.title,mimeType:f.mimeType,viewUrl:f.viewUrl,_day:f._day,createdTime:f.createdTime}))};S.creSnap=snap;renderCre();if(db)try{await db.doc("qc/creatives").set(snap)}catch(e){}
   }catch(e){$("#creTime").textContent=errTxt(e)}finally{btn.disabled=false}}
 function driveOpen(u){u=String(u||"");const m=u.match(/\/file\/d\/([\w-]+)/)||u.match(/[?&]id=([\w-]+)/);return m?`https://drive.google.com/file/d/${m[1]}/view`:u}
 const isOkQc=st=>/đã duyệt|đã đăng/i.test(String(st||""));
 function renderCre(){const s=S.creSnap;if(!s)return;const rows=new Map();
   if((s.qc||[]).length&&(s.qc||[]).every(q=>q.st===undefined)&&mcp&&!renderCre._auto){renderCre._auto=1;setTimeout(syncCre,300)}
-  const get=(key,init)=>{if(!rows.has(key))rows.set(key,{...init,mSpend:0,mRes:0,lSpend:0,lPur:0,allPur:0,ads:0,on:0,im:0,lc:0,link:""});return rows.get(key)};
+  const get=(key,init)=>{if(!rows.has(key))rows.set(key,{...init,mSpend:0,mRes:0,mPur:0,lSpend:0,lRes:0,lPur:0,allPur:0,ads:0,on:0,im:0,lc:0,link:""});return rows.get(key)};
   const tpLink=new Map();for(const f of s.tp||[]){const {code}=parseAdName(f.title.replace(/\.[^.]+$/,""));if(code&&!tpLink.has(f._day+"|"+code))tpLink.set(f._day+"|"+code,f.viewUrl)}
   for(const q of s.qc||[]){if(q.st!==undefined&&!isOkQc(q.st))continue;const {code}=parseAdName(q.name);if(!q.day&&!code)continue;const r=get(q.day+"|"+(code||q.name),{day:q.day,name:code||q.name,type:q.type||(code&&code.startsWith("VD")?"Video":"Ảnh")});
     if(q.post)r.post=q.post;if(q.link)r.link=driveOpen(q.link);else if(!r.link)r.link=tpLink.get(q.day+"|"+(code||q.name))||"";if(q.page)r.page=q.page;r.ok=true}
   const byPost=new Map([...rows.values()].filter(r=>r.post).map(r=>[r.post.split("_").pop(),r]));
+  const startBy=new Map((s.sets||[]).map(x=>[String(x.id),x.start]));
   for(const a of s.ads||[]){if(!isTest(a.name)&&!isTest(a.campaign_name))continue;const {code,date}=parseAdName(a.name);const day=date||(a.created_time||"").slice(0,10);let key=code?day+"|"+code:"camp|"+a.campaign_name;if(code&&!rows.has(key)){const m=[...rows.values()].filter(x=>x.name===code&&x.day<=day).sort((x,y)=>y.day.localeCompare(x.day))[0];if(m)key=m.day+"|"+code}if(!code||!rows.has(key))continue;
     const r=get(key,{day:code?day:(a.created_time||"").slice(0,10),name:code||a.campaign_name,type:code?(code.startsWith("VD")?"Video":"Ảnh"):"—",old:!code});
-    r.ads++;if(String(a.status||"").toUpperCase()!=="PAUSED"&&!/PAUSED/i.test(a.effective_status||""))r.on++;const sp=num(a.amount_spent),pur=num(a.omni_purchase);r.allPur+=pur;r.im+=num(a.impressions);r.lc+=num(a.link_click);
-    if(isSales(a.objective)){r.lSpend+=sp;r.lPur+=pur}else{r.mSpend+=sp;r.mRes+=msgOf(a)}}
+    r.ads++;const onA=String(a.status||"").toUpperCase()!=="PAUSED"&&!/PAUSED/i.test(a.effective_status||"");if(onA){r.on++;const st=startBy.get(String(a.adset_id||""));if(st&&Date.parse(st)>Date.now())r.sched=(r.sched||0)+1;else if(/PENDING|IN_PROCESS|REVIEW/i.test(a.effective_status||""))r.review=(r.review||0)+1;else r.live=(r.live||0)+1}const sp=num(a.amount_spent),pur=num(a.omni_purchase);r.allPur+=pur;r.im+=num(a.impressions);r.lc+=num(a.link_click);
+    if(isSales(a.objective,a.campaign_name)){r.lSpend+=sp;r.lPur+=pur;r.lRes+=msgOf(a)}else{r.mSpend+=sp;r.mRes+=msgOf(a);r.mPur+=pur}}
   const days=new Map();for(const r of rows.values()){if(!days.has(r.day))days.set(r.day,[]);days.get(r.day).push(r)}
   const v1=r=>{if(!r.mSpend)return "—";const c=r.mRes?r.mSpend/r.mRes:Infinity;if(r.ads&&!r.on)return c<=KPI_MESS?"Đã tắt":"Không win";if(r.mRes<5&&r.mSpend<50000)return "Đang test";return c<=KPI_MESS?"Win":r.mSpend>KPI_MESS*5?"Không win":"Đang test"};
-  const v2=r=>!r.lSpend?"—":r.lPur&&r.lSpend/r.lPur<=KPI_CPO?"Win":r.lSpend>LM_STOP?"Không win":"Đang test";
+  /* lượt mua: tính cả đơn ra từ camp tin nhắn (sếp nhắc 15/11) – CPO tổng ≤ 500k = Win */
+  const v2=r=>{const tot=r.mSpend+r.lSpend;if(r.lSpend)return r.lPur&&r.lSpend/r.lPur<=KPI_CPO?"Win":r.allPur&&tot/r.allPur<=KPI_CPO?"Win":r.lSpend>LM_STOP?"Không win":"Đang test";return r.allPur?(tot/r.allPur<=KPI_CPO?"Win":"Đang test"):"—"};
   const chip=t=>t==="—"?"—":`<span class="chip" style="--st:${LB_COL[t]||"var(--warn)"}">${esc(t)}</span>`;
   $("#creTime").textContent="Cập nhật lúc "+new Date(s.at).toLocaleString("vi-VN")+" · số liệu: "+(s.label||"30 ngày qua");
   $("#creList").innerHTML=days.size?[...days.keys()].sort().reverse().map(d=>`<article class="panel" style="overflow-x:auto" data-d="${esc(d||"")}"><h3>${d?fmtDate(d)+" · "+d.split("-").reverse().join("/"):"Không rõ ngày"}</h3>
-    <table class="q"><thead><tr><th>Tên tư liệu</th><th>ID post</th><th>Thể loại</th><th>Tình trạng</th><th class="n">Đã chi</th><th>Giá mess</th><th>CPO (camp lượt mua)</th><th>CPO tổng</th><th>Đánh giá</th></tr></thead><tbody>
+    <table class="q"><thead><tr><th>Tên tư liệu</th><th>ID post</th><th>Thể loại</th><th>Tình trạng${tipI("tt")}</th><th class="n">Đã chi${tipI("chi")}</th><th>Giá mess${tipI("gmess")}</th><th class="n">Lượt mua${tipI("lmua")}</th><th>CPO (camp lượt mua)${tipI("cpolm")}</th><th>CPO tổng${tipI("cpotong")}</th><th>Đánh giá${tipI("dg")}</th></tr></thead><tbody>
     ${days.get(d).map(r=>{const dg=danhGia.get(r.name)||{};const tot=r.mSpend+r.lSpend;
       return `<tr><td>${r.link?`<a href="${esc(driveOpen(r.link))}" target="_blank" rel="noopener" title="Mở video trên Google Drive">▶ ${esc(r.name)}</a>`:esc(r.name)}${r.old?'<div class="note">quảng cáo cũ (theo tên chiến dịch)</div>':""}${r.page?`<div class="note">${esc(r.page)}</div>`:""}</td><td>${r.post?postLink(r.post):"—"}</td><td>${esc(r.type)}</td>
-      <td>${!r.ads?'<span class="chip" style="--st:var(--muted)">Chưa lên camp</span>':r.on&&!r.im&&!(r.mSpend+r.lSpend)?'<span class="chip" style="--st:var(--warn)" title="Quảng cáo đã bật nhưng chưa có lượt hiển thị: nhóm đang hẹn giờ bắt đầu hoặc Meta đang duyệt">⏰ Hẹn giờ / chờ chạy</span>':r.on?'<span class="chip" style="--st:var(--ok)">Đang chạy</span>':'<span class="chip" style="--st:var(--danger)">Đã tắt</span>'}</td>
-      <td class="n">${vnd(tot)}</td><td>${r.mRes?vnd(r.mSpend/r.mRes):r.mSpend?"chưa có tin":"—"}</td><td>${r.lPur?vnd(r.lSpend/r.lPur):r.lSpend?"chưa có lượt mua":"—"}</td><td>${r.allPur?vnd(tot/r.allPur):"—"}</td>
+      <td>${!r.ads?'<span class="chip" style="--st:var(--muted)">Chưa lên camp</span>':r.live?`<span class="chip" style="--st:var(--ok)">Đang chạy</span>${!(r.mSpend+r.lSpend)?`<div class="note">chưa chi trong khoảng ngày đang xem</div>`:""}${r.sched?`<div class="note">+${r.sched} quảng cáo hẹn giờ</div>`:""}`:r.review?'<span class="chip" style="--st:var(--warn)" title="Meta đang duyệt quảng cáo, duyệt xong tự chạy">⏳ Meta đang duyệt</span>':r.sched?'<span class="chip" style="--st:var(--warn)" title="Nhóm đặt giờ bắt đầu trong tương lai (06:00 PH), trước giờ đó không chi">⏰ Hẹn giờ 06:00 PH</span>':'<span class="chip" style="--st:var(--danger)">Đã tắt</span>'}</td>
+      <td class="n"${spl(`Camp tin nhắn: ${vnd(r.mSpend)}\nCamp lượt mua: ${vnd(r.lSpend)}`)}>${vnd(tot)}</td><td${spl(`${intf(r.mRes)} mess từ camp tin nhắn (tính giá mess)\n${intf(r.lRes)} mess từ camp lượt mua (không tính vào giá mess)`)}>${r.mRes?vnd(r.mSpend/r.mRes):r.mSpend?"chưa có tin":"—"}</td><td class="n"${spl(`${intf(r.mPur)} đơn từ camp tin nhắn\n${intf(r.lPur)} đơn từ camp lượt mua`)}>${r.allPur?`<b style="color:var(--ok)">${intf(r.allPur)}</b>${r.allPur>r.lPur?`<div class="note">${intf(r.allPur-r.lPur)} từ camp tin nhắn</div>`:""}`:"—"}</td><td>${r.lPur?vnd(r.lSpend/r.lPur):r.lSpend?"chưa có lượt mua":"—"}</td><td>${r.allPur?vnd(tot/r.allPur):"—"}</td>
       <td>${dg.label?chip(dg.label):`Mess: ${chip(v1(r))}<br>Lượt mua: ${chip(v2(r))}`}${dg.note?`<div class="note">${esc(dg.note)}</div>`:""}</td></tr>`}).join("")}</tbody></table></article>`).join("")
     :'<div class="empty">Chưa có thành phẩm nào được duyệt. Sếp duyệt ở Sản xuất quảng cáo → Media &amp; thành phẩm, rồi bấm Đồng bộ quảng cáo.</div>';dayFilterDom("at",$("#creList"));}
 
@@ -1935,6 +2013,8 @@ function grp(rows,kf){const m=new Map();for(const r of rows||[]){const k=kf(r);(
 async function loadDLNotes(){try{const v=valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"DO-LUONG!A1:F800"})).slice(1).filter(r=>r[0]&&r[2]);
   const last=v.map(r=>String(r[0])).sort().pop()||"";DL.nDate=last;DL.notes=v.filter(r=>String(r[0])===last).map(r=>({range:r[1]||"",muc:String(r[2]).trim().toUpperCase(),txt:r[3]||"",de:r[4]||"",ut:r[5]||""}))}catch(e){DL.notes=[]}}
 async function loadDL(){if(!mcp){toast("App chưa được phép dùng kết nối");return}
+  /* 16/11: chốt khoảng ngày + nhãn NGAY LÚC BẮT ĐẦU; lượt cũ (sếp đổi ngày khi đang tải) bị bỏ, không ghi đè số mới – trước đây số 7 ngày hiện kèm nhãn "Hôm nay" */
+  const run=DL.run=(DL.run||0)+1,stale=()=>run!==DL.run,label=adrLabel();DL.d=null;renderDL();
   const btn=$("#dlSync");btn.disabled=true;$("#dlTime").textContent="Đang phân tích…";
   try{const rng=adrArgs(),sc=$("#dlScope").value,test=sc==="test";lsSet("merah_dlscope",sc);const base=test?{level:"campaign",filtering:[TEST_F]}:{level:"ad_account"};
     const F=["amount_spent","impressions","reach","link_click",MSG_F,"omni_purchase"];
@@ -1945,17 +2025,17 @@ async function loadDL(){if(!mcp){toast("App chưa được phép dùng kết n�
     if(sc.startsWith("pg:")){const pid=sc.slice(3);let accs;try{accs=await dlAccounts()}catch(e){accs={ok:[{id:AD_ACC,name:"Tài khoản quảng cáo chính"}],bad:[]}}
       let done=0;$("#dlTime").textContent=`Đang quét ${accs.ok.length} tài khoản quảng cáo…`;
       const per=await pool(accs.ok,4,async ac=>{const l=await adsQ({level:"ad",...rng,fields:[...VF,"creative_id"],filtering:[{field:"amount_spent",operator:"GREATER_THAN",value:["0"]}],limit:500},25,ac.id).catch(()=>[]);done++;$("#dlTime").textContent=`Đang quét tài khoản ${done}/${accs.ok.length}…`;return (Array.isArray(l)?l:[]).map(x=>({...x,_acc:ac.id}))});
-      const all=per.flat();$("#dlTime").textContent=`Đang xác định page của ${all.length} quảng cáo…`;await creativePages(all.map(x=>String(x.creative_id||"")));
+      if(stale())return;const seenAd=new Set(),all=per.flat().filter(x=>{const id=String(x.id);return seenAd.has(id)?false:seenAd.add(id)});$("#dlTime").textContent=`Đang xác định page của ${all.length} quảng cáo…`;await creativePages(all.map(x=>String(x.creative_id||"")));
       fillPageOpts(Object.values(CR_PG));$("#dlScope").value=sc;
       const pads=all.filter(x=>CR_PG[String(x.creative_id)]===pid);const byAcc=new Map();for(const x of pads)(byAcc.get(x._acc)||byAcc.set(x._acc,[]).get(x._acc)).push(String(x.id));
       const qb=async(fields,breakdowns)=>{try{const out=[];for(const [acc,ids] of byAcc)for(let k=0;k<ids.length;k+=40)out.push(...await adsQ({level:"ad",filtering:[{field:"ad.id",operator:"IN",value:ids.slice(k,k+40)}],...rng,fields,breakdowns,limit:1000},10,acc));return out}catch(e){return {err:errTxt(e)}}};
       $("#dlTime").textContent="Đang phân tích chân dung khách…";
       const [ag,pl,rg]=await Promise.all([qb(F,["age","gender"]),qb(F,["publisher_platform","platform_position"]),qb(["amount_spent","reach","impressions"],["region"]),loadDLNotes()]);
       const accUsed=accs.ok.filter(ac=>byAcc.has(ac.id)).map(ac=>({name:ac.name,n:byAcc.get(ac.id).length,sp:pads.filter(x=>x._acc===ac.id).reduce((t,x)=>t+num(x.amount_spent),0)}));
-      DL.d={at:new Date(),label:adrLabel(),test:false,page:pid,nAds:pads.length,accUsed,accBad:accs.bad,nAcc:accs.ok.length,tot:pads,ag,pl,rg,ads:pads};renderDL();return}
+      if(stale())return;DL.d={at:new Date(),label,test:false,page:pid,nAds:pads.length,accUsed,accBad:accs.bad,nAcc:accs.ok.length,tot:pads,ag,pl,rg,ads:pads};renderDL();return}
     const [tot,ag,pl,rg,ads]=await Promise.all([q(F),q(F,["age","gender"]),q(F,["publisher_platform","platform_position"]),q(["amount_spent","reach","impressions"],["region"]),adq,loadDLNotes()]);
-    DL.d={at:new Date(),label:adrLabel(),test,tot,ag,pl,rg,ads};renderDL();
-  }catch(e){$("#dlTime").textContent=errTxt(e)}finally{btn.disabled=false}}
+    if(stale())return;DL.d={at:new Date(),label,test,tot,ag,pl,rg,ads};renderDL();
+  }catch(e){if(!stale())$("#dlTime").textContent=errTxt(e)}finally{if(!stale())btn.disabled=false}}
 const kpi=(l,v,sub="",col="")=>`<div><b${col?` style="color:${col}"`:""}>${v}</b><span>${esc(l)}</span>${sub?`<small>${sub}</small>`:""}</div>`;
 const barRow=(l,v,max,txt,cls="")=>`<div class="bar ${cls}"><span>${esc(l)}</span><i style="width:${max?Math.max(1,v/max*100):0}%"></i><b>${txt}</b></div>`;
 const gm=m=>m.rs?vnd(m.sp/m.rs):"—",cpo=m=>m.pu?vnd(m.sp/m.pu):"—";
@@ -1963,7 +2043,7 @@ function insBox(lines){lines=lines.filter(Boolean);return lines.length?`<div cla
 function notesFor(muc){const n=DL.notes.filter(x=>x.muc===muc);if(!n.length)return "";const UT={"Cao":"var(--danger)","Vừa":"var(--warn)","Thấp":"var(--muted)"};
   return `<h4 style="margin:14px 0 6px">Nhân viên Đo lường nhận định <span class="note">(${esc(DL.nDate.split("-").reverse().join("/"))}${n[0].range?" · số liệu "+esc(n[0].range):""})</span></h4><div class="dl-notes">${n.map(x=>`<div><p style="margin:0">${linkify?linkify(esc(x.txt)):esc(x.txt)}</p>${x.de?`<p class="note" style="margin:4px 0 0"><b>Đề xuất:</b> ${esc(x.de)}</p>`:""}${x.ut?`<span class="chip" style="--st:${UT[x.ut]||"var(--muted)"};margin-top:6px">Ưu tiên ${esc(x.ut)}</span>`:""}</div>`).join("")}</div>`}
 const errBox=x=>x&&x.err?`<div class="empty">Không đọc được: ${esc(x.err)}</div>`:"";
-function slideHTML(key){const d=DL.d;if(!d)return '<div class="empty">Bấm "Phân tích lại" để tải số liệu.</div>';const L=d.label+(d.page?` · page ${PG_NAME.get(d.page)||d.page} (${d.nAds} quảng cáo, ${(d.accUsed||[]).length} tài khoản)`:d.test?" · chỉ camp test":" · toàn tài khoản");
+function slideHTML(key){const d=DL.d;if(!d)return '<div class="empty">Đang tải số liệu đúng khoảng ngày đã chọn… (nếu lâu không thấy, bấm "Phân tích lại")</div>';const L=d.label+(d.page?` · page ${PG_NAME.get(d.page)||d.page} (${d.nAds} quảng cáo, ${(d.accUsed||[]).length} tài khoản)`:d.test?" · chỉ camp test":" · toàn tài khoản");
   if(d.page&&!d.nAds)return `<h3>${esc(PG_NAME.get(d.page)||d.page)}</h3><div class="empty">Không có quảng cáo nào của page này có chi tiêu trong khoảng ngày đã chọn. Thử chọn "Toàn bộ".</div>`;
   const head=(t,s)=>`<h3>${t}</h3><p class="sub">${s} · ${esc(L)}</p>`;
   if(key==="TONG-QUAN"){if(d.tot.err)return head("Tổng quan","")+errBox(d.tot);const T=met(d.tot);const cr=T.rs?T.pu/T.rs:0;
@@ -2232,9 +2312,9 @@ function lkState(x){const st=String(x.st||""),h=String(x.note||"");const bad=/kh
 function renderSpyLinks(){const box=$("#lkList");if(!box)return;const sel=$("#lkPage");if(sel&&!sel.options.length)sel.innerHTML=PAGES.map(p=>`<option>${esc(p)}</option>`).join("");
   const all=(SPY.saved||[]).filter(x=>String(x.note).includes(LK_TAG)&&!/bỏ qua|bỏ hẳn/i.test(x.st)).reverse(),rows=all;
   const Y=t=>`<span style="color:var(--ok);font-weight:600">✓ ${t||"Rồi"}</span>`,N=t=>`<span class="note">${t||"Chưa"}</span>`;
-  box.innerHTML=all.length?`<table class="q"><thead><tr><th>Ngày gửi</th><th>Link</th><th>Dịch vụ</th><th>Đã tải</th><th>Lên Drive</th><th>Đã xử lý (edit + content)</th></tr></thead><tbody>${rows.map(x=>{const k=lkState(x);
+  box.innerHTML=all.length?`<div class="tblx"><table class="q"><thead><tr><th>Ngày gửi</th><th>Link</th><th>Dịch vụ</th><th>Đã tải</th><th>Lên Drive</th><th>Đã xử lý (edit + content)</th></tr></thead><tbody>${rows.map(x=>{const k=lkState(x);
     return `<tr data-d="${esc(x.day)}"><td>${esc(x.day)}</td><td><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.plat||"Link")} ↗</a></td><td>${esc(x.svc)}</td>
-      ${k.bad?`<td colspan="3"><span class="chip" style="--st:var(--danger)">${esc(x.st)}</span> <button class="btn small primary" data-lkfix="${x.row}">Xử lý</button></td>`:`<td>${k.got?Y():N("⏳ Đang tải")}</td><td>${k.drive?Y(k.drive==="có"?"":"SPY/"+k.drive):N()}</td><td>${k.done?Y(k.qc||"Chờ Sếp duyệt"):k.skip?`<span class="chip" style="--st:var(--warn)" title="${esc(x.st)}">⚠ ${esc(x.st.split(/[(;–-]/)[0].trim())}</span> <button class="btn small primary" data-lkfix="${x.row}">Xử lý</button><div class="note" style="font-size:11px">${esc(x.st)}</div>`:k.edit?N("⏳ Đang làm"+(/sếp/i.test(x.st)?" theo lệnh Sếp":"")):k.got?`${N(/sếp chốt|sếp xử lý|vẫn dựng/i.test(x.note)?"⏳ Chờ dựng theo lệnh Sếp":"⏳ Chờ dựng")} <button class="btn small" data-lkfix="${x.row}">Xử lý</button>`:N()}</td>`}</tr>`}).join("")}</tbody></table>`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>';dayFilterDom("lk",box)}
+      ${k.bad?`<td colspan="3"><span class="chip" style="--st:var(--danger)">${esc(x.st)}</span> <button class="btn small primary" data-lkfix="${x.row}">Xử lý</button></td>`:`<td>${k.got?Y():N("⏳ Đang tải")}</td><td>${k.drive?Y(k.drive==="có"?"":"SPY/"+k.drive):N()}</td><td>${k.done?Y(k.qc||"Chờ Sếp duyệt"):k.skip?`<span class="chip" style="--st:var(--warn)" title="${esc(x.st)}">⚠ ${esc(x.st.split(/[(;–-]/)[0].trim())}</span> <button class="btn small primary" data-lkfix="${x.row}">Xử lý</button><div class="note" style="font-size:11px">${esc(x.st)}</div>`:k.edit?N("⏳ Đang làm"+(/sếp/i.test(x.st)?" theo lệnh Sếp":"")):k.got?`${N(/sếp chốt|sếp xử lý|vẫn dựng/i.test(x.note)?"⏳ Chờ dựng theo lệnh Sếp":"⏳ Chờ dựng")} <button class="btn small" data-lkfix="${x.row}">Xử lý</button>`:N()}</td>`}</tr>`}).join("")}</tbody></table></div>`:'<p class="note" style="margin:0">Chưa gửi link nào.</p>';dayFilterDom("lk",box)}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#lkMore")){LK_ALL=true;renderSpyLinks()}});
 /* nút Xử lý cho link có vấn đề (sếp chốt 15/11/2026): sếp ra lệnh ngay trên app -> ghi SPY-ADS + báo máy làm ngay */
 const LK_ACT=[["dung","Vẫn dựng video này","Sếp cho dựng – chờ EDIT"],["tai","Tải lại link này","Dùng làm ý tưởng"],["bo","Bỏ link này","Bỏ hẳn (Sếp chốt trong app)"],["lenh","Làm theo lệnh ghi bên dưới","Sếp yêu cầu – chờ xử lý"]];
@@ -2337,11 +2417,66 @@ async function loadPc(){const box=$("#pcList");if(!box)return;if(!mcp){box.inner
       ${p.vid?`<button class="btn small" data-pcvid="${esc(p.code)}|${esc(p.vid)}">▶ Xem video mẫu</button>`:'<span class="note">Chưa có video mẫu</span>'}</div></div>`).join(""):'<div class="empty">Chưa có phong cách nào trong tab PHONG-CACH.</div>'}
   catch(e){box.innerHTML=`<div class="empty">Chưa đọc được tab PHONG-CACH: ${esc(errTxt(e))}</div>`}}
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-pcvid]");if(!b)return;const [code,id]=b.dataset.pcvid.split("|");const m=document.getElementById("pcm-"+code);if(!m)return;m.innerHTML=vidBox(id);b.remove();playVid(m.querySelector("[data-vfid]"))});
-const LOADERS={"q-y":()=>{loadHoi();loadPc()},"t-tq":loadTq,"p-nguon":()=>{loadNguon("p-nguon");loadHoi()},"q-nguon":()=>{loadNguon("q-nguon");loadHoi()},"p-tp":()=>{renderPagePreview();loadTp("p-tp")},"q-tp":()=>{loadTp("q-tp");loadPreview()},"q-dang":loadQDang,"p-y":loadHoi,"a-dl":loadDL,"q-spy":loadSpySaved,"q-link":loadSpySaved};
+/* ---- Kiểm duyệt bình luận (tab BINH-LUAN, 16/11) ---- */
+const BL={rows:[],tab:"xau",sub:"chua"};
+/* sếp chốt 16/11: AI dịch ra nghĩa xấu thì tự xoá (sếp chỉ quyết có chặn người viết không); câu chưa chắc nằm mục riêng trong "Bình luận xấu" */
+const isXau=r=>/^Đã xoá|^Chờ Sếp|^Lỗi (xoá|chặn)|^AI: Xoá|^Sếp: (Xoá|Cấm|Chặn)/.test(r.st);
+const BL_SUB=[["chua","Chưa chắc chắn – Sếp quyết",r=>/^Chờ Sếp|^Lỗi xoá/.test(r.st)],["daxoa","AI đã xoá",r=>/^Đã xoá|^Lỗi chặn|^AI: Xoá|^Sếp: (Xoá|Cấm|Chặn)/.test(r.st)]];
+/* nút ! giải thích từng mục (sếp 16/11: người mới bấm vào là hiểu) */
+const BL_TIP={xau:"Những câu có vấn đề. Gồm 2 mục con:\n• Chưa chắc chắn – AI không dịch được hoặc hiểu 2 kiểu, CHƯA xoá → Sếp bấm Xoá / Xoá + chặn / Giữ lại.\n• AI đã xoá – AI dịch ra là xấu (chửi, chê, mỉa, spam, quảng cáo đối thủ) nên đã tự xoá trên Facebook. Vẫn hiện để Sếp kiểm tra, Sếp chỉ quyết có Chặn người viết không.",
+  kn:"Khách than phiền thật, có trải nghiệm cụ thể (làm rồi không hiệu quả, phản ứng sau điều trị, chê đắt…). AI KHÔNG xoá. Nhân viên mở trên Facebook để trả lời / nhắn tin xử lý.",
+  ok:"Hỏi giá, hỏi địa chỉ, khen, tag bạn bè… AI để nguyên. Chỉ để xem; thấy AI để sót câu xấu thì bấm Xoá.",
+  ai:"Bình luận máy vừa quét về, AI chưa đọc xong. Thường dưới 10 phút sẽ tự chuyển sang các mục khác. Số 0 là bình thường.",
+  all:"Mọi bình luận của KHÁCH trong ngày và page đang lọc (không gồm bình luận của page).",
+  chua:"AI không dịch được hoặc câu hiểu 2 kiểu (khen hay mỉa). Chưa xoá – Sếp quyết: Xoá / Xoá + chặn người này / Giữ lại. Máy làm trong khoảng 10 phút.",
+  daxoa:"AI đã tự xoá trên Facebook vì dịch ra là xấu. Nhãn 🗑 Đã xoá bởi AI. Không khôi phục được. Sếp xem lại và bấm Chặn người này nếu muốn chặn người viết."};
+const blTip=k=>`<span class="info-btn th-i" role="button" tabindex="0" data-tip="${esc(BL_TIP[k]||"")}" aria-label="Giải thích mục">!</span>`;
+const BL_TABS=[["xau","Bình luận xấu",isXau],["kn","Khiếu nại",r=>r.st==="Khiếu nại"],["ok","Bình thường",r=>/^Bình thường|^Giữ|^Của page/.test(r.st)],["ai","Đang chờ AI",r=>/^Chờ AI/.test(r.st)],["all","Tất cả",()=>true]];
+const ymd=d=>d.toLocaleDateString("sv-SE",{timeZone:"Asia/Ho_Chi_Minh"});
+async function loadBL(){const box=$("#blList");if(!mcp){box.innerHTML=`<div class="empty">Cần kết nối Google Sheets</div>`;return}
+  try{const v=valuesOf(await sheetTool("get_values",{spreadsheetId:SHEET_ID,range:"BINH-LUAN!A1:O20000"}));
+    /* sếp 16/11: chỉ hiện bình luận của KHÁCH, không hiện bình luận của page */
+    BL.rows=v.slice(1).map((r,i)=>({row:i+2,id:r[0],t:r[1]||"",page:r[2]||"",loai:r[3]||"",link:r[4]||"",who:r[5]||"",txt:r[6]||"",nghia:r[7]||"",st:r[8]||"",ly:r[9]||"",log:r[10]||"",bai:r[11]||"",doan:r[14]||""})).filter(x=>x.id&&x.st!=="Của page");
+    const sel=$("#blPage"),cur=sel.value,pgs=[...new Set(BL.rows.map(x=>x.page))].sort();
+    sel.innerHTML=`<option value="all">Tất cả page</option>`+pgs.map(p=>`<option${p===cur?" selected":""}>${esc(p)}</option>`).join("");renderBL()}
+  catch(e){box.innerHTML=`<div class="empty">Chưa đọc được tab BINH-LUAN: ${esc(errTxt(e))}</div>`}}
+function blInDay(x){const d=$("#blDay").value;if(d==="all")return true;const day=x.t.slice(0,10);const now=new Date();
+  if(d==="pick"){const p=$("#blDate").value;return !p||day===p}
+  if(d==="7")return day>=ymd(new Date(now-6*864e5));return day===ymd(new Date(now-(+d)*864e5))}
+function renderBL(){$("#blDateL").hidden=$("#blDay").value!=="pick";const pg=$("#blPage").value;
+  const base=BL.rows.filter(x=>(pg==="all"||x.page===pg)&&blInDay(x));
+  $("#blTabs").innerHTML=BL_TABS.map(([k,l,f])=>`<button type="button" class="dchip" data-bltab="${k}" aria-pressed="${BL.tab===k}"><b>${l}</b><small>${base.filter(f).length}</small>${blTip(k)}</button>`).join("");
+  let f=BL_TABS.find(z=>z[0]===BL.tab)[2],subBar="";
+  if(BL.tab==="xau"){const xs=base.filter(isXau);subBar=`<div class="daybar" role="group" aria-label="Mục con bình luận xấu" style="margin:0 0 10px">`+BL_SUB.map(([k,l,g])=>`<button type="button" class="dchip" data-blsub="${k}" aria-pressed="${BL.sub===k}"><b>${l}</b><small>${xs.filter(g).length}</small>${blTip(k)}</button>`).join("")+`</div>`;f=BL_SUB.find(z=>z[0]===BL.sub)[2]}
+  const ls=base.filter(f).sort((a,b)=>b.t.localeCompare(a.t));
+  if(!ls.length){$("#blList").innerHTML=subBar+`<div class="empty">Không có bình luận nào trong mục này</div>`;return}
+  /* thẻ (sếp 16/11): tên người bình luận → bình luận gốc → (AI đoán viết đúng) → dịch tiếng Việt sát nghĩa → công cụ xử lý */
+  $("#blList").innerHTML=subBar+`<div class="stack">`+ls.slice(0,300).map(x=>{const xoaRoi=/^Đã xoá/.test(x.st),cho=!xoaRoi&&!/^Sếp: |^AI: Xoá|^Chờ AI/.test(x.st),choChan=/^Đã xoá \((AI|Sếp)\)$|^Lỗi chặn/.test(x.st);
+    const nhan=/^Đã xoá \(AI\)/.test(x.st)?`<span style="color:#c0392b;font-weight:700">🗑 Đã xoá bởi AI</span>`:/^Đã xoá \+ chặn/.test(x.st)?`<span style="color:#c0392b;font-weight:700">🗑 Đã xoá + chặn người viết</span>`:/^Đã xoá/.test(x.st)?`<span style="color:#c0392b;font-weight:700">🗑 Đã xoá theo lệnh Sếp</span>`:/^Sếp: |^AI: Xoá/.test(x.st)?`<span class="note">⏳ ${esc(x.st.replace(/ \(app.*$/,""))} – máy đang làm</span>`:`<span class="note"><b>${esc(x.st)}</b></span>`;
+    return `<div class="panel" style="padding:12px${xoaRoi?";opacity:.85;border-left:4px solid #c0392b":""}">
+    <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><b style="font-size:15px">👤 ${esc(x.who)}</b>${nhan}</div>
+    <p style="margin:8px 0 4px;font-size:16px;line-height:1.45">${esc(x.txt)||"<i class='muted'>(không có chữ)</i>"}</p>
+    ${x.doan?`<p class="note" style="margin:2px 0">✏️ AI đoán khách định viết: <i>${esc(x.doan)}</i></p>`:""}
+    ${x.nghia?`<p style="margin:4px 0;padding:8px 10px;background:var(--surface,#f5f5f5);border-radius:8px">🇻🇳 ${esc(x.nghia)}</p>`:`<p class="note" style="margin:4px 0">🇻🇳 AI chưa dịch</p>`}
+    ${x.ly?`<p class="note" style="margin:2px 0">AI xếp loại: ${esc(x.ly)}</p>`:""}
+    <p class="note" style="margin:2px 0">${esc(x.t)} · ${esc(x.page)}${x.bai?` · Bài: ${esc(x.bai.slice(0,70))}`:""}</p>
+    <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center">
+      ${cho?`<button class="btn bl-del" type="button" data-blact="Sếp: Xoá" data-blrow="${x.row}">Xoá</button><button class="btn" type="button" data-blact="Sếp: Cấm" data-blrow="${x.row}">Xoá + chặn người này</button>${/^Chờ Sếp|^Lỗi xoá/.test(x.st)?`<button class="btn" type="button" data-blact="Sếp: Giữ" data-blrow="${x.row}">Giữ lại</button>`:""}`:""}
+      ${choChan?`<button class="btn bl-del" type="button" data-blact="Sếp: Chặn" data-blrow="${x.row}">Chặn người này</button>`:""}
+      ${x.link&&!xoaRoi?`<a class="btn" target="_blank" rel="noopener" href="${esc(x.link)}">Mở trên Facebook</a>`:""}</div></div>`}).join("")+`</div>`+(ls.length>300?`<p class="note">Đang hiện 300 bình luận mới nhất – lọc theo ngày/page để xem thêm.</p>`:"")}
+async function blAct(row,act){const x=BL.rows.find(y=>y.row===row);if(!x)return;
+  try{await sheetTool("update_values",{spreadsheetId:SHEET_ID,range:`BINH-LUAN!I${row}`,values:[[act+" (app "+new Date().toLocaleString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})+")"]]});
+    x.st=act;renderBL();toast(act.replace("Sếp: ","")+" – máy sẽ làm trong vài phút")}catch(e){toast(errTxt(e))}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-bltab]");if(t){BL.tab=t.dataset.bltab;renderBL();return}
+  const sb=e.target.closest&&e.target.closest("[data-blsub]");if(sb){BL.sub=sb.dataset.blsub;renderBL();return}
+  const a=e.target.closest&&e.target.closest("[data-blact]");if(a)blAct(+a.dataset.blrow,a.dataset.blact)});
+document.addEventListener("change",e=>{if(e.target&&["blDay","blDate","blPage"].includes(e.target.id))renderBL()});
+const LOADERS={"p-bl":loadBL,"q-y":()=>{loadHoi();loadPc()},"t-tq":loadTq,"p-nguon":()=>{loadNguon("p-nguon");loadHoi()},"q-nguon":()=>{loadNguon("q-nguon");loadHoi()},"p-tp":()=>{renderPagePreview();loadTp("p-tp")},"q-tp":()=>{loadTp("q-tp");loadPreview()},"q-dang":loadQDang,"p-y":loadHoi,"a-dl":loadDL,"a-auto":loadQct,"q-spy":loadSpySaved,"q-link":loadSpySaved};
 function lazyLoad(h){if(!LOADERS[h]||loaded[h]||!mcp)return;loaded[h]=true;LOADERS[h]()}
 document.addEventListener("click",e=>{
   const rl=e.target.closest("[data-reload]");if(rl){const h=rl.dataset.reload;loaded[h]=true;LOADERS[h]&&LOADERS[h]();return}
   const xm=e.target.closest("[data-xem]");if(xm){const el=document.getElementById("x-"+xm.dataset.xem);if(el.innerHTML){el.innerHTML="";return}xemFile(xm.dataset.xem,el);return}
+  const qb=e.target.closest("[data-qct]");if(qb){answerQct(+qb.dataset.qct,qb.dataset.v);return}
   const ho=e.target.closest("[data-hoi]");if(ho){const row=+ho.dataset.hoi;answerHoi(row,ho.dataset.v||($("#ans-"+row)&&$("#ans-"+row).value.trim()));return}
   const ht=e.target.closest("[data-hoitick]");if(ht){const row=+ht.dataset.hoitick;answerHoi(row,tickAnswer(row));return}
   const ppk=e.target.closest("[data-ppok]");if(ppk){pageOk(ppk.dataset.ppok);return}

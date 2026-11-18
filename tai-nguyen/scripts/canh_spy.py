@@ -288,6 +288,18 @@ def main():
                 sheet_api.set_("MAY-TRUC!B%d:C%d" % ((2, 2) if a.may == "truc" else (3, 3)), [[int(time.time()), gio_vn()]])
         except Exception as e:
             log(f"ghi nhịp sống lỗi: {e}")
+    # KIỂM DUYỆT BÌNH LUẬN (16/11): máy trực, 10 phút/lần, chạy tách rời (quét không tốn token; AI chỉ gọi khi có bình luận mới)
+    bl = os.path.join(TMP, "kiem_duyet_bl.lock")
+    if not a.thu and a.may == "truc" and (not os.path.exists(bl) or time.time() - os.path.getmtime(bl) > 600):
+        open(bl, "w").write(str(time.time()))
+        py = sys.executable
+        if py.lower().endswith("python.exe") and os.path.exists(py[:-10] + "pythonw.exe"):
+            py = py[:-10] + "pythonw.exe"
+        try:
+            subprocess.Popen([py, os.path.join(os.path.dirname(os.path.abspath(__file__)), "kiem_duyet_bl.py"), "chay"], cwd=KHO, close_fds=True,
+                             creationflags=0x00000008 | 0x00000200 | 0x08000000)
+        except OSError as e:
+            log(f"kiểm duyệt bình luận: không chạy được ({e})")
     cho = a.cho if a.cho is not None else (0 if a.may == "truc" else 3)
     lan_dung = ["dung%d" % n for n in range(1, SO_LAN[a.may] + 1)]
     lan_ranh = [l for l in lan_dung if not ban(l)]
@@ -311,15 +323,36 @@ def main():
         k, i, h = r.get("J", "").strip(), r.get("I", "").strip(), r.get("H", "")
         if not k:
             continue
-        if i == "Chờ máy tải":
+        # Nút "Xử lý" trong app ghi 4 kiểu (LK_ACT trong merah-studio/src.html), có thể kèm ": <lệnh>":
+        #   'Chờ máy tải[: lệnh]' · 'Sếp cho dựng – chờ EDIT[: lệnh]' · 'Sếp yêu cầu – chờ xử lý: lệnh' · 'Bỏ hẳn (...)'
+        # → luôn so bằng startswith, KHÔNG so ==, kẻo dòng kẹt (lỗi 15/11).
+        if i.startswith("Sếp yêu cầu"):
+            if "Drive: SPY/" in h:
+                viec.append((k, "dung"))  # đã có tư liệu → làn DỰNG làm đúng lệnh (lệnh nằm ở cột H 'Sếp xử lý …')
+            else:
+                dong_tai[k] = r
+                viec.append((k, "tai"))
+            continue
+        if i.startswith("Chờ máy tải"):
             dong_tai[k] = r
             # chưa thử tải bằng code (H chưa có "Máy tải bằng code lỗi") → làn TẢI CODE, không gọi Claude
             viec.append((k, "tai" if "Máy tải bằng code lỗi" in h or not r.get("F", "").strip().startswith("http") else "tai_code"))
         elif i.startswith("Đang tải (máy") and khoa_cu(i.replace("Đang tải", "Đang edit", 1), now):
             dong_tai[k] = r
             viec.append((k, "tai"))  # lượt tải code/Claude chết giữa chừng quá 3 tiếng → Claude tải lại
-        elif (("Drive: SPY/" in h) or ("File: SPY_" in h and ngay_iso(r.get("A", "")) >= MOC_CHAT)) and (i.startswith("Đã tải về SPY") or khoa_cu(i, now)):
+        elif (("Drive: SPY/" in h) or ("File: SPY_" in h and ngay_iso(r.get("A", "")) >= MOC_CHAT)) and (i.startswith("Đã tải về SPY") or i.startswith("Sếp cho dựng") or khoa_cu(i, now)):
+            # 'Sếp cho dựng – chờ EDIT' = sếp bấm Xử lý → Vẫn dựng trong app (lỗi 15/11: trước bỏ sót, video kẹt)
             viec.append((k, "dung"))
+    # LƯỚI AN TOÀN: dòng link sếp gửi / sếp đã bấm Xử lý mà cột I là trạng thái máy không biết → ghi cảnh báo (6 tiếng/lần/dòng)
+    BIET = ("Chờ máy tải", "Đang tải", "Đã tải về SPY", "Sếp cho dựng", "Sếp yêu cầu", "Đang edit", "Chờ Sếp duyệt",
+            "Đã dựng", "Bỏ", "Không tải được", "Lỗi dựng", "Không dựng", "Đề xuất bỏ", "Đã giao")
+    for r in rows[1:]:
+        k, i, h = r.get("J", "").strip(), r.get("I", "").strip(), r.get("H", "")
+        if k and ("LINK SẾP GỬI" in h or "Sếp xử lý" in h) and i and not i.startswith(BIET):
+            mk2 = os.path.join(TMP, "la_" + re.sub(r"[^\w-]", "_", k))
+            if not os.path.exists(mk2) or time.time() - os.path.getmtime(mk2) > 6 * 3600:
+                open(mk2, "w").write(i)
+                log(f"CẢNH BÁO trạng thái lạ – máy không tự làm: {k} I='{i[:80]}' (thêm vào canh_spy.py nếu cần xử lý)")
     # yêu cầu sửa video quảng cáo (QUANG-CAO 'Cần sửa') – ưu tiên trước video mới
     sua = []
     try:
@@ -385,7 +418,7 @@ def main():
         if t in ("sua", "sua_treo"):
             ok = gianh("QUANG-CAO", "A", k, "I", r"^(Cần sửa|Đang sửa)", f"Đang sửa (máy {may} {gio_vn()})")
         elif t == "dung":
-            ok = gianh("SPY-ADS", "J", k, "I", r"^(Đã tải về SPY|Đang edit)", f"Đang edit (máy {may} {gio_vn()})")
+            ok = gianh("SPY-ADS", "J", k, "I", r"^(Đã tải về SPY|Sếp cho dựng|Sếp yêu cầu|Đang edit)", f"Đang edit (máy {may} {gio_vn()})")
         elif t == "tai_code":
             ok = gianh("SPY-ADS", "J", k, "I", r"^Chờ máy tải", f"Đang tải (máy {may} {gio_vn()})")
         elif t == "page":
